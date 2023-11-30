@@ -117,6 +117,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks
         PhotonNetwork.AutomaticallySyncScene = true;
         Debug.Log("OnJoin");
 
+
         //カスタムプロパティの設定(GAMESTATUS).
        // GAMESTATUS status = GAMESTATUS.NONE;
 
