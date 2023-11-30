@@ -4,43 +4,45 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
-{
-    [SerializeField]InputAction InputAction;
+{ 
     Rigidbody2D Rb;
-
-    Vector3 MoveVector;
-    [SerializeField]float MoveSpeed; // プレイヤーの移動スピード.
-
-    private void OnDisable()
-    {
-        // InputActionを無効にする.
-        InputAction.Disable();
-    }
-
-    private void OnEnable()
-    {
-        // InputActionを有効にする.
-        InputAction.Enable();
-    }
+    [SerializeField] Vector3 MoveVector;
+    [SerializeField] bool isMove;
+    [SerializeField] float MoveSpeed; // プレイヤーの移動スピード.
+    [SerializeField] bool isJump;     // ジャンプできるかどうか.
+    [SerializeField] float AddJump;   // ジャンプ力.
 
     void Start()
     {
         Rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
-        PlayerMove();
+        Rb.velocity = new Vector3(MoveVector.x * MoveSpeed * Time.deltaTime, Rb.velocity.y, 0);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        isJump = true;
     }
 
     /// <summary>
     /// プレイヤーの移動.
     /// </summary>
-    void PlayerMove()
+    private void OnMove(InputValue value)
     {
-        MoveVector = InputAction.ReadValue<Vector2>();
-        Rb.velocity = new Vector3(MoveVector.x, MoveVector.y, 0) * MoveSpeed * Time.deltaTime;
+        var velocity = value.Get<Vector2>();
+        MoveVector = new Vector3(velocity.x, 0, 0);
     }
-    
+
+    private void OnJump()
+    {
+        if(isJump == true)
+        {
+            Debug.Log("jump");
+            Rb.AddForce(transform.up * AddJump, ForceMode2D.Impulse);
+            isJump = false;
+        }
+    }
 }
