@@ -537,9 +537,10 @@ MonoBehaviour:
   moveDecay: 0.8
   isJump: 0
   jumpPower: 10
-  rayDis: 2
-  nowHitDir: 0
   wallJumpPower: {x: 2, y: 1}
+  wallSlidingSpeed: 2
+  nowHitDir: 0
+  nowPlayerAction: 0
 --- !u!70 &1730293226
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
