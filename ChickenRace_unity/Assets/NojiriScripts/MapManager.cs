@@ -6,65 +6,132 @@ public class MapManager : MonoBehaviour
 {
     //public Vector2 movePos;    // 移動したい座標　テスト用
 
-    [SerializeField] List<GameObject> GenerateList = new List<GameObject>(); // 生成した障害物リスト
-    [SerializeField] List<Transform> UsedGridList = new List<Transform>(); // 設置した障害物リスト
-
     [SerializeField] private GameObject gameObject; // 移動したいオブジェクトの情報取得
+    [SerializeField] private List<GameObject> InstalledList; // 設置した障害物リスト
+    [SerializeField] private List<Vector2Int> UsedGridList;   // 使用済みグリッドの位置リスト
+
+    private bool isRunning = false;  // コルーチン実行判定フラグ
+    private bool isInstall = false; // 設置フラグ
 
     // Start is called before the first frame update
     void Start()
     {
-
+        MapInit(); // 初期化
     }
 
     // Update is called once per frame
     void Update()
     {
+        // テスト
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            CreativeModeStart();
+        }
 
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            CreativeModeEnd();
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            GenerateMapObject();
+        }
     }
-    
-    //void OnTriggerStay2D(Collider2D collision)
-    //{
-    //    if (collision.tag == "UsedGrid")
-    //    {
-    //        Debug.Log("置けません");
-    //    }
-    //}
 
     /// <summary>
-    /// グリッド移動メソッド
+    /// マップ初期化メソッド
     /// </summary>
-    private IEnumerator StartMove()
+    private void MapInit()
     {
+        // リストの初期化
+        InstalledList = new List<GameObject>();
+        UsedGridList = new List<Vector2Int>();
+    }
+
+    /// <summary>
+    /// 障害物設置モード
+    /// 外部からコルーチンの開始、終了を行う
+    /// </summary>
+    private IEnumerator CreativeMode()
+    {
+        // コルーチン終了までループ
         while (true)
         {
-            // 移動メソッド
+            /* 
+            ここで
+            ・移動メソッド
+            ・設置位置取得メソッド
+            ・障害物生成メソッド
+            を呼び出す
+            */
+
+            yield return null;
         }
+
+        Debug.Log("コルーチン終了");
     }
 
     #region 外部用メソッド
     /// <summary>
-    /// コルーチン開始用メソッド
-    /// 障害物の移動の際に呼び出す
+    /// 設置開始用メソッド
+    /// 障害物設置モード移行の際にコルーチン開始
     /// </summary>
-    public void MapCoroutineStart()
+    public void CreativeModeStart()
     {
-        StartCoroutine(StartMove());
+        if (isRunning)
+        {
+            Debug.LogError("クリエイティブモード実行中です。エラー１");
+            return;
+        }
+
+        isRunning = true;
+        StartCoroutine(CreativeMode());
+
+        Debug.Log("クリエイティブモード開始");
     }
 
     /// <summary>
-    /// コルーチン終了用メソッド
+    /// 設置終了用メソッド
+    /// 障害物設置終了後にコルーチン終了
     /// </summary>
-    public void MapCoroutineEnd()
+    public void CreativeModeEnd()
     {
-        StopCoroutine(StartMove());
+        if (!isRunning)
+        {
+            Debug.LogError("クリエイティブモードが開始されていません。エラー２");
+            return;
+        }
+
+        isRunning = false;
+        StopCoroutine(CreativeMode());
+
+        Debug.Log("クリエイティブモード終了");
     }
 
     /// <summary>
-    /// 障害物設置時メソッド
+    /// 障害物設置用メソッド
+    /// クリックされた位置を取得後、設置できるかを判定
+    /// ture：障害物を生成 / false：生成しない
     /// </summary>
-    public void MapMoveEnd()
+    public void GenerateMapObject()
     {
+        if (!isRunning)
+        {
+            Debug.LogError("クリエイティブモードが開始されていません。エラー３");
+            return;
+        }
+
+        Vector2Int installPos; // 仮設置位置
+
+        // カーソルの位置に障害物を生成
+        
+
+        // クリック位置取得
+        //Debug.Log(installPos);
+
+        // 設置判定
+
         // その位置に固定
     }
     #endregion
