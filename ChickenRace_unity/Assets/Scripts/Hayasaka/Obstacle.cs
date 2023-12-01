@@ -7,7 +7,7 @@ public class Obstacle : MonoBehaviour
 {
     Vector2Int ObstacleCenterPos; // 中心グリッド位置
     [SerializeField]
-    List<Vector2Int> ObstacleCenterPosList; // 相対グリッド
+    List<Vector2Int> CollisionList; // 相対グリッド
 
     [SerializeField]
     int ObstacleID; // 障害物のID
@@ -52,5 +52,9 @@ public class Obstacle : MonoBehaviour
     {
         this.gameObject.SetActive(false);
         // Destroy(this.gameObject);
+    }
+    List<Vector2Int> Seter()
+    {
+        return CollisionList;
     }
 }
