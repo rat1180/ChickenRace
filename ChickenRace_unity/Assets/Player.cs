@@ -2,38 +2,71 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ConstList;
 
 public class Player : MonoBehaviour
 { 
     Rigidbody2D rb;
     
     [SerializeField] Vector3 moveVector;
-    [SerializeField] float moveSpeed; // プレイヤーの移動スピード.
-    [SerializeField] bool isJump;     // ジャンプできるかどうか.
-    [SerializeField] float addJump;   // ジャンプ力.
-    [SerializeField] float rayDis;    // レイの長さ.
+    [SerializeField] bool isMove;           // 動いているかどうか.
+    [SerializeField] float moveSpeed;       // プレイヤーの移動スピード.
+    [SerializeField] float minMoveSpeed;    // 最小移動力.
+    [SerializeField] float maxMoveSpeed;    // 最大移動力.
+    [SerializeField] float moveDecay;       // 移動減衰値.
+    [SerializeField] bool isJump;           // ジャンプできるかどうか.
+    [SerializeField] float jumpPower;       // ジャンプ力.
+    [SerializeField] Vector2 wallJumpPower; // 壁キックの力.
+    [SerializeField] HitDirList nowHitDir;  // プレイヤーがオブジェクトとどの向きで衝突したか.
+    [SerializeField] PlayerAction nowPlayerAction;  // プレイヤーが何の行動をしているか.
+
+    /// <summary>
+    /// 初期化用関数.
+    /// </summary>
+    private void Init()
+    {
+        nowHitDir = HitDirList.NONE;
+        nowPlayerAction = PlayerAction.NONE;
+    }
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        Init();
     }
 
     void FixedUpdate()
     {
-        rb.velocity = new Vector3(moveVector.x * moveSpeed * Time.deltaTime, rb.velocity.y, 0);
-        
-        // デバッグ用.
-        //rb.velocity = new Vector3(moveVector.x, moveVector.y, 0) * moveSpeed * Time.deltaTime;
+        PlayerMove();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
         isJump = true;
         DirectionCheck(collision.contacts[0].point);
     }
 
     /// <summary>
-    /// プレイヤーの移動.
+    /// プレイヤーの移動処理.
+    /// </summary>
+    void PlayerMove()
+    {
+        if (Mathf.Abs(rb.velocity.x) < maxMoveSpeed)
+        {
+            nowPlayerAction = PlayerAction.MOVE;
+            rb.velocity = new Vector3(rb.velocity.x + (moveVector.x * moveSpeed * Time.deltaTime), rb.velocity.y, 0);
+        }
+        else if (Mathf.Abs(rb.velocity.x) < minMoveSpeed)
+        {
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
+        }
+
+        rb.velocity = new Vector3(rb.velocity.x * moveDecay, rb.velocity.y, 0);
+
+    }
+
+    /// <summary>
+    /// PlayerInputのMoveからキー情報や値の受け取り.
     /// </summary>
     private void OnMove(InputValue value)
     {
@@ -43,13 +76,26 @@ public class Player : MonoBehaviour
 
     /// <summary>
     /// プレイヤーのジャンプ処理.
+    /// PlayerInputのJumpからキー情報や値の受け取り.
     /// </summary>
     private void OnJump()
     {
         if(isJump == true)
         {
-            // Debug.Log("jump");
-            rb.AddForce(transform.up * addJump, ForceMode2D.Impulse);
+            nowPlayerAction = PlayerAction.WALLJUMP;
+            switch (nowHitDir)
+            {
+                case HitDirList.HIT_RIGHT:
+                    rb.AddForce(new Vector2(-wallJumpPower.x, wallJumpPower.y) * jumpPower, ForceMode2D.Impulse);
+                    break;
+                case HitDirList.HIT_LEFT:
+                    rb.AddForce(new Vector2(wallJumpPower.x, wallJumpPower.y) * jumpPower, ForceMode2D.Impulse);
+                    break;
+                case HitDirList.HIT_DOWN:
+                    rb.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
+                    break;
+            }
+
             isJump = false;
         }
     }
@@ -78,18 +124,31 @@ public class Player : MonoBehaviour
         if (angle >= 315 - threshold)
         {
             //Debug.Log("右");
+            nowHitDir = HitDirList.HIT_RIGHT;
         }
         else if (angle < 135 - threshold)
         {
             //Debug.Log("上");
+            nowHitDir = HitDirList.HIT_UP;
         }
         else if (angle < 225 - threshold)
         {
             //Debug.Log("左");
+            nowHitDir = HitDirList.HIT_LEFT;
         }
         else if (angle < 315 - threshold)
         {
             //Debug.Log("下");
+            nowHitDir = HitDirList.HIT_DOWN;
         }
+    }
+
+    /// <summary>
+    /// プレイヤーの行動を返す処理.
+    /// </summary>
+    /// <returns></returns>
+    public PlayerAction GetPlayerAction()
+    {
+        return nowPlayerAction;
     }
 }

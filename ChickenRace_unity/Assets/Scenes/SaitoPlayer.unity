@@ -530,10 +530,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveVector: {x: 0, y: 0, z: 0}
-  moveSpeed: 500
+  isMove: 0
+  moveSpeed: 100
+  minMoveSpeed: 0.05
+  maxMoveSpeed: 10
+  moveDecay: 0.8
   isJump: 0
-  addJump: 5
+  jumpPower: 10
   rayDis: 2
+  nowHitDir: 0
+  wallJumpPower: {x: 2, y: 1}
 --- !u!70 &1730293226
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -565,7 +571,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -789,7 +795,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2073710827}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -5, z: 0}
   m_LocalScale: {x: 20, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
