@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     [SerializeField] bool isJump;           // ジャンプできるかどうか.
     [SerializeField] float jumpPower;       // ジャンプ力.
     [SerializeField] Vector2 wallJumpPower; // 壁キックの力.
+    [SerializeField] float wallSlidingSpeed;// 壁滑りのスピード.
     [SerializeField] HitDirList nowHitDir;  // プレイヤーがオブジェクトとどの向きで衝突したか.
     [SerializeField] PlayerAction nowPlayerAction;  // プレイヤーが何の行動をしているか.
 
@@ -38,12 +39,18 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         PlayerMove();
+        WallSliding();
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
         isJump = true;
         DirectionCheck(collision.contacts[0].point);
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        nowHitDir = HitDirList.NONE;
     }
 
     /// <summary>
@@ -87,16 +94,33 @@ public class Player : MonoBehaviour
             {
                 case HitDirList.HIT_RIGHT:
                     rb.AddForce(new Vector2(-wallJumpPower.x, wallJumpPower.y) * jumpPower, ForceMode2D.Impulse);
+                    nowPlayerAction = PlayerAction.WALLJUMP;
                     break;
                 case HitDirList.HIT_LEFT:
                     rb.AddForce(new Vector2(wallJumpPower.x, wallJumpPower.y) * jumpPower, ForceMode2D.Impulse);
+                    nowPlayerAction = PlayerAction.WALLJUMP;
                     break;
                 case HitDirList.HIT_DOWN:
                     rb.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
+                    nowPlayerAction = PlayerAction.JUMP;
                     break;
             }
 
             isJump = false;
+        }
+    }
+
+    /// <summary>
+    /// 壁滑り処理.
+    /// </summary>
+    private void WallSliding()
+    {
+        switch (nowHitDir)
+        {
+            case HitDirList.HIT_RIGHT:
+            case HitDirList.HIT_LEFT:
+                rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y - wallSlidingSpeed, 0);
+                break;
         }
     }
 
