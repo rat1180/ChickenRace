@@ -119,7 +119,7 @@ public class Player : MonoBehaviour
         {
             case HitDirList.HIT_RIGHT:
             case HitDirList.HIT_LEFT:
-                rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y - wallSlidingSpeed, 0);
+                rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y - wallSlidingSpeed * Time.deltaTime, 0);
                 break;
         }
     }
