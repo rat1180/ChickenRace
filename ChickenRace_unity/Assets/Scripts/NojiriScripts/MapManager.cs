@@ -10,7 +10,7 @@ public class MapManager : MonoBehaviour
     [SerializeField] private List<GameObject> InstalledList; // 設置した障害物リスト
     [SerializeField] private List<Vector2Int> UsedGridList;   // 使用済みグリッドの位置リスト
 
-    private bool isRunning = false;  // コルーチン実行判定フラグ
+    private bool isRunning = false; // コルーチン実行判定フラグ
     private bool isInstall = false; // 設置フラグ
 
     // Start is called before the first frame update
@@ -22,7 +22,7 @@ public class MapManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // テスト
+        // テスト用
         if (Input.GetKeyDown(KeyCode.S))
         {
             CreativeModeStart();
@@ -122,10 +122,10 @@ public class MapManager : MonoBehaviour
             return;
         }
 
-        Vector2Int installPos; // 仮設置位置
+        //Vector2Int installPos; // 仮設置位置
 
         // カーソルの位置に障害物を生成
-        
+
 
         // クリック位置取得
         //Debug.Log(installPos);
@@ -133,6 +133,7 @@ public class MapManager : MonoBehaviour
         // 設置判定
 
         // その位置に固定
+        Debug.Log("生成");
     }
     #endregion
 }

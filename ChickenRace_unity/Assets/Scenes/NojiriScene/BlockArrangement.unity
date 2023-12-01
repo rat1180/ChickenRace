@@ -238,7 +238,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObject: {fileID: 1294979247}
-  movePos: {x: 0, y: 0}
+  InstalledList: []
+  UsedGridList: []
 --- !u!4 &486987410
 Transform:
   m_ObjectHideFlags: 0
