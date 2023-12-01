@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class Obstacle : MonoBehaviour
 {
-    Vector2Int ObstacleCenterPos; // 中心グリッド位置
+    protected Vector2Int ObstacleCenterPos; // 中心グリッド位置
     [SerializeField]
     List<Vector2Int> CollisionList; // 相対グリッド
 
@@ -24,7 +24,7 @@ public class Obstacle : MonoBehaviour
     /// <summary>
     /// 初期化
     /// </summary>
-    void Init()
+    public virtual void Init()
     {
         ObstacleCenterPos = new Vector2Int(0, 0);
     }
@@ -35,7 +35,7 @@ public class Obstacle : MonoBehaviour
     }
     public virtual void update()
     {
-
+        
     }
     /// <summary>
     /// 生成時の回転等の情報受け取り
@@ -56,5 +56,9 @@ public class Obstacle : MonoBehaviour
     List<Vector2Int> Seter()
     {
         return CollisionList;
+    }
+    public virtual void ObjStart()
+    {
+
     }
 }
