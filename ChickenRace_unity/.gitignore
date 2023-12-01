@@ -47,7 +47,7 @@ ExportedObj/
 *.opendb
 *.VC.db
 
-ChickenRace/Logs/*
+ChickenRace_unity/Logs/*
 
 # Unity3D generated meta files
 *.pidb.meta
