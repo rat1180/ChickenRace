@@ -224,6 +224,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+
     // ルームから退出した時に呼ばれるコールバック
     public override void OnLeftRoom()
     {
