@@ -17,11 +17,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     [SerializeField, Tooltip("1ルームの参加人数")] int MaxPlayer;
     [SerializeField, Tooltip("参加ボタンリスト")] CanvasGroup ButtonRoot;
+    [SerializeField, Tooltip("部屋の名前リスト")] Dropdown roomNameDropdown;
+    [SerializeField, Tooltip("入室")] Button connectRoomButton;
     [SerializeField, Tooltip("モード選択パネル")] GameObject ModeSelectPanel;
     //ロビー参加済みか
     private bool isInLobby;
-
-    private List<RoomInfo> RoomInfos;
 
     /// <summary>
     /// コネクトサーバーから呼ばれ、
@@ -49,21 +49,21 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             Buttons.Add(ButtonRoot.gameObject.transform.GetChild(i).gameObject);//ここでボタンの要素を追加している.
         }
 
-        //GetComponent<SelectButton>().AddButton(Buttons);
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         base.OnRoomListUpdate(roomList);
-        
-        foreach(var room in roomList)
+
+        foreach (var room in roomList)
         {
             if (int.Parse(room.Name) < 0 || int.Parse(room.Name) > ButtonRoot.transform.childCount) continue;
 
             //ルーム番号に応じた情報を更新
             var button = ButtonRoot.transform.GetChild(int.Parse(room.Name));
-            button.transform.GetChild(0).GetComponent<Text>().text = RoomHead+room.Name+RoomMidle + room.PlayerCount + "/" + room.MaxPlayers 
-                                                                     + "\n"+ (room.IsOpen ? RoomOK : RoomNotOK);
+            button.transform.GetChild(0).GetComponent<Text>().text = RoomHead + room.Name + RoomMidle + room.PlayerCount + "/" + room.MaxPlayers
+                                                                     + "\n" + (room.IsOpen ? RoomOK : RoomNotOK);
+
 
             //入室できるルームのみボタンを押せるようにする.
             if (room.IsOpen)
@@ -75,15 +75,46 @@ public class LobbyManager : MonoBehaviourPunCallbacks
                 button.GetComponent<Button>().interactable = false;//ボタン押下不可状態に.
             }
         }
+        //base.OnRoomListUpdate(roomList);
+
+        //foreach(var room in roomList)
+        //{
+        //    if (int.Parse(room.Name) < 0 || int.Parse(room.Name) > ButtonRoot.transform.childCount) continue;
+
+        //    //ルーム番号に応じた情報を更新
+        //    var button = ButtonRoot.transform.GetChild(int.Parse(room.Name));
+        //    button.transform.GetChild(0).GetComponent<Text>().text = RoomHead+room.Name+RoomMidle + room.PlayerCount + "/" + room.MaxPlayers 
+        //                                                             + "\n"+ (room.IsOpen ? RoomOK : RoomNotOK);
+
+        //    //入室できるルームのみボタンを押せるようにする.
+        //    if (room.IsOpen)
+        //    {
+        //        button.GetComponent<Button>().interactable = true;//ボタン押下可能状態に.
+        //    }
+        //    else
+        //    {
+        //        button.GetComponent<Button>().interactable = false;//ボタン押下不可状態に.
+        //    }
+        //}
     }
 
     /// <summary>
-    /// ルームのボタンを押したら呼べるようにする
+    /// ルームのボタンを押したら部屋を移動する.
     /// </summary>
     public void JoinRoom(int RoomNm)
     {
         ButtonRoot.interactable = false;                          //他のルームのボタンを押下不可にする.
-        ConectServer.RoomProperties.RoomName = RoomNm.ToString(); //入室するルームの名前を設定.
+        //ConectServer.RoomProperties.RoomName = RoomNm.ToString(); //入室するルームの名前を設定.
+        //ConectServer.RoomProperties.MaxPlayer = MaxPlayer;        //ルームに参加できる人数の設定.
+        SceneManager.LoadScene("WaitRoom");                       //ゲーム待機シーンに移動.
+    }
+
+    public void JoinRoom()
+    {
+        Debug.Log(roomNameDropdown.value + "の部屋");
+        ConectServer.RoomProperties.MaxPlayer = MaxPlayer;
+        //ButtonRoot.interactable = false;                          //他のルームのボタンを押下不可にする.
+        ConectServer.RoomProperties.RoomName = roomNameDropdown.value.ToString(); //入室するルームの名前を設定.
         ConectServer.RoomProperties.MaxPlayer = MaxPlayer;        //ルームに参加できる人数の設定.
         SceneManager.LoadScene("WaitRoom");                       //ゲーム待機シーンに移動.
     }
@@ -128,6 +159,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
+       
     }
     #endregion
 
