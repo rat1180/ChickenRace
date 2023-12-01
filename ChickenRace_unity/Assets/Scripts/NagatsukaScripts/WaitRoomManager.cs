@@ -11,17 +11,34 @@ using Photon.Realtime;
 現在のロビー状態の表示と、ロビー情報のコントロールを行う
 マッチング後はゲーム開始に合わせてシーンの移動を行う
  */
-public class WaitRoomManager : MonoBehaviourPunCallbacks
+public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     [SerializeField, Tooltip("情報を表示するメッセージ")] Text MessageText;
     [SerializeField, Tooltip("開始ボタン")] Button SceanMoveButton;
-    [SerializeField, Tooltip("ルーム名を表示するテキスト")] Text RoomNameText;
+    [SerializeField, Tooltip("ルーム名を表示するテキスト")] Text roomNameText;
+    [SerializeField, Tooltip("ルーム名を表示するテキスト")] Text nowPlayerCountText;
+
+    #region チャット関連
+    [Header("チャット関連")]
+    [SerializeField] InputField InputChat;
+    [SerializeField] Text ChatLog;
+    [SerializeField] Text ChatLog2;
+    #endregion
+
+    #region 色定数
+    const string RED16 = "#FF0000";
+    const string YELLOW16 = "#FFFF00";
+    #endregion
+
     //マスターかどうか
-    private bool isMaster;
+    public bool isMaster;
     //ルーム内で接続できているか
     private bool isInRoom;
     //スタートしたかどうか
     private bool isStart;
+
+    //現在部屋にいるプレイヤーの数
+    public int nowPlayers;
 
     //ルームのカスタムプロパティを設定する為の宣言.
     ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
@@ -30,7 +47,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        //PhotonNetwork.ConnectUsingSettings();
+        PhotonNetwork.ConnectUsingSettings();
         isMaster = false;
         isInRoom = false;
         isStart = false;
@@ -40,7 +57,6 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        RoomNameText.text = "RoomName:" + ConectServer.RoomProperties.RoomName;
         if (isInRoom)
         {
             RoomStatusUpDate();
@@ -50,6 +66,37 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks
             }
         }
     }
+    #endregion
+
+
+    #region チャット機能関連
+    public void PushSendChatButton()
+    {
+        string chat = InputChat.text;
+        int master = PhotonNetwork.LocalPlayer.ActorNumber;//送信者の番号(全員がActorNumberを呼ばないために代入).
+        InputChat.text = "";//送信したら消す.
+        photonView.RPC(nameof(PushChat), RpcTarget.All, master, chat);
+    }
+
+    //[PunRPC]
+    //void PushChat(string chat)
+    //{
+    //    ChatLog2.text = ChatLog.text;
+    //    ChatLog2.color = ChatLog.color;
+    //    ChatLog.text = chat;
+    //    ChatLog.color = Color.black;
+    //}
+    [PunRPC]
+    void PushChat(string chat,string color16)
+    {
+        Color color;
+        ColorUtility.TryParseHtmlString(color16, out color);
+        ChatLog2.text = ChatLog.text;
+        ChatLog2.color = ChatLog.color;
+        ChatLog.text = chat;
+        ChatLog.color = color;
+    }
+
     #endregion
 
     /// <summary>
@@ -71,19 +118,20 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks
     /// </summary>
     void TryRoomJoin()
     {
-        Debug.Log("RoomName:" + ConectServer.RoomProperties.RoomName);
+        //Debug.Log("RoomName:" + ConectServer.RoomProperties.RoomName);
         //オフライン以外の時に接続
         if (ConectServer.RoomProperties.RoomName != "Offline")
         {
-
+            var roomOptions = new RoomOptions();
+            roomOptions.MaxPlayers = ConectServer.RoomProperties.MaxPlayer;
+            //PhotonNetwork.CurrentRoom.MaxPlayers = (byte)ConectServer.RoomProperties.MaxPlayer;
             //タイトルで確立した情報で接続
-            PhotonNetwork.JoinOrCreateRoom(ConectServer.RoomProperties.RoomName, new RoomOptions(), TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom(ConectServer.RoomProperties.RoomName, roomOptions, TypedLobby.Default);
         }
         else
         {
             StartCoroutine(WaitDisconect());
         }
-
     }
 
     /// <summary>
@@ -112,16 +160,24 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks
         isInRoom = true;
         if (isMaster)
         {
-            PhotonNetwork.CurrentRoom.MaxPlayers = (byte)ConectServer.RoomProperties.MaxPlayer;
+            // ルームの参加人数を2人に設定する
+            //var roomOptions = new RoomOptions();
+            //roomOptions.MaxPlayers = ConectServer.RoomProperties.MaxPlayer;
+            //PhotonNetwork.CurrentRoom.MaxPlayers = (byte)ConectServer.RoomProperties.MaxPlayer;
+            Debug.Log("最大人数" + PhotonNetwork.CurrentRoom.MaxPlayers);
         }
         PhotonNetwork.AutomaticallySyncScene = true;
         Debug.Log("OnJoin");
 
 
         //カスタムプロパティの設定(GAMESTATUS).
-       // GAMESTATUS status = GAMESTATUS.NONE;
+        // GAMESTATUS status = GAMESTATUS.NONE;
 
         //customProperties["GameStatus"] = status;
+
+        string message = PhotonNetwork.NickName + "が入室しました";
+        photonView.RPC(nameof(PushChat), RpcTarget.All, message,YELLOW16);
+
         PhotonNetwork.CurrentRoom.SetCustomProperties(customProperties);
         customProperties.Clear();
     }
@@ -138,11 +194,12 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks
     /// </summary>
     void RoomStatusUpDate()
     {
-        //RoomNameText.text = ConectServer.RoomProperties.RoomName.ToString();
-        if (PhotonNetwork.CurrentRoom.PlayerCount >= PhotonNetwork.CurrentRoom.MaxPlayers)
-        {
-            PhotonNetwork.CurrentRoom.IsOpen = false;
-        }
+        roomNameText.text = "RoomName:" + ConectServer.RoomProperties.RoomName.ToString();
+        nowPlayerCountText.text = "プレイヤーの数:"+ PhotonNetwork.PlayerList.Length;
+        //if (PhotonNetwork.CurrentRoom.PlayerCount >= PhotonNetwork.CurrentRoom.MaxPlayers)
+        //{
+        //    //PhotonNetwork.CurrentRoom.IsOpen = false;
+        //}
 
         if (!isInRoom)
         {
@@ -153,12 +210,12 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks
             if (!isMaster)
             {
                 SceanMoveButton.interactable = false;
-                MessageText.text = "開始をまっています...\n下のキャラクターに触れると色を変更出来ます";
+                MessageText.text = "開始をまっています...";
             }
             else
             {
                 SceanMoveButton.interactable = true;
-                MessageText.text = "スペースキーを押すとゲームが始まります\n下のキャラクターに触れると色を変更出来ます";
+                MessageText.text = "スペースキーを押すとゲームが始まります";
             }
             SceanMoveButton.transform.GetChild(0).gameObject.GetComponent<Text>().text
             = "開始(" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + ")";
@@ -167,4 +224,30 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks
         }
     }
 
+    // ルームから退出した時に呼ばれるコールバック
+    public override void OnLeftRoom()
+    {
+        Debug.Log("ルームから退出しました");
+    }
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
+    {
+        string message = otherPlayer.NickName + "が退出しました";
+        photonView.RPC(nameof(PushChat), RpcTarget.All, message,RED16);
+        //Debug.Log(otherPlayer.NickName + "が退出しました。");
+    }
+
+    #region Photon関連(変数送信)
+    /// <summary>
+    /// PUNを使って変数を同期する.
+    /// </summary>
+    void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+        }
+        else
+        {
+        }
+    }
+#endregion
 }
