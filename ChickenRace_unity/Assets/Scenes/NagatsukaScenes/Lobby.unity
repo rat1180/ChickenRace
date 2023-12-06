@@ -1220,20 +1220,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcbacf937bfc88740b0a4a7c8de8190c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OutLineSettings:
-    Color: {r: 0, g: 0.66128135, b: 1, a: 0}
-    Thickness: 10
-    isLine: 0
-  InputButtonKeys:
-    Up: 0000000000000000
-    Down: 0000000000000000
-    Right: 0000000000000000
-    Left: 0000000000000000
-    Select: 0000000000000000
-  ButtonRows:
-  - Buttons:
-    - {fileID: 1132293655}
-  isForcePush: 0
 --- !u!114 &822286531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1246,7 +1232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5c1f3cabbf57354fb8ae6421ea2d8c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPlayer: 0
+  maxPlayer: 4
   ButtonRoot: {fileID: 1863561254}
   inputNickName: {fileID: 1193275983}
   roomNameDropdown: {fileID: 1226915291}

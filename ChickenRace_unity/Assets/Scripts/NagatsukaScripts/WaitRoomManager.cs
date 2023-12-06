@@ -18,6 +18,9 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField, Tooltip("ルーム名を表示するテキスト")] Text roomNameText;
     [SerializeField, Tooltip("ルーム名を表示するテキスト")] Text nowPlayerCountText;
 
+    public DataSharingClass dataSharingClass;//データ共有クラス.
+    public Text sharDataText;
+
     #region チャット関連
     [Header("チャット関連")]
     [SerializeField] InputField InputChat;
@@ -60,6 +63,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         if (isInRoom)
         {
             RoomStatusUpDate();
+            ShowDataSharing();
             if (Input.GetKeyDown(KeyCode.Space) && SceanMoveButton.IsInteractable())
             {
                 MoveGameScean();
@@ -97,6 +101,31 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         ChatLog.color = color;
     }
 
+    #endregion
+
+
+    #region データ共有クラス関連
+
+    /// <summary>
+    /// データ共有クラスが生成された際、この関数を呼んで値を入れる.
+    /// </summary>
+    public void PushDataSharingClass(GameObject gameObject)
+    {
+        dataSharingClass = gameObject.GetComponent<DataSharingClass>();
+    }
+    /// <summary>
+    /// DataSharingClassの値をテキストに表示する関数.
+    /// </summary>
+    private void ShowDataSharing()
+    {
+        if (dataSharingClass == null) return;//生成出来ていなかったら関数を終了.
+        for(int i = 0; i < PhotonNetwork.PlayerList.Length; i++)//現在いる人数分ループする.
+        {
+            sharDataText.text = "ID:" + dataSharingClass.ID[i].ToString() +
+                                "　Score:" + dataSharingClass.score[i].ToString() + "\n";
+        }
+        
+    }
     #endregion
 
     /// <summary>
@@ -165,6 +194,8 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
             //roomOptions.MaxPlayers = ConectServer.RoomProperties.MaxPlayer;
             //PhotonNetwork.CurrentRoom.MaxPlayers = (byte)ConectServer.RoomProperties.MaxPlayer;
             Debug.Log("最大人数" + PhotonNetwork.CurrentRoom.MaxPlayers);
+            var obj = PhotonNetwork.Instantiate("NagatsukaObjects/DataSharingClass", Vector3.zero, Quaternion.identity);//データ共有クラスを生成する.
+            obj.SetActive(true);
         }
         PhotonNetwork.AutomaticallySyncScene = true;
         Debug.Log("OnJoin");
