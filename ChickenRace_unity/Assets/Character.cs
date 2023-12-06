@@ -23,7 +23,7 @@ public class Character : MonoBehaviourPun, IPunObservable
     /// </summary>
     private void TargetMove()
     {
-        transform.position = Vector3.Lerp(transform.position, targetPos, 1.0f);
+        transform.position = Vector3.Lerp(transform.position, targetPos, 10.0f * Time.fixedDeltaTime);
     }
 
     /// <summary>
