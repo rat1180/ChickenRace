@@ -6,37 +6,41 @@ using UnityEngine.Events;
 public class Obstacle_Arrow : Obstacle
 {
     [SerializeField]
-    float ShotCnt;
+    float shotCnt;
 
     [SerializeField]
-    bool ShotFlg;
+    bool isShotFlg;
 
     /// <summary>
     /// èâä˙âª
     /// </summary>
     public override void Init()
     {
-        ObstacleCenterPos = new Vector2Int(0, 0);
-        ShotCnt = 3.0f;
-        ShotFlg = false;
+        obstacleCenterPos = new Vector2Int(0, 0);
+        shotCnt = 3.0f;
+        isShotFlg = true;
     }
     public override void update()
     {
-        ShotCnt -= Time.deltaTime;
-        if (ShotCnt < 0.0f)
+        if (isShotFlg)
         {
-            ShotFlg = true;
+            ObjStart();
         }
     }
     public override void ObjStart()
     {
-        if(ShotFlg)
+        if (shotCnt > 0.0f)
+        {
+            shotCnt -= Time.deltaTime;
+        }
+        if (shotCnt < 0.0f)
         {
             ShotObj();
         }
     }
     void ShotObj()
     {
+        isShotFlg = false;
         Debug.Log("î≠éÀ");
     }
 }

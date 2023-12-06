@@ -5,18 +5,18 @@ using UnityEngine.Events;
 
 public class Obstacle : MonoBehaviour
 {
-    protected Vector2Int ObstacleCenterPos; // 中心グリッド位置
+    protected Vector2Int obstacleCenterPos; // 中心グリッド位置
     [SerializeField]
-    List<Vector2Int> CollisionList; // 相対グリッド
+    List<Vector2Int> collisionList; // 相対グリッド
 
     [SerializeField]
-    int ObstacleID; // 障害物のID
+    int obstacleID; // 障害物のID
     [SerializeField]
-    int ObstacleKindID; // 種類のID
+    int obstacleKindID; // 種類のID
     [SerializeField]
-    int MyRotation; // 回転
+    int myRotation; // 回転
     [SerializeField]
-    UnityEvent UE; // イベント関数
+    UnityEvent ue; // イベント関数
     void Awake()
     {
         Init();
@@ -26,7 +26,7 @@ public class Obstacle : MonoBehaviour
     /// </summary>
     public virtual void Init()
     {
-        ObstacleCenterPos = new Vector2Int(0, 0);
+        obstacleCenterPos = new Vector2Int(0, 0);
     }
     // Update is called once per frame
     void Update()
@@ -43,7 +43,7 @@ public class Obstacle : MonoBehaviour
     /// <param name="rot"></param>
     public void Generation(int rot)
     {
-        MyRotation = rot;
+        myRotation = rot;
     }
     /// <summary>
     /// 破壊
@@ -55,7 +55,7 @@ public class Obstacle : MonoBehaviour
     }
     List<Vector2Int> Seter()
     {
-        return CollisionList;
+        return collisionList;
     }
     public virtual void ObjStart()
     {
