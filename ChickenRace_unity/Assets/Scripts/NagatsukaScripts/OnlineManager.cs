@@ -13,8 +13,8 @@ public class OnlineManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("ルームから退出しました");
     }
-    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
-    {
-        Debug.Log(otherPlayer + "が退出しました。");
-    }
+    //public override void OnPlayerLeftRoom(Player otherPlayer)
+    //{
+    //    Debug.Log(otherPlayer + "が退出しました。");
+    //}
 }
