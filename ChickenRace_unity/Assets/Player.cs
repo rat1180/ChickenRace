@@ -1,8 +1,10 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ConstList;
+using Photon.Pun;
 
 public class Player : MonoBehaviour
 { 
@@ -14,36 +16,45 @@ public class Player : MonoBehaviour
     [SerializeField] float minMoveSpeed;    // 最小移動力.
     [SerializeField] float maxMoveSpeed;    // 最大移動力.
     [SerializeField] float moveDecay;       // 移動減衰値.
-    [SerializeField] bool isJump;           // ジャンプできるかどうか.
     [SerializeField] float jumpPower;       // ジャンプ力.
     [SerializeField] Vector2 wallJumpPower; // 壁キックの力.
+    [SerializeField] float wallSlidingSpeed;// 壁滑りのスピード.
     [SerializeField] HitDirList nowHitDir;  // プレイヤーがオブジェクトとどの向きで衝突したか.
     [SerializeField] PlayerAction nowPlayerAction;  // プレイヤーが何の行動をしているか.
+    [SerializeField] GameObject playerImage; // プレイヤーの画像.
+    [SerializeField] GameObject instanceObj; // 生成したオブジェクト.
 
     /// <summary>
     /// 初期化用関数.
     /// </summary>
     private void Init()
     {
+        rb = GetComponent<Rigidbody2D>();
         nowHitDir = HitDirList.NONE;
         nowPlayerAction = PlayerAction.NONE;
+        ImageInstance();
     }
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
         Init();
     }
 
     void FixedUpdate()
     {
         PlayerMove();
+        WallSliding();
+        PlayerTransform();
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        isJump = true;
         DirectionCheck(collision.contacts[0].point);
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        nowHitDir = HitDirList.NONE;
     }
 
     /// <summary>
@@ -80,23 +91,38 @@ public class Player : MonoBehaviour
     /// </summary>
     private void OnJump()
     {
-        if(isJump == true)
+        if(nowHitDir != HitDirList.NONE)
         {
             nowPlayerAction = PlayerAction.WALLJUMP;
             switch (nowHitDir)
             {
                 case HitDirList.HIT_RIGHT:
                     rb.AddForce(new Vector2(-wallJumpPower.x, wallJumpPower.y) * jumpPower, ForceMode2D.Impulse);
+                    nowPlayerAction = PlayerAction.WALLJUMP;
                     break;
                 case HitDirList.HIT_LEFT:
                     rb.AddForce(new Vector2(wallJumpPower.x, wallJumpPower.y) * jumpPower, ForceMode2D.Impulse);
+                    nowPlayerAction = PlayerAction.WALLJUMP;
                     break;
                 case HitDirList.HIT_DOWN:
                     rb.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
+                    nowPlayerAction = PlayerAction.JUMP;
                     break;
             }
+        }
+    }
 
-            isJump = false;
+    /// <summary>
+    /// 壁滑り処理.
+    /// </summary>
+    private void WallSliding()
+    {
+        switch (nowHitDir)
+        {
+            case HitDirList.HIT_RIGHT:
+            case HitDirList.HIT_LEFT:
+                rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y - wallSlidingSpeed * Time.deltaTime, 0);
+                break;
         }
     }
 
@@ -150,5 +176,21 @@ public class Player : MonoBehaviour
     public PlayerAction GetPlayerAction()
     {
         return nowPlayerAction;
+    }
+
+    /// <summary>
+    /// 画像の生成.
+    /// </summary>
+    private void ImageInstance()
+    {
+        instanceObj = PhotonNetwork.Instantiate("PlayerImage", transform.position, transform.rotation);
+    }
+
+    /// <summary>
+    /// プレイヤーの座標をセット.
+    /// </summary>
+    private void PlayerTransform()
+    {
+        instanceObj.GetComponent<Character>().PositionUpdate(transform.position);
     }
 }

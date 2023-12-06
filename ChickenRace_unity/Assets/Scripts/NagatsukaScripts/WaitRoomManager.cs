@@ -43,8 +43,12 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     //現在部屋にいるプレイヤーの数
     public int nowPlayers;
 
+    private bool createPlayerFlg;//プレイヤーを生成したか判定.
+
     //ルームのカスタムプロパティを設定する為の宣言.
     ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
+
+    public GameObject player;
 
     #region Unityイベント(Start・Update)
     // Start is called before the first frame update
@@ -54,6 +58,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         isMaster = false;
         isInRoom = false;
         isStart = false;
+        createPlayerFlg = false;
         TryRoomJoin();
     }
 
@@ -247,6 +252,11 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 SceanMoveButton.interactable = true;
                 MessageText.text = "スペースキーを押すとゲームが始まります";
+            }
+            if (!createPlayerFlg)
+            {
+                Instantiate(player, Vector3.zero, Quaternion.identity);//Playerを生成する.
+                createPlayerFlg = true;
             }
             SceanMoveButton.transform.GetChild(0).gameObject.GetComponent<Text>().text
             = "開始(" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + ")";
