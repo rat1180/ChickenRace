@@ -230,7 +230,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         Debug.Log("ƒ‹[ƒ€‚©‚ç‘Şo‚µ‚Ü‚µ‚½");
     }
-    public override void OnPlayerLeftRoom(Player otherPlayer)
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
         string message = otherPlayer.NickName + "‚ª‘Şo‚µ‚Ü‚µ‚½";
         photonView.RPC(nameof(PushChat), RpcTarget.All, message,RED16);
