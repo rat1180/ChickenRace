@@ -24,23 +24,24 @@ public class Obstacle_Arrow : Obstacle
     {
         if (isShotFlg)
         {
-            ObjStart();
+            if (shotCnt > 0.0f)
+            {
+                shotCnt -= Time.deltaTime;
+            }
+            if (shotCnt < 0.0f)
+            {
+                ShotObj();
+                shotCnt = 3.0f;
+            }
         }
     }
     public override void ObjStart()
     {
-        if (shotCnt > 0.0f)
-        {
-            shotCnt -= Time.deltaTime;
-        }
-        if (shotCnt < 0.0f)
-        {
-            ShotObj();
-        }
+        shotCnt = 3.0f;
+        isShotFlg = true;
     }
     void ShotObj()
     {
-        isShotFlg = false;
         Debug.Log("”­ŽË");
     }
 }
