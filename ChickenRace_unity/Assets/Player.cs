@@ -14,7 +14,6 @@ public class Player : MonoBehaviour
     [SerializeField] float minMoveSpeed;    // 最小移動力.
     [SerializeField] float maxMoveSpeed;    // 最大移動力.
     [SerializeField] float moveDecay;       // 移動減衰値.
-    [SerializeField] bool isJump;           // ジャンプできるかどうか.
     [SerializeField] float jumpPower;       // ジャンプ力.
     [SerializeField] Vector2 wallJumpPower; // 壁キックの力.
     [SerializeField] float wallSlidingSpeed;// 壁滑りのスピード.
@@ -44,7 +43,6 @@ public class Player : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        isJump = true;
         DirectionCheck(collision.contacts[0].point);
     }
 
@@ -87,7 +85,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void OnJump()
     {
-        if(isJump == true)
+        if(nowHitDir != HitDirList.NONE)
         {
             nowPlayerAction = PlayerAction.WALLJUMP;
             switch (nowHitDir)
@@ -105,8 +103,6 @@ public class Player : MonoBehaviour
                     nowPlayerAction = PlayerAction.JUMP;
                     break;
             }
-
-            isJump = false;
         }
     }
 
