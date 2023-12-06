@@ -647,7 +647,7 @@ MonoBehaviour:
   maxMoveSpeed: 10
   moveDecay: 0.8
   jumpPower: 10
-  wallJumpPower: {x: 2.5, y: 1.5}
+  wallJumpPower: {x: 2, y: 1}
   wallSlidingSpeed: 15
   nowHitDir: 0
   nowPlayerAction: 0

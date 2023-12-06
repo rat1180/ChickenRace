@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class Character : MonoBehaviour
+public class Character : MonoBehaviourPun, IPunObservable
 {
     Vector3 targetPos;
     
@@ -20,7 +22,7 @@ public class Character : MonoBehaviour
     /// プレイヤーの追従.
     /// </summary>
     private void TargetMove()
-    {   
+    {
         transform.position = Vector3.Lerp(transform.position, targetPos, 1.0f);
     }
 
@@ -31,5 +33,19 @@ public class Character : MonoBehaviour
     public void PositionUpdate(Vector3 targetpos)
     {
         targetPos = targetpos;
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            // プレイヤーオブジェクトの位置情報を送信
+            stream.SendNext(targetPos);
+        }
+        else
+        {
+            // プレイヤーオブジェクトの位置情報を受信
+            targetPos = (Vector3)stream.ReceiveNext();
+        }
     }
 }

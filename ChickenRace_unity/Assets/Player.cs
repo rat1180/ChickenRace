@@ -1,8 +1,10 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ConstList;
+using Photon.Pun;
 
 public class Player : MonoBehaviour
 { 
@@ -181,7 +183,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void ImageInstance()
     {
-        instanceObj = Instantiate(playerImage, transform.position, transform.rotation);
+        instanceObj = PhotonNetwork.Instantiate("PlayerImage", transform.position, transform.rotation);
     }
 
     /// <summary>
