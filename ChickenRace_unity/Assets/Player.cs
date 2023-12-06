@@ -19,19 +19,22 @@ public class Player : MonoBehaviour
     [SerializeField] float wallSlidingSpeed;// 壁滑りのスピード.
     [SerializeField] HitDirList nowHitDir;  // プレイヤーがオブジェクトとどの向きで衝突したか.
     [SerializeField] PlayerAction nowPlayerAction;  // プレイヤーが何の行動をしているか.
+    [SerializeField] GameObject playerImage; // プレイヤーの画像.
+    [SerializeField] GameObject instanceObj; // 生成したオブジェクト.
 
     /// <summary>
     /// 初期化用関数.
     /// </summary>
     private void Init()
     {
+        rb = GetComponent<Rigidbody2D>();
         nowHitDir = HitDirList.NONE;
         nowPlayerAction = PlayerAction.NONE;
+        ImageInstance();
     }
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
         Init();
     }
 
@@ -39,6 +42,7 @@ public class Player : MonoBehaviour
     {
         PlayerMove();
         WallSliding();
+        PlayerTransform();
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -170,5 +174,21 @@ public class Player : MonoBehaviour
     public PlayerAction GetPlayerAction()
     {
         return nowPlayerAction;
+    }
+
+    /// <summary>
+    /// 画像の生成.
+    /// </summary>
+    private void ImageInstance()
+    {
+        instanceObj = Instantiate(playerImage, transform.position, transform.rotation);
+    }
+
+    /// <summary>
+    /// プレイヤーの座標をセット.
+    /// </summary>
+    private void PlayerTransform()
+    {
+        instanceObj.GetComponent<Character>().PositionUpdate(transform.position);
     }
 }

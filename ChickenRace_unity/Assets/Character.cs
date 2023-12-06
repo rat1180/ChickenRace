@@ -5,6 +5,7 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     Vector3 targetPos;
+    
     void Start()
     {
         
@@ -15,14 +16,20 @@ public class Character : MonoBehaviour
         TargetMove();
     }
 
+    /// <summary>
+    /// プレイヤーの追従.
+    /// </summary>
     private void TargetMove()
-    {
-        Vector3 CharaPos = targetPos - transform.position;
-        transform.position = CharaPos;
+    {   
+        transform.position = Vector3.Lerp(transform.position, targetPos, 1.0f);
     }
 
-    public void PositionUpdate(Vector3 TargetPos)
+    /// <summary>
+    /// プレイヤーから座標を取得.
+    /// </summary>
+    /// <param name="TargetPos"></param>
+    public void PositionUpdate(Vector3 targetpos)
     {
-        targetPos = TargetPos;
+        targetPos = targetpos;
     }
 }
