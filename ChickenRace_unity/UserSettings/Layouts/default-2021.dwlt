@@ -8,11 +8,7 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
-<<<<<<< HEAD
-  m_EditorHideFlags: 0
-=======
   m_EditorHideFlags: 1
->>>>>>> origin/develop/Nojiri
   m_Script: {fileID: 12004, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
   m_EditorClassIdentifier: 
@@ -24,7 +20,11 @@ MonoBehaviour:
     height: 780.8
   m_ShowMode: 4
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_Title: Scene
+=======
+  m_Title: Console
+>>>>>>> origin/develop/Nojiri
 =======
   m_Title: Console
 >>>>>>> origin/develop/Nojiri
@@ -57,7 +57,11 @@ MonoBehaviour:
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
 <<<<<<< HEAD
+<<<<<<< HEAD
   controlID: 112
+=======
+  controlID: 71
+>>>>>>> origin/develop/Nojiri
 =======
   controlID: 71
 >>>>>>> origin/develop/Nojiri
@@ -81,12 +85,14 @@ MonoBehaviour:
     width: 364
     height: 730.8
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_MinSize: {x: 276, y: 71}
   m_MaxSize: {x: 4001, y: 4021}
 =======
+=======
+>>>>>>> origin/develop/Nojiri
   m_MinSize: {x: 275, y: 50}
   m_MaxSize: {x: 4000, y: 4000}
->>>>>>> origin/develop/Nojiri
   m_ActualView: {fileID: 13}
   m_Panes:
   - {fileID: 13}
@@ -111,14 +117,16 @@ MonoBehaviour:
     y: 0
     width: 290.4
 <<<<<<< HEAD
+<<<<<<< HEAD
     height: 432
   m_MinSize: {x: 201, y: 221}
   m_MaxSize: {x: 4001, y: 4021}
 =======
+=======
+>>>>>>> origin/develop/Nojiri
     height: 432.8
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
->>>>>>> origin/develop/Nojiri
   m_ActualView: {fileID: 14}
   m_Panes:
   - {fileID: 14}
@@ -134,16 +142,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-<<<<<<< HEAD
-  m_Name: ProjectBrowser
-=======
   m_Name: ConsoleWindow
->>>>>>> origin/develop/Nojiri
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
     serializedVersion: 2
     x: 0
+<<<<<<< HEAD
 <<<<<<< HEAD
     y: 432
     width: 1172
@@ -157,6 +162,8 @@ MonoBehaviour:
   m_Selected: 0
   m_LastSelected: 1
 =======
+=======
+>>>>>>> origin/develop/Nojiri
     y: 432.8
     width: 1172
     height: 298
@@ -168,7 +175,6 @@ MonoBehaviour:
   - {fileID: 17}
   m_Selected: 1
   m_LastSelected: 0
->>>>>>> origin/develop/Nojiri
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -265,7 +271,11 @@ MonoBehaviour:
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
 <<<<<<< HEAD
+<<<<<<< HEAD
   controlID: 117
+=======
+  controlID: 72
+>>>>>>> origin/develop/Nojiri
 =======
   controlID: 72
 >>>>>>> origin/develop/Nojiri
@@ -290,17 +300,23 @@ MonoBehaviour:
     y: 0
     width: 1172
 <<<<<<< HEAD
+<<<<<<< HEAD
     height: 432
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
   controlID: 118
 =======
+=======
+>>>>>>> origin/develop/Nojiri
     height: 432.8
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
   controlID: 73
+<<<<<<< HEAD
+>>>>>>> origin/develop/Nojiri
+=======
 >>>>>>> origin/develop/Nojiri
 --- !u!114 &11
 MonoBehaviour:
@@ -321,14 +337,16 @@ MonoBehaviour:
     y: 0
     width: 881.6
 <<<<<<< HEAD
+<<<<<<< HEAD
     height: 432
   m_MinSize: {x: 202, y: 221}
   m_MaxSize: {x: 4002, y: 4021}
 =======
+=======
+>>>>>>> origin/develop/Nojiri
     height: 432.8
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
->>>>>>> origin/develop/Nojiri
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -357,9 +375,15 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
 <<<<<<< HEAD
+<<<<<<< HEAD
     y: 505.6
     width: 1171
     height: 277.8
+=======
+    y: 506.4
+    width: 1171
+    height: 277
+>>>>>>> origin/develop/Nojiri
 =======
     y: 506.4
     width: 1171
@@ -383,7 +407,11 @@ MonoBehaviour:
     m_SearchArea: 1
     m_Folders:
 <<<<<<< HEAD
+<<<<<<< HEAD
     - Assets/Scenes
+=======
+    - Assets/Resources
+>>>>>>> origin/develop/Nojiri
 =======
     - Assets/Resources
 >>>>>>> origin/develop/Nojiri
@@ -392,6 +420,7 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
+<<<<<<< HEAD
 <<<<<<< HEAD
   - Assets/Scenes
   m_LastFoldersGridSize: -1
@@ -408,6 +437,8 @@ MonoBehaviour:
       m_Name: NojiriScripts
       m_OriginalName: NojiriScripts
 =======
+=======
+>>>>>>> origin/develop/Nojiri
   - Assets/Resources
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\nwuser.DA\Documents\Unity Projects\ChickenRace\ChickenRace_unity
@@ -422,28 +453,18 @@ MonoBehaviour:
       m_UserAcceptedRename: 0
       m_Name: 
       m_OriginalName: 
->>>>>>> origin/develop/Nojiri
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-<<<<<<< HEAD
-      m_UserData: 26504
-      m_IsWaitingForDelay: 0
-      m_IsRenaming: 0
-      m_OriginalEventType: 0
-      m_IsRenamingFilename: 1
-      m_ClientGUIView: {fileID: 5}
-=======
       m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 0}
->>>>>>> origin/develop/Nojiri
     m_SearchString: 
     m_CreateAssetUtility:
       m_EndAction: {fileID: 0}
@@ -456,7 +477,11 @@ MonoBehaviour:
     m_SelectedIDs: 
     m_LastClickedID: 0
 <<<<<<< HEAD
+<<<<<<< HEAD
     m_ExpandedIDs: 000000008667000000ca9a3b
+=======
+    m_ExpandedIDs: 000000002464000026640000
+>>>>>>> origin/develop/Nojiri
 =======
     m_ExpandedIDs: 000000002464000026640000
 >>>>>>> origin/develop/Nojiri
@@ -485,6 +510,7 @@ MonoBehaviour:
       m_ResourceFile: 
   m_ListAreaState:
 <<<<<<< HEAD
+<<<<<<< HEAD
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 0
@@ -494,6 +520,8 @@ MonoBehaviour:
       m_Name: Saito
       m_OriginalName: Saito
 =======
+=======
+>>>>>>> origin/develop/Nojiri
     m_SelectedInstanceIDs: 78650000
     m_LastClickedInstanceID: 25976
     m_HadKeyboardFocusLastEvent: 1
@@ -502,24 +530,16 @@ MonoBehaviour:
       m_UserAcceptedRename: 0
       m_Name: 
       m_OriginalName: 
->>>>>>> origin/develop/Nojiri
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-<<<<<<< HEAD
-      m_UserData: 41630
-      m_IsWaitingForDelay: 0
-      m_IsRenaming: 0
-      m_OriginalEventType: 0
-=======
       m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 11
->>>>>>> origin/develop/Nojiri
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 5}
     m_CreateAssetUtility:
@@ -598,7 +618,11 @@ MonoBehaviour:
     y: 73.6
     width: 289.4
 <<<<<<< HEAD
+<<<<<<< HEAD
     height: 411
+=======
+    height: 411.8
+>>>>>>> origin/develop/Nojiri
 =======
     height: 411.8
 >>>>>>> origin/develop/Nojiri
@@ -610,6 +634,7 @@ MonoBehaviour:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
 <<<<<<< HEAD
+<<<<<<< HEAD
       m_SelectedIDs: 
       m_LastClickedID: 0
       m_ExpandedIDs: 0ac7ffff72c7ffff84d9ffff34dbffff
@@ -618,6 +643,8 @@ MonoBehaviour:
         m_Name: 
         m_OriginalName: 
 =======
+=======
+>>>>>>> origin/develop/Nojiri
       m_SelectedIDs: 78650000
       m_LastClickedID: 25976
       m_ExpandedIDs: 32f9ffff74f9ffff1efbffff
@@ -625,6 +652,9 @@ MonoBehaviour:
         m_UserAcceptedRename: 0
         m_Name: ObjectManager
         m_OriginalName: ObjectManager
+<<<<<<< HEAD
+>>>>>>> origin/develop/Nojiri
+=======
 >>>>>>> origin/develop/Nojiri
         m_EditFieldRect:
           serializedVersion: 2
@@ -633,15 +663,21 @@ MonoBehaviour:
           width: 0
           height: 0
 <<<<<<< HEAD
+<<<<<<< HEAD
         m_UserData: 0
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
         m_OriginalEventType: 11
 =======
+=======
+>>>>>>> origin/develop/Nojiri
         m_UserData: 25976
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
         m_OriginalEventType: 0
+<<<<<<< HEAD
+>>>>>>> origin/develop/Nojiri
+=======
 >>>>>>> origin/develop/Nojiri
         m_IsRenamingFilename: 0
         m_ClientGUIView: {fileID: 4}
@@ -676,7 +712,11 @@ MonoBehaviour:
     y: 73.6
     width: 879.6
 <<<<<<< HEAD
+<<<<<<< HEAD
     height: 411
+=======
+    height: 411.8
+>>>>>>> origin/develop/Nojiri
 =======
     height: 411.8
 >>>>>>> origin/develop/Nojiri
@@ -733,7 +773,11 @@ MonoBehaviour:
       floating: 0
       collapsed: 0
 <<<<<<< HEAD
+<<<<<<< HEAD
       displayed: 0
+=======
+      displayed: 1
+>>>>>>> origin/develop/Nojiri
 =======
       displayed: 1
 >>>>>>> origin/develop/Nojiri
@@ -908,9 +952,15 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_Position:
 <<<<<<< HEAD
+<<<<<<< HEAD
     m_Target: {x: -7.7618594, y: 0.508635, z: -0.07001443}
     speed: 2
     m_Value: {x: -7.7618594, y: 0.508635, z: -0.07001443}
+=======
+    m_Target: {x: 2.8960278, y: 1.292761, z: 0.013936443}
+    speed: 2
+    m_Value: {x: 2.8960278, y: 1.292761, z: 0.013936443}
+>>>>>>> origin/develop/Nojiri
 =======
     m_Target: {x: 2.8960278, y: 1.292761, z: 0.013936443}
     speed: 2
@@ -933,7 +983,11 @@ MonoBehaviour:
     showParticleSystems: 1
     showVisualEffectGraphs: 1
 <<<<<<< HEAD
+<<<<<<< HEAD
     m_FxEnabled: 1
+=======
+    m_FxEnabled: 0
+>>>>>>> origin/develop/Nojiri
 =======
     m_FxEnabled: 0
 >>>>>>> origin/develop/Nojiri
@@ -971,9 +1025,15 @@ MonoBehaviour:
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
 <<<<<<< HEAD
+<<<<<<< HEAD
     m_Target: 23.500387
     speed: 2
     m_Value: 23.500387
+=======
+    m_Target: 8.735115
+    speed: 2
+    m_Value: 8.735115
+>>>>>>> origin/develop/Nojiri
 =======
     m_Target: 8.735115
     speed: 2
@@ -1027,7 +1087,11 @@ MonoBehaviour:
     y: 73.6
     width: 879.6
 <<<<<<< HEAD
+<<<<<<< HEAD
     height: 411
+=======
+    height: 411.8
+>>>>>>> origin/develop/Nojiri
 =======
     height: 411.8
 >>>>>>> origin/develop/Nojiri
@@ -1039,7 +1103,11 @@ MonoBehaviour:
   m_SerializedViewValues: []
   m_PlayModeViewName: GameView
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_ShowGizmos: 1
+=======
+  m_ShowGizmos: 0
+>>>>>>> origin/develop/Nojiri
 =======
   m_ShowGizmos: 0
 >>>>>>> origin/develop/Nojiri
@@ -1053,7 +1121,11 @@ MonoBehaviour:
   m_UseMipMap: 0
   m_VSyncEnabled: 0
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_Gizmos: 1
+=======
+  m_Gizmos: 0
+>>>>>>> origin/develop/Nojiri
 =======
   m_Gizmos: 0
 >>>>>>> origin/develop/Nojiri
@@ -1087,9 +1159,15 @@ MonoBehaviour:
       y: 21
       width: 879.6
 <<<<<<< HEAD
+<<<<<<< HEAD
       height: 390
     m_Scale: {x: 0.4513889, y: 0.4513889}
     m_Translation: {x: 439.8, y: 195}
+=======
+      height: 390.8
+    m_Scale: {x: 0.4523148, y: 0.4523148}
+    m_Translation: {x: 439.8, y: 195.4}
+>>>>>>> origin/develop/Nojiri
 =======
       height: 390.8
     m_Scale: {x: 0.4523148, y: 0.4523148}
@@ -1102,6 +1180,7 @@ MonoBehaviour:
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
 <<<<<<< HEAD
+<<<<<<< HEAD
       x: -974.3261
       y: -432
       width: 1948.6522
@@ -1110,6 +1189,8 @@ MonoBehaviour:
   m_defaultScale: 0.4513889
   m_LastWindowPixelSize: {x: 1099.5, y: 513.75}
 =======
+=======
+>>>>>>> origin/develop/Nojiri
       x: -972.33167
       y: -432
       width: 1944.6633
@@ -1117,6 +1198,9 @@ MonoBehaviour:
     m_MinimalGUI: 1
   m_defaultScale: 0.4523148
   m_LastWindowPixelSize: {x: 1099.5, y: 514.75}
+<<<<<<< HEAD
+>>>>>>> origin/develop/Nojiri
+=======
 >>>>>>> origin/develop/Nojiri
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
@@ -1145,9 +1229,15 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
 <<<<<<< HEAD
+<<<<<<< HEAD
     y: 505.6
     width: 1171
     height: 277.8
+=======
+    y: 506.4
+    width: 1171
+    height: 277
+>>>>>>> origin/develop/Nojiri
 =======
     y: 506.4
     width: 1171

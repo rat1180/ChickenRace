@@ -1,4 +1,3 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -71,21 +70,22 @@ public class PlayerMouse : MonoBehaviour
     private void OnClick()
     {
         // Debug.Log("クリック");
-        
-        if(User.GetComponent<User>().SetMode() == false)
-        {
-            // 選択フェーズ.
-        }
-        else
-        {
-            // 設置フェーズ.
-        }
+
+        //if (User.GetComponent<User>().SetMode() == false)
+        //{
+        //    // 選択フェーズ.
+           
+        //}
+        //else
+        //{
+        //    // 設置フェーズ.
+        //}
 
         // アイテムが設置可能なら.
         if (isInstalled == false)
         {
             // アイテムの生成.
-           Map.GetComponent<MapManager>().GenerateMapObject(0, gridPos);
+           Map.GetComponent<MapManager>().GenerateMapObject(0,saveAngle, gridPos);
         }
         else
         {
@@ -111,19 +111,11 @@ public class PlayerMouse : MonoBehaviour
     }
 
     /// <summary>
-    /// オブジェクトを回転させる.
-    /// </summary>
-    public float SetObjRotation()
-    {
-        return saveAngle;
-    }
-
-    /// <summary>
     /// オブジェクト左回転用
     /// </summary>
     private void OnLeftRotate()
     {
-        saveAngle -= angle;
+        saveAngle += angle;
     }
 
     /// <summary>
@@ -131,6 +123,6 @@ public class PlayerMouse : MonoBehaviour
     /// </summary>
     private void OnRightRotate()
     {
-        saveAngle += angle;
+        saveAngle -= angle;
     }
 }

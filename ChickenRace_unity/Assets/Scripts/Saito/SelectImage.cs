@@ -22,7 +22,7 @@ public class SelectImage : MonoBehaviour
     /// <returns></returns>
     public int GetItemId()
     {
-        return itemid;
+        return itemId;
     }
 
     /// <summary>
