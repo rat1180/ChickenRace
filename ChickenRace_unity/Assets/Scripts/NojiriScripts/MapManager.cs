@@ -8,7 +8,7 @@ public class MapManager : MonoBehaviour
     public Vector3Int gridPos; // テスト用設置位置
 
     [SerializeField] private GameObject gameObject; // 移動したいオブジェクトの情報取得
-    [SerializeField] private List<GameObject> InstalledList; // 設置した障害物リスト
+    [SerializeField] private List<int> InstalledList; // 設置した障害物リスト
     [SerializeField] private List<Vector2Int> UsedGridList;   // 使用済みグリッドの位置リスト
     [SerializeField] private Tilemap tilemap;
 
@@ -25,20 +25,15 @@ public class MapManager : MonoBehaviour
     void Update()
     {
         // テスト用
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.X))
         {
             CreativeModeStart();
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             CreativeModeEnd();
         }
-
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    GenerateMapObject();
-        //}
     }
 
     /// <summary>
@@ -47,7 +42,7 @@ public class MapManager : MonoBehaviour
     private void MapInit()
     {
         // リストの初期化
-        InstalledList = new List<GameObject>();
+        InstalledList = new List<int>();
         UsedGridList = new List<Vector2Int>();
     }
 
@@ -72,15 +67,6 @@ public class MapManager : MonoBehaviour
         }
 
         Debug.Log("コルーチン終了");
-    }
-
-    /// <summary>
-    /// 設置位置確定メソッド
-    /// 設置が確定した場合、設置位置を送る
-    /// </summary>
-    private Vector3 ConfirmPosition()
-    {
-        return Input.mousePosition;
     }
 
     #region 外部用メソッド
@@ -154,36 +140,14 @@ public class MapManager : MonoBehaviour
         }
 
         // カーソルの位置に障害物を生成
-        GameObject gameObj = (GameObject)Resources.Load("Square"); // 仮のSquare
-
-        // ワールド座標のマウス座標を取得
-        // Mathf.RoundToIntでVector3からVector2Intに変換予定
-        //Vector3 installPos = Camera.main.ScreenToWorldPoint(gridPos);
-        Vector3 installPos = Camera.main.ScreenToWorldPoint(Input.mousePosition); //テスト
-
-        // テスト
-        //Vector3Int installPos;
-        //gridPos = tilemap.WorldToCell(installPos);
-        //Vector3 complementPos = new Vector3(tilemap.cellSize.x / 2, tilemap.cellSize.y / 2, 0);
-        //Vector3 worldPos = tilemap.CellToWorld(gridPos) + complementPos;
-        //今選択している場所にオブジェクトを移動させる。
-        //gameObj.transform.position = worldPos;
-
-        // 座標を四捨五入、生成位置のz軸が勝手に-10されるため、0に設定しておく
-        Vector2Int installPosInt;
-        installPosInt = gridPos;
-        //installPosInt = new Vector2Int(Mathf.RoundToInt(installPos.x), Mathf.RoundToInt(installPos.y));
-        //installPos.y = Mathf.RoundToInt(installPos.y);
-        //installPos.z = 0f;
+        GameObject gameObj = (GameObject)Resources.Load("Square"); // 仮Square
 
         // 障害物の生成
-        Instantiate(gameObj, new Vector3(installPosInt.x, installPosInt.y, 0f), Quaternion.identity);
+        Instantiate(gameObj, new Vector3(gridPos.x, gridPos.y), Quaternion.identity);
 
-        Debug.Log(installPos);
-
-        // 設置したオブジェクトをリストに追加
-        InstalledList.Add(gameObj);
-        UsedGridList.Add(installPosInt);
+        // 設置したオブジェクトIDと位置をリストに追加
+        InstalledList.Add(id);
+        UsedGridList.Add(gridPos);
     }
     #endregion
 }
