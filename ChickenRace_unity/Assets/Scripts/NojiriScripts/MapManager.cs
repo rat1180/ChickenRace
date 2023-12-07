@@ -1,16 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class MapManager : MonoBehaviour
 {
-    //public Vector2 movePos;    // 移動したい座標　テスト用
+    public Vector3Int gridPos; // テスト用設置位置
 
     [SerializeField] private GameObject gameObject; // 移動したいオブジェクトの情報取得
-    [SerializeField] private List<GameObject> InstalledList; // 設置した障害物リスト
+    [SerializeField] private List<int> InstalledList; // 設置した障害物リスト
     [SerializeField] private List<Vector2Int> UsedGridList;   // 使用済みグリッドの位置リスト
+    [SerializeField] private Tilemap tilemap;
 
-    private bool isRunning = false;  // コルーチン実行判定フラグ
+    private bool isRunning = false; // コルーチン実行判定フラグ
     private bool isInstall = false; // 設置フラグ
 
     // Start is called before the first frame update
@@ -22,20 +24,15 @@ public class MapManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // テスト
-        if (Input.GetKeyDown(KeyCode.S))
+        // テスト用
+        if (Input.GetKeyDown(KeyCode.X))
         {
             CreativeModeStart();
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             CreativeModeEnd();
-        }
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            GenerateMapObject();
         }
     }
 
@@ -45,7 +42,7 @@ public class MapManager : MonoBehaviour
     private void MapInit()
     {
         // リストの初期化
-        InstalledList = new List<GameObject>();
+        InstalledList = new List<int>();
         UsedGridList = new List<Vector2Int>();
     }
 
@@ -59,11 +56,11 @@ public class MapManager : MonoBehaviour
         while (true)
         {
             /* 
-            ここで
-            ・移動メソッド
-            ・設置位置取得メソッド
-            ・障害物生成メソッド
-            を呼び出す
+            コルーチン実行中に
+            ・設置判定　　　：JudgeInstall()
+            ・障害物生成　　：GenerateMapObject()
+            ・コルーチン終了：CreativeModeEnd()
+            のメソッドを呼び出せる
             */
 
             yield return null;
@@ -110,11 +107,31 @@ public class MapManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 障害物設置用メソッド
-    /// クリックされた位置を取得後、設置できるかを判定
-    /// ture：障害物を生成 / false：生成しない
+    /// 設置判定メソッド
+    /// 引数に渡されたグリッド位置が、設置可能かどうかを戻り値で返す
+    /// ture：生成可能 / false：生成不可
     /// </summary>
-    public void GenerateMapObject()
+    public bool JudgeInstall(Vector2Int installPos)
+    {
+        // 設置判定
+        for (int i = 0; i < UsedGridList.Count; i++)
+        {
+            if (installPos == UsedGridList[i])
+            {
+                Debug.LogError("障害物が配置済みです");
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// 障害物設置用メソッド
+    /// JudgeInstallメソッドからtrueが返った時に呼ばれる
+    /// ID、グリッド位置を取得後、その位置に障害物生成
+    /// </summary>
+    public void GenerateMapObject(int id, Vector2Int gridPos)
     {
         if (!isRunning)
         {
@@ -122,17 +139,15 @@ public class MapManager : MonoBehaviour
             return;
         }
 
-        Vector2Int installPos; // 仮設置位置
-
         // カーソルの位置に障害物を生成
-        
+        GameObject gameObj = (GameObject)Resources.Load("Square"); // 仮Square
 
-        // クリック位置取得
-        //Debug.Log(installPos);
+        // 障害物の生成
+        Instantiate(gameObj, new Vector3(gridPos.x, gridPos.y), Quaternion.identity);
 
-        // 設置判定
-
-        // その位置に固定
+        // 設置したオブジェクトIDと位置をリストに追加
+        InstalledList.Add(id);
+        UsedGridList.Add(gridPos);
     }
     #endregion
 }

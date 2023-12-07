@@ -10,8 +10,6 @@ using Photon.Realtime;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
-
-    const int INPUT_NAME = 2;//名前入力の子オブジェクトを参照用.
     #region おまかせName配列
     private static readonly string[] OMAKASE_NAMES = new string[] { "すねえく", "くらあけん", "さかな","いか","ねずみ","ごりら",
         "ちんあなご","いぬ"};

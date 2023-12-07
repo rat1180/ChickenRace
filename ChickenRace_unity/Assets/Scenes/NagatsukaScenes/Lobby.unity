@@ -1220,20 +1220,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcbacf937bfc88740b0a4a7c8de8190c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OutLineSettings:
-    Color: {r: 0, g: 0.66128135, b: 1, a: 0}
-    Thickness: 10
-    isLine: 0
-  InputButtonKeys:
-    Up: 0000000000000000
-    Down: 0000000000000000
-    Right: 0000000000000000
-    Left: 0000000000000000
-    Select: 0000000000000000
-  ButtonRows:
-  - Buttons:
-    - {fileID: 1132293655}
-  isForcePush: 0
 --- !u!114 &822286531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1246,7 +1232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5c1f3cabbf57354fb8ae6421ea2d8c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPlayer: 0
+  maxPlayer: 4
   ButtonRoot: {fileID: 1863561254}
   inputNickName: {fileID: 1193275983}
   roomNameDropdown: {fileID: 1226915291}
@@ -2245,6 +2231,7 @@ GameObject:
   - component: {fileID: 1226915293}
   - component: {fileID: 1226915292}
   - component: {fileID: 1226915291}
+  - component: {fileID: 1226915294}
   m_Layer: 5
   m_Name: RoomNameDropdown
   m_TagString: Untagged
@@ -2378,6 +2365,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1226915289}
   m_CullTransparentMesh: 1
+--- !u!114 &1226915294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226915289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 10, y: -10}
+  m_UseGraphicAlpha: 1
 --- !u!1 &1260733320
 GameObject:
   m_ObjectHideFlags: 0
@@ -3395,6 +3397,7 @@ GameObject:
   - component: {fileID: 1965349856}
   - component: {fileID: 1965349855}
   - component: {fileID: 1965349854}
+  - component: {fileID: 1965349857}
   m_Layer: 5
   m_Name: ConnectRoomButton
   m_TagString: Untagged
@@ -3517,3 +3520,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1965349852}
   m_CullTransparentMesh: 1
+--- !u!114 &1965349857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1965349852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 10, y: -10}
+  m_UseGraphicAlpha: 1
