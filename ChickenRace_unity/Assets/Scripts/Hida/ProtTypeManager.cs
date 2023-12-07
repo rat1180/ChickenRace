@@ -34,6 +34,7 @@ public class ProtTypeManager : MonoBehaviour
     {
         public MapManager mapManager;
         public Image uiManager;
+        //public Data
     }
 
     [SerializeField, Tooltip("現在のゲーム状態")] GameStatus gameState;
@@ -286,8 +287,30 @@ public class ProtTypeManager : MonoBehaviour
     IEnumerator StatePLANT()
     {
         DebugLog("障害物設置開始");
+        gameProgress.mapManager.CreativeModeStart();
 
-        yield break;
+        while (!isFazeEnd)
+        {
+            //設置中
+            //設置されたかどうかをmapManagerから受取
+            if (true)
+            {
+
+            }
+
+            //全員が設置完了するか時間切れで設置完了
+            if (true)
+            {
+
+            }
+
+            yield return null;
+        }
+
+        DebugLog("障害物設置終了");
+
+        //ステートコルーチンの終了処理
+        ClearCoroutine();
     }
 
     #endregion
