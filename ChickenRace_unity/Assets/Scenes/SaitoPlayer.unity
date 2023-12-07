@@ -201,7 +201,11 @@ MonoBehaviour:
   moveVector: {x: 0, y: 0, z: 0}
   moveSpeed: 5
   itemId: 0
+<<<<<<< HEAD
   isInstalled: 0
+=======
+  isInstall: 0
+>>>>>>> origin/develop/Nojiri
   mouseImage: {fileID: 4384123820751128111, guid: 380291cd5af83394c98584b29215eb3b, type: 3}
   instanceObj: {fileID: 0}
   Map: {fileID: 1401999052}
@@ -569,7 +573,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridPos: {x: 2, y: -3, z: 0}
   gameObject: {fileID: 0}
+<<<<<<< HEAD
   InstalledList: 
+=======
+  InstalledList: []
+>>>>>>> origin/develop/Nojiri
   UsedGridList: []
   tilemap: {fileID: 0}
 --- !u!4 &1401999054
