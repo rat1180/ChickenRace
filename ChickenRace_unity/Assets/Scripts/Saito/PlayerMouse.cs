@@ -13,6 +13,7 @@ public class PlayerMouse : MonoBehaviour
     [SerializeField] GameObject mouseImage;  // 自身の画像.
     [SerializeField] GameObject instanceObj; // 生成した画像.
     [SerializeField] GameObject Map;
+    [SerializeField] GameObject User;
     Vector2Int gridPos;
 
     [SerializeField] float angle;
@@ -42,7 +43,8 @@ public class PlayerMouse : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        
+        // 当たった画像のIDを取得.
+        itemId = collision.GetComponent<SelectImage>().itemId;
     }
 
     /// <summary>
@@ -69,6 +71,15 @@ public class PlayerMouse : MonoBehaviour
     private void OnClick()
     {
         // Debug.Log("クリック");
+        
+        if(User.GetComponent<User>().SetMode() == false)
+        {
+            // 選択フェーズ.
+        }
+        else
+        {
+            // 設置フェーズ.
+        }
 
         // アイテムが設置可能なら.
         if (isInstalled == false)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SelectImage : MonoBehaviour
 {
-    int itemid;
+    public int itemId;
     int index;
     void Start()
     {

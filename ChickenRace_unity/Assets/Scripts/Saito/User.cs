@@ -6,6 +6,7 @@ public class User : MonoBehaviour
 {
     [SerializeField] GameObject player;
     [SerializeField] GameObject mouse;
+    bool isMode;
 
     void Start()
     {
@@ -23,8 +24,14 @@ public class User : MonoBehaviour
         Instantiate(player, transform.position, transform.rotation);
     }
 
-    private void GenerateMouse()
+    private void GenerateMouse(bool mode)
     {
+        isMode = mode;
         Instantiate(mouse, transform.position, transform.rotation);
+    }
+
+    public bool SetMode()
+    {
+        return isMode;
     }
 }
