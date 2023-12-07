@@ -98,13 +98,30 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         string chat = ChatGroup.transform.GetChild((int)ChatGroups.InputChat).GetComponent<InputField>().text;
         string name = PhotonNetwork.LocalPlayer.NickName;
         ChatGroup.transform.GetChild((int)ChatGroups.InputChat).GetComponent<InputField>().text = "";//送信したら消す.
-        photonView.RPC(nameof(PushChat), RpcTarget.All, name, chat,BLACK16);
+        photonView.RPC(nameof(SendChat), RpcTarget.All, name, chat,BLACK16);
     }
     /// <summary>
     /// Player側で打つチャットの関数.
     /// </summary>
     [PunRPC]
-    void PushChat(string name, string chat, string color16)
+    void SendChat(string name, string message, string color16)
+    {
+        string chat = name + ":" + message;
+        PushChat(chat, color16);
+    }
+    /// <summary>
+    /// システムメッセージ関連のチャット関数.
+    /// </summary>
+    [PunRPC]
+    void SendChat(string message,string color16)
+    {
+        PushChat(message, color16);
+    }
+
+    /// <summary>
+    /// チャットの色と内容をログに残す.
+    /// </summary>
+    private void PushChat(string chat, string color16)
     {
         Color color;
         ColorUtility.TryParseHtmlString(color16, out color);
@@ -116,27 +133,6 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         //送信されたチャットを送る.
         ChatGroup.transform.GetChild((int)ChatGroups.ChatLog).GetComponent<Text>().text = name + ":" + chat;
         ChatGroup.transform.GetChild((int)ChatGroups.ChatLog).GetComponent<Text>().color = color;
-    }
-    /// <summary>
-    /// システムメッセージ関連のチャット関数.
-    /// </summary>
-    [PunRPC]
-    void PushChat(string chat,string color16)
-    {
-        Color color;
-        ColorUtility.TryParseHtmlString(color16, out color);
-        ChatLog2.text = ChatLog.text;
-        ChatLog2.color = ChatLog.color;
-        ChatLog.text = chat;
-        ChatLog.color = color;
-    }
-
-    /// <summary>
-    /// チャットの色と内容をログに残す.
-    /// </summary>
-    private void LeaveChat()
-    {
-
     }
 
     #endregion
@@ -265,7 +261,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         //customProperties["GameStatus"] = status;
 
         string message = PhotonNetwork.NickName + "が入室しました";
-        photonView.RPC(nameof(PushChat), RpcTarget.All, message,YELLOW16);
+        photonView.RPC(nameof(SendChat), RpcTarget.All, message,YELLOW16);
 
         PhotonNetwork.CurrentRoom.SetCustomProperties(customProperties);
         customProperties.Clear();
@@ -342,7 +338,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
         string message = otherPlayer.NickName + "が退出しました";
-        photonView.RPC(nameof(PushChat), RpcTarget.All, message,RED16);
+        photonView.RPC(nameof(SendChat), RpcTarget.All, message,RED16);
         //Debug.Log(otherPlayer.NickName + "が退出しました。");
     }
 
