@@ -73,7 +73,7 @@ public class PlayerMouse : MonoBehaviour
         }
         else
         {
-            Debug.Log("РЁТuВ≈ВЂВ№ВєВс");
+            // Debug.Log("РЁТuВ≈ВЂВ№ВєВс");
         }
     }
 
