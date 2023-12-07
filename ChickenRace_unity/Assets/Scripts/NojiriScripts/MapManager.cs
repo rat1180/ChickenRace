@@ -7,10 +7,11 @@ public class MapManager : MonoBehaviour
 {
     public Vector3Int gridPos; // テスト用設置位置
 
-    [SerializeField] private GameObject gameObject; // 移動したいオブジェクトの情報取得
-    [SerializeField] private List<int> InstalledList; // 設置した障害物リスト
-    [SerializeField] private List<Vector2Int> UsedGridList;   // 使用済みグリッドの位置リスト
-    [SerializeField] private Tilemap tilemap;
+    [Header("テスト用設置オブジェクト")]
+    [SerializeField] private GameObject gameObj; // 移動したいオブジェクトの情報取得
+
+    [SerializeField] private List<int> InstalledList;       // 設置した障害物リスト
+    [SerializeField] private List<Vector2Int> UsedGridList; // 使用済みグリッドの位置リスト
 
     private bool isRunning = false; // コルーチン実行判定フラグ
     private bool isInstall = false; // 設置フラグ
@@ -36,6 +37,7 @@ public class MapManager : MonoBehaviour
         }
     }
 
+    #region 内部処理
     /// <summary>
     /// マップ初期化メソッド
     /// </summary>
@@ -68,6 +70,7 @@ public class MapManager : MonoBehaviour
 
         Debug.Log("コルーチン終了");
     }
+    #endregion
 
     #region 外部用メソッド
     /// <summary>
@@ -83,6 +86,7 @@ public class MapManager : MonoBehaviour
         }
 
         isRunning = true;
+        isInstall = false;
         StartCoroutine(CreativeMode());
 
         Debug.Log("クリエイティブモード開始");
@@ -131,7 +135,7 @@ public class MapManager : MonoBehaviour
     /// JudgeInstallメソッドからtrueが返った時に呼ばれる
     /// ID、グリッド位置を取得後、その位置に障害物生成
     /// </summary>
-    public void GenerateMapObject(int id, Vector2Int gridPos)
+    public void GenerateMapObject(int id,/* int angle,*/ Vector2Int gridPos)
     {
         if (!isRunning)
         {
@@ -140,14 +144,26 @@ public class MapManager : MonoBehaviour
         }
 
         // カーソルの位置に障害物を生成
-        GameObject gameObj = (GameObject)Resources.Load("Square"); // 仮Square
+        //gameObj = (GameObject)Resources.Load("Square"); // 仮Square
 
         // 障害物の生成
         Instantiate(gameObj, new Vector3(gridPos.x, gridPos.y), Quaternion.identity);
+        //Instantiate(gameObj, new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
 
         // 設置したオブジェクトIDと位置をリストに追加
         InstalledList.Add(id);
         UsedGridList.Add(gridPos);
+
+        isInstall = true;
+    }
+
+    /// <summary>
+    /// フラグ参照メソッド
+    /// </summary>
+    /// <returns>設置フラグ　true：設置済み　false：未設置</returns>
+    public bool IsInstallReference()
+    {
+        return isInstall;
     }
     #endregion
 }
