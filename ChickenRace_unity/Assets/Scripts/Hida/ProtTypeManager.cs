@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class ProtTypeManager : MonoBehaviour
 {
@@ -34,7 +35,7 @@ public class ProtTypeManager : MonoBehaviour
     {
         public MapManager mapManager;
         public Image uiManager;
-        //public Data
+        public DataSharingClass dataSharingClass;
     }
 
     [SerializeField, Tooltip("現在のゲーム状態")] GameStatus gameState;
@@ -51,13 +52,17 @@ public class ProtTypeManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameInit();
+        StartCoroutine(GameInit());
     }
 
     // Update is called once per frame
     void Update()
     {
         GameLoop();
+
+        if(Input.GetKeyDown(KeyCode.Space)){
+            DebugNextState();
+        }
     }
 
     #endregion
@@ -79,7 +84,6 @@ public class ProtTypeManager : MonoBehaviour
         InitStatus playerinitlist = status;
         if (playerinitlist == status) return true;
         else return false;
-
     }
 
     /// <summary>
@@ -106,6 +110,11 @@ public class ProtTypeManager : MonoBehaviour
         isFazeEnd = true;
     }
 
+    public void SetDataSheringClass(DataSharingClass datasharingclass)
+    {
+        gameProgress.dataSharingClass = datasharingclass;
+    }
+
     #endregion
 
     #region デバッグ用
@@ -118,6 +127,12 @@ public class ProtTypeManager : MonoBehaviour
     void DebugLogWarning(string message)
     {
         if (isDebug) Debug.LogWarning(message);
+    }
+
+    void DebugNextState()
+    {
+        gameState++;
+        ClearCoroutine();
     }
 
     #endregion
@@ -136,12 +151,16 @@ public class ProtTypeManager : MonoBehaviour
         switch (gameState)
         {
             case GameStatus.READY:
+                coroutinename = "StateREADY";
                 break;
             case GameStatus.START:
+                coroutinename = "StateSTART";
                 break;
             case GameStatus.SELECT:
+                coroutinename = "StateSELECT";
                 break;
             case GameStatus.PLANT:
+                coroutinename = "StatePLANT";
                 break;
             case GameStatus.RACE:
                 break;
@@ -169,13 +188,13 @@ public class ProtTypeManager : MonoBehaviour
 
         //1.接続を確認<CONECT
         {
-            //フォトンの機能で接続しているか確認(現在は接続済みと仮定
-            while (false)
-            {
-                //接続まで待機
-                DebugLog("接続確認中..");
-                yield return null;
-            }
+            //フォトンの機能で接続しているか確認
+            //while (!PhotonNetwork.InRoom)
+            //{
+            //    //接続まで待機
+            //    DebugLog("接続確認中..");
+            //    yield return null;
+            //}
 
             //状態を送信
             initStatus = InitStatus.RESET;
@@ -191,10 +210,19 @@ public class ProtTypeManager : MonoBehaviour
             stateCoroutine = null;
 
             //各マネージャーを生成
+            //データ共有クラスを生成
+            if (PhotonNetwork.LocalPlayer.IsMasterClient) //ホスト
+            {
+                //データ共有クラスを生成
+                //PhotonNetwork.Instantiate
+            }
+            else                                          //ゲスト
+            {
+                //データ共有クラスが生成されるまで待機
+                //yield return new WaitUntil(() => gameProgress.dataSharingClass != null);
+            }
 
-            //各マネージャー初期化確認・待機
-
-            //Playerクラス生成
+            //Userクラス生成
 
             //状態を送信
             initStatus = InitStatus.WAIT;
@@ -265,9 +293,29 @@ public class ProtTypeManager : MonoBehaviour
     {
         DebugLog("障害物選択開始");
 
+        //ホストなら障害物を抽選
+        if (PhotonNetwork.IsMasterClient)
+        {
+            //テスト
+            for(int i = 0; i < 4; i++)
+            {
+                int id = Random.Range(1, 4);
+                //障害物追加
+                //gameProgress.dataSharingClass.ID.Add(i == 3 ? 0 : id);
+            }
+        }
+        //ゲストなら抽選まで待機
+        else
+        {
+            yield return new WaitUntil(() => gameProgress.dataSharingClass.ID[gameProgress.dataSharingClass.ID.Count-1] == 0);
+        }
+
         //選択クラスによって終了呼び出し
         while (!isFazeEnd)
         {
+            //障害物候補を表示
+            var list = gameProgress.dataSharingClass.ID;
+
             //障害物選択まで待機
             yield return null;
         }
