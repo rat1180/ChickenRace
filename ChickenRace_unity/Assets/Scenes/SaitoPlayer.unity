@@ -200,8 +200,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveVector: {x: 0, y: 0, z: 0}
   moveSpeed: 5
+  itemId: 0
+  isInstall: 0
   mouseImage: {fileID: 4384123820751128111, guid: 380291cd5af83394c98584b29215eb3b, type: 3}
   instanceObj: {fileID: 0}
+  Map: {fileID: 1401999052}
 --- !u!1 &981348858
 GameObject:
   m_ObjectHideFlags: 0
@@ -535,6 +538,55 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!1 &1401999052
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1401999054}
+  - component: {fileID: 1401999053}
+  m_Layer: 0
+  m_Name: ObjectManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1401999053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1401999052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 523101eee2a954847959e8b1f6dcdacb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridPos: {x: 2, y: -3, z: 0}
+  gameObject: {fileID: 0}
+  InstalledList: []
+  UsedGridList: []
+  tilemap: {fileID: 0}
+--- !u!4 &1401999054
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1401999052}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1458518705
 GameObject:
   m_ObjectHideFlags: 0
