@@ -13,7 +13,7 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
 
     public List<float> rankTime = new List<float>();
 
-    float timer;
+    float timer = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,24 +28,26 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            //photonView.RPC(nameof(PushSharData), RpcTarget.All);
-        }
         if (Input.GetKeyDown(KeyCode.K))//デバッグ用
         {
             //1人目が0番目になるように-1(RPC内でActorNumberを引数にすると全員自分を呼んでしまうため代入).
             int number = PhotonNetwork.LocalPlayer.ActorNumber - 1;
-            photonView.RPC(nameof(PushGoalTime), RpcTarget.All,number,timer);
+            //photonView.RPC(nameof(PushGoalTime), RpcTarget.All,number,timer);
+            photonView.RPC(nameof(PushGoalTime), RpcTarget.All, number, 1);
         }
     }
 
+    /// <summary>
+    /// 外部からIDを受け取ってリストに入れる関数
+    /// 引数にはIDを1つずつ指定(リストはサポートされていない).
+    /// </summary>
     [PunRPC]
-    void PushSharData()
+    public void PushID(int iD)
     {
-        waitRoomManager = GameObject.Find("WaitRoomManager").GetComponent<WaitRoomManager>();
-        waitRoomManager.PushDataSharingClass(gameObject);
+        ID.Add(iD);
     }
+
+
 
     /// <summary>
     /// スコア加算タイミングでこの関数を呼び出す

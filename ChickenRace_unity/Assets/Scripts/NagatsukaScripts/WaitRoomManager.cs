@@ -16,19 +16,11 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     [SerializeField, Tooltip("情報を表示するメッセージ")] Text MessageText;
     [SerializeField, Tooltip("開始ボタン")] Button SceanMoveButton;
-    [SerializeField, Tooltip("ルーム名を表示するテキスト")] Text roomNameText;
-    [SerializeField, Tooltip("ルーム名を表示するテキスト")] Text nowPlayerCountText;
 
-    public DataSharingClass dataSharingClass;//データ共有クラス.
-    public Text sharDataText;
+    private DataSharingClass dataSharingClass;//データ共有クラス.
 
-    #region チャット関連
-    [Header("チャット関連")]
-    [SerializeField] GameObject ChatGroup;
-    [SerializeField] InputField InputChat;
-    [SerializeField] Text ChatLog;
-    [SerializeField] Text ChatLog2;
-    #endregion
+    [SerializeField, Tooltip("ChatGroupをそのまま入れる")] GameObject chatGroup;
+    [SerializeField, Tooltip("RoomInformationをそのまま入れる")] GameObject roomInformation;
 
     #region 色定数
     const string RED16 = "#FF0000";
@@ -39,24 +31,27 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     /// <summary>
     /// チャットグループの子要素のまとめ
     /// </summary>
-    enum ChatGroups:int { 
+    private enum ChatGroups { 
         BackGround,
         InputChat,
         ChatLog,
         ChatLog2,
     }
 
+    /// <summary>
+    /// ルームの情報を表示するオブジェクトの子要素まとめ
+    /// デバッグ用
+    /// </summary>
+    private enum RoomInformations
+    {
+        RoomNameText,//ルーム名を表示するテキスト.
+        NowPlayerCount,//現在ルームにいる人数を表示.
+        SharDataText,
+    }
 
-    //マスターかどうか
-    public bool isMaster;
-    //ルーム内で接続できているか
-    private bool isInRoom;
-    //スタートしたかどうか
-    private bool isStart;
-
-    //現在部屋にいるプレイヤーの数
-    public int nowPlayers;
-
+    private bool isMaster;       //マスターかどうか
+    private bool isInRoom;       //ルーム内で接続できているか
+    private bool isStart;        //スタートしたかどうか
     private bool createPlayerFlg;//プレイヤーを生成したか判定.
 
     //ルームのカスタムプロパティを設定する為の宣言.
@@ -82,7 +77,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         if (isInRoom)
         {
             RoomStatusUpDate();
-            ShowDataSharing();
+            ShowRoomInformation();
             if (Input.GetKeyDown(KeyCode.Space) && SceanMoveButton.IsInteractable())
             {
                 MoveGameScean();
@@ -95,9 +90,9 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     #region チャット・システムメッセージ機能関連
     public void PushSendChatButton()
     {
-        string chat = ChatGroup.transform.GetChild((int)ChatGroups.InputChat).GetComponent<InputField>().text;
+        string chat = chatGroup.transform.GetChild((int)ChatGroups.InputChat).GetComponent<InputField>().text;
         string name = PhotonNetwork.LocalPlayer.NickName;
-        ChatGroup.transform.GetChild((int)ChatGroups.InputChat).GetComponent<InputField>().text = "";//送信したら消す.
+        chatGroup.transform.GetChild((int)ChatGroups.InputChat).GetComponent<InputField>().text = "";//送信したら消す.
         photonView.RPC(nameof(SendChat), RpcTarget.All, name, chat,BLACK16);
     }
     /// <summary>
@@ -126,13 +121,13 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         Color color;
         ColorUtility.TryParseHtmlString(color16, out color);
         //前回のチャットを残す.
-        ChatGroup.transform.GetChild((int)ChatGroups.ChatLog2).GetComponent<Text>().text =
-                 ChatGroup.transform.GetChild((int)ChatGroups.ChatLog).GetComponent<Text>().text;
-        ChatGroup.transform.GetChild((int)ChatGroups.ChatLog2).GetComponent<Text>().color =
-                 ChatGroup.transform.GetChild((int)ChatGroups.ChatLog).GetComponent<Text>().color;
+        chatGroup.transform.GetChild((int)ChatGroups.ChatLog2).GetComponent<Text>().text =
+                 chatGroup.transform.GetChild((int)ChatGroups.ChatLog).GetComponent<Text>().text;
+        chatGroup.transform.GetChild((int)ChatGroups.ChatLog2).GetComponent<Text>().color =
+                 chatGroup.transform.GetChild((int)ChatGroups.ChatLog).GetComponent<Text>().color;
         //送信されたチャットを送る.
-        ChatGroup.transform.GetChild((int)ChatGroups.ChatLog).GetComponent<Text>().text = name + ":" + chat;
-        ChatGroup.transform.GetChild((int)ChatGroups.ChatLog).GetComponent<Text>().color = color;
+        chatGroup.transform.GetChild((int)ChatGroups.ChatLog).GetComponent<Text>().text = chat;
+        chatGroup.transform.GetChild((int)ChatGroups.ChatLog).GetComponent<Text>().color = color;
     }
 
     #endregion
@@ -150,26 +145,25 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     }
     /// <summary>
     /// DataSharingClassの値をテキストに表示する関数.
+    /// デバッグ用.
     /// </summary>
-    private void ShowDataSharing()
+    private void ShowRoomInformation()
     {
         if (dataSharingClass == null) return;//生成出来ていなかったら関数を終了.
-        sharDataText.text = "";
-        //for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)//現在いる人数分ループする.
-        //{
-        //    sharDataText.text += "ID:" + dataSharingClass.ID[i].ToString() +
-        //                        "　Score:" + dataSharingClass.score[i].ToString() + "\n";
-        //   // Debug.Log("Playerの人数" + PhotonNetwork.PlayerList.Length);
-        //}
+        //ルームの名前を表示する.
+        roomInformation.transform.GetChild((int)RoomInformations.RoomNameText).GetComponent<Text>().text = 
+            "RoomName:" + ConectServer.RoomProperties.RoomName.ToString();
+        //ルームにいるプレイヤーの数を表示する.
+        roomInformation.transform.GetChild((int)RoomInformations.NowPlayerCount).GetComponent<Text>().text =
+            "プレイヤーの数:" + PhotonNetwork.PlayerList.Length;
+        roomInformation.transform.GetChild((int)RoomInformations.SharDataText).GetComponent<Text>().text = "";
         int i = 0;
         foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
         {
-            sharDataText.text += player.NickName +
-                                " Score:" + dataSharingClass.score[i].ToString() + "\n";
-            // Debug.Log("Playerの人数" + PhotonNetwork.PlayerList.Length);
+            roomInformation.transform.GetChild((int)RoomInformations.SharDataText).GetComponent<Text>().text +=
+                                player.NickName + " Score:" + dataSharingClass.score[i].ToString() + "\n";
             i++;
         }
-
     }
     #endregion
 
@@ -279,8 +273,6 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     /// </summary>
     void RoomStatusUpDate()
     {
-        roomNameText.text = "RoomName:" + ConectServer.RoomProperties.RoomName.ToString();
-        nowPlayerCountText.text = "プレイヤーの数:"+ PhotonNetwork.PlayerList.Length;
         //if (PhotonNetwork.CurrentRoom.PlayerCount >= PhotonNetwork.CurrentRoom.MaxPlayers)
         //{
         //    //PhotonNetwork.CurrentRoom.IsOpen = false;
