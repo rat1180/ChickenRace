@@ -171,7 +171,8 @@ public class MapManager : MonoBehaviour
 
         // 座標を四捨五入、生成位置のz軸が勝手に-10されるため、0に設定しておく
         Vector2Int installPosInt;
-        installPosInt = new Vector2Int(Mathf.RoundToInt(installPos.x), Mathf.RoundToInt(installPos.y));
+        installPosInt = gridPos;
+        //installPosInt = new Vector2Int(Mathf.RoundToInt(installPos.x), Mathf.RoundToInt(installPos.y));
         //installPos.y = Mathf.RoundToInt(installPos.y);
         //installPos.z = 0f;
 
