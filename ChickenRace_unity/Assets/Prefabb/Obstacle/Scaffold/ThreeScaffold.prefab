@@ -267,13 +267,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37094d40cc34e51499dcbed65805cf38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CollisionList:
+  collisionList:
   - {x: 0, y: 0}
   - {x: 0, y: -1}
   - {x: 0, y: -2}
-  ObstacleID: 0
-  ObstacleKindID: 0
-  MyRotation: 0
-  UE:
+  obstacleID: 0
+  obstacleKindID: 0
+  myRotation: 0
+  ue:
     m_PersistentCalls:
       m_Calls: []
