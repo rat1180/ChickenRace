@@ -27,4 +27,15 @@ public class Obstacle_ArrowShot : MonoBehaviour
     {
         this.transform.rotation = Quaternion.Euler(0, 0, rot);
     }
+    public void BlowArrow(Vector3 qtn,float power)
+    {
+        this.transform.eulerAngles = qtn;
+
+        speed *= power;
+        Debug.Log(speed);
+    }
+    //void OnBecameInvisible()
+    //{
+    //    Destroy(this.gameObject);
+    //}
 }
