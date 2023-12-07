@@ -189,12 +189,12 @@ public class ProtTypeManager : MonoBehaviour
         //1.接続を確認<CONECT
         {
             //フォトンの機能で接続しているか確認
-            //while (!PhotonNetwork.InRoom)
-            //{
-            //    //接続まで待機
-            //    DebugLog("接続確認中..");
-            //    yield return null;
-            //}
+            while (!PhotonNetwork.InRoom)
+            {
+                //接続まで待機
+                DebugLog("接続確認中..");
+                yield return null;
+            }
 
             //状態を送信
             initStatus = InitStatus.RESET;
@@ -214,12 +214,12 @@ public class ProtTypeManager : MonoBehaviour
             if (PhotonNetwork.LocalPlayer.IsMasterClient) //ホスト
             {
                 //データ共有クラスを生成
-                //PhotonNetwork.Instantiate
+                var obj = PhotonNetwork.Instantiate("NagatsukaObjects/DataSharingClass", Vector3.zero, Quaternion.identity);//データ共有クラスを生成する.
             }
             else                                          //ゲスト
             {
                 //データ共有クラスが生成されるまで待機
-                //yield return new WaitUntil(() => gameProgress.dataSharingClass != null);
+                yield return new WaitUntil(() => gameProgress.dataSharingClass != null);
             }
 
             //Userクラス生成
@@ -301,7 +301,7 @@ public class ProtTypeManager : MonoBehaviour
             {
                 int id = Random.Range(1, 4);
                 //障害物追加
-                //gameProgress.dataSharingClass.ID.Add(i == 3 ? 0 : id);
+                gameProgress.dataSharingClass.PushID(i == 3 ? 0 : id);
             }
         }
         //ゲストなら抽選まで待機

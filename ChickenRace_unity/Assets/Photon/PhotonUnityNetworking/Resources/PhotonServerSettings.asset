@@ -45,6 +45,9 @@ MonoBehaviour:
   - <PushReadyButton>g__PushSharData|31_0
   - PushDataSharingClass
   - SendChat
+  - PushIDRPC
+  - ResetIDListRPC
+  - ResetIDRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
