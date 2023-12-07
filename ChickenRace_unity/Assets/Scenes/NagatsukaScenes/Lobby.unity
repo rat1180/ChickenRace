@@ -377,13 +377,13 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 8
     m_MaxSize: 80
-    m_Alignment: 3
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "\u5BCC\u58EB\u306E\u90E8\u5C4B"
+  m_Text: "\u3007\u306E\u90E8\u5C4B"
 --- !u!222 &145866313
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2260,7 +2260,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -19.00003}
-  m_SizeDelta: {x: 500, y: 100}
+  m_SizeDelta: {x: 650, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1226915291
 MonoBehaviour:
@@ -2311,17 +2311,19 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: "\u5BCC\u58EB\u306E\u90E8\u5C4B"
+    - m_Text: "\u3007\u306E\u90E8\u5C4B"
       m_Image: {fileID: 0}
-    - m_Text: "\u9DF9\u306E\u90E8\u5C4B"
+    - m_Text: "\u25B3\u306E\u90E8\u5C4B"
       m_Image: {fileID: 0}
-    - m_Text: "\u8304\u5B50\u306E\u90E8\u5C4B"
+    - m_Text: "\u25A1\U0001F34A\u306E\u90E8\u5C4B"
       m_Image: {fileID: 0}
-    - m_Text: "\u6247\u306E\u90E8\u5C4B"
+    - m_Text: "\u2606\u306E\u90E8\u5C4B"
       m_Image: {fileID: 0}
-    - m_Text: "\u7159\u8349\u306E\u90E8\u5C4B"
+    - m_Text: "\u221E\u30EB\u30FC\u30E0"
       m_Image: {fileID: 0}
-    - m_Text: "\u5EA7\u982D\u306E\u90E8\u5C4B"
+    - m_Text: "\u306F\u3042\u3068\u306E\u3078\u3084\u2661"
+      m_Image: {fileID: 0}
+    - m_Text: "\u9577\u585A\u5C02\u7528\u90E8\u5C4B"
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:

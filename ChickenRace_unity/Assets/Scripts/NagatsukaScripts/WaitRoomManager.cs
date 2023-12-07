@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
-//using ConstList_old;
+using ConstList;
 
 /*
 マッチング中に待機するロビー内の管理マネージャー
@@ -23,6 +24,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
 
     #region チャット関連
     [Header("チャット関連")]
+    [SerializeField] GameObject ChatGroup;
     [SerializeField] InputField InputChat;
     [SerializeField] Text ChatLog;
     [SerializeField] Text ChatLog2;
@@ -31,7 +33,19 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     #region 色定数
     const string RED16 = "#FF0000";
     const string YELLOW16 = "#FFFF00";
+    const string BLACK16 = "#000000";
     #endregion
+
+    /// <summary>
+    /// チャットグループの子要素のまとめ
+    /// </summary>
+    enum ChatGroups:int { 
+        BackGround,
+        InputChat,
+        ChatLog,
+        ChatLog2,
+    }
+
 
     //マスターかどうか
     public bool isMaster;
@@ -78,23 +92,34 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     #endregion
 
 
-    #region チャット機能関連
+    #region チャット・システムメッセージ機能関連
     public void PushSendChatButton()
     {
-        string chat = InputChat.text;
-        int master = PhotonNetwork.LocalPlayer.ActorNumber;//送信者の番号(全員がActorNumberを呼ばないために代入).
-        InputChat.text = "";//送信したら消す.
-        photonView.RPC(nameof(PushChat), RpcTarget.All, master, chat);
+        string chat = ChatGroup.transform.GetChild((int)ChatGroups.InputChat).GetComponent<InputField>().text;
+        string name = PhotonNetwork.LocalPlayer.NickName;
+        ChatGroup.transform.GetChild((int)ChatGroups.InputChat).GetComponent<InputField>().text = "";//送信したら消す.
+        photonView.RPC(nameof(PushChat), RpcTarget.All, name, chat,BLACK16);
     }
-
-    //[PunRPC]
-    //void PushChat(string chat)
-    //{
-    //    ChatLog2.text = ChatLog.text;
-    //    ChatLog2.color = ChatLog.color;
-    //    ChatLog.text = chat;
-    //    ChatLog.color = Color.black;
-    //}
+    /// <summary>
+    /// Player側で打つチャットの関数.
+    /// </summary>
+    [PunRPC]
+    void PushChat(string name, string chat, string color16)
+    {
+        Color color;
+        ColorUtility.TryParseHtmlString(color16, out color);
+        //前回のチャットを残す.
+        ChatGroup.transform.GetChild((int)ChatGroups.ChatLog2).GetComponent<Text>().text =
+                 ChatGroup.transform.GetChild((int)ChatGroups.ChatLog).GetComponent<Text>().text;
+        ChatGroup.transform.GetChild((int)ChatGroups.ChatLog2).GetComponent<Text>().color =
+                 ChatGroup.transform.GetChild((int)ChatGroups.ChatLog).GetComponent<Text>().color;
+        //送信されたチャットを送る.
+        ChatGroup.transform.GetChild((int)ChatGroups.ChatLog).GetComponent<Text>().text = name + ":" + chat;
+        ChatGroup.transform.GetChild((int)ChatGroups.ChatLog).GetComponent<Text>().color = color;
+    }
+    /// <summary>
+    /// システムメッセージ関連のチャット関数.
+    /// </summary>
     [PunRPC]
     void PushChat(string chat,string color16)
     {
@@ -106,6 +131,14 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         ChatLog.color = color;
     }
 
+    /// <summary>
+    /// チャットの色と内容をログに残す.
+    /// </summary>
+    private void LeaveChat()
+    {
+
+    }
+
     #endregion
 
 
@@ -114,6 +147,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     /// <summary>
     /// データ共有クラスが生成された際、この関数を呼んで値を入れる.
     /// </summary>
+    [PunRPC]
     public void PushDataSharingClass(GameObject gameObject)
     {
         dataSharingClass = gameObject.GetComponent<DataSharingClass>();
@@ -124,12 +158,22 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     private void ShowDataSharing()
     {
         if (dataSharingClass == null) return;//生成出来ていなかったら関数を終了.
-        for(int i = 0; i < PhotonNetwork.PlayerList.Length; i++)//現在いる人数分ループする.
+        sharDataText.text = "";
+        //for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)//現在いる人数分ループする.
+        //{
+        //    sharDataText.text += "ID:" + dataSharingClass.ID[i].ToString() +
+        //                        "　Score:" + dataSharingClass.score[i].ToString() + "\n";
+        //   // Debug.Log("Playerの人数" + PhotonNetwork.PlayerList.Length);
+        //}
+        int i = 0;
+        foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
         {
-            sharDataText.text = "ID:" + dataSharingClass.ID[i].ToString() +
-                                "　Score:" + dataSharingClass.score[i].ToString() + "\n";
+            sharDataText.text += player.NickName +
+                                " Score:" + dataSharingClass.score[i].ToString() + "\n";
+            // Debug.Log("Playerの人数" + PhotonNetwork.PlayerList.Length);
+            i++;
         }
-        
+
     }
     #endregion
 
@@ -169,6 +213,15 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     /// <summary>
+    /// 退出ボタンを押したら部屋を抜ける.
+    /// </summary>
+    public void PushExitButton()
+    {
+        PhotonNetwork.LeaveRoom();// ルームから退出する
+        SceneManager.LoadScene(SceneNames.Lobby.ToString());  //ゲーム待機シーンに移動.
+    }
+
+    /// <summary>
     /// 切断を待ってからオフラインモードを開始する
     /// </summary>
     /// <returns></returns>
@@ -199,8 +252,8 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
             //roomOptions.MaxPlayers = ConectServer.RoomProperties.MaxPlayer;
             //PhotonNetwork.CurrentRoom.MaxPlayers = (byte)ConectServer.RoomProperties.MaxPlayer;
             Debug.Log("最大人数" + PhotonNetwork.CurrentRoom.MaxPlayers);
-            var obj = PhotonNetwork.Instantiate("NagatsukaObjects/DataSharingClass", Vector3.zero, Quaternion.identity);//データ共有クラスを生成する.
-            obj.SetActive(true);
+            //var obj = PhotonNetwork.Instantiate("NagatsukaObjects/DataSharingClass", Vector3.zero, Quaternion.identity);//データ共有クラスを生成する.
+            //obj.SetActive(true);
         }
         PhotonNetwork.AutomaticallySyncScene = true;
         Debug.Log("OnJoin");
@@ -243,28 +296,43 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         }
         else
         {
-            if (!isMaster)
+            if (isMaster)
             {
-                SceanMoveButton.interactable = false;
-                MessageText.text = "開始をまっています...";
+                SceanMoveButton.interactable = true;
+                SceanMoveButton.transform.GetChild(0).gameObject.GetComponent<Text>().text
+                = "ゲームヲ始メル(" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + ")";
+                MessageText.text = "ボタンを押すとゲームが始まります";
             }
             else
             {
-                SceanMoveButton.interactable = true;
-                MessageText.text = "スペースキーを押すとゲームが始まります";
+                SceanMoveButton.interactable = false;
+                SceanMoveButton.transform.GetChild(0).gameObject.GetComponent<Text>().text
+                = "開始ヲ待ッテル(" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + ")";
+                MessageText.text = "ホストの開始をまっています...";
             }
-            if (!createPlayerFlg)
+            if (!createPlayerFlg)//Playerを生成していなければ生成する.
             {
                 Instantiate(player, Vector3.zero, Quaternion.identity);//Playerを生成する.
                 createPlayerFlg = true;
             }
-            SceanMoveButton.transform.GetChild(0).gameObject.GetComponent<Text>().text
-            = "開始(" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + ")";
+            //SceanMoveButton.transform.GetChild(0).gameObject.GetComponent<Text>().text
+            //= "ゲームを始メル(" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + ")";
 
             //メンバリストを表示
         }
     }
 
+    #region　ゲーム開始ボタン関連
+    /// <summary>
+    /// ホストが準備完了ボタンを押したらゲームを始める.
+    /// </summary>
+    public void PushReadyButton()
+    {
+        var obj = PhotonNetwork.Instantiate("NagatsukaObjects/DataSharingClass", Vector3.zero, Quaternion.identity);//データ共有クラスを生成する.
+        PushDataSharingClass(obj);
+        photonView.RPC(nameof(PushDataSharingClass), RpcTarget.All,obj);
+    }
+    #endregion
 
     // ルームから退出した時に呼ばれるコールバック
     public override void OnLeftRoom()
