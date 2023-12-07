@@ -27,4 +27,13 @@ namespace ConstList
         WALLJUMP,
         DANCE,
     }
+
+    /// <summary>
+    /// ƒV[ƒ“‚Ì–¼‘Oˆê——.
+    /// </summary>
+    public enum SceneNames
+    {
+        Lobby,
+        WaitRoom,
+    }
 }

@@ -40,6 +40,11 @@ MonoBehaviour:
   - Fire
   - RespawnSpaceship
   - PushChat
+  - PushSharData
+  - PushGoalTime
+  - <PushReadyButton>g__PushSharData|31_0
+  - PushDataSharingClass
+  - SendChat
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
