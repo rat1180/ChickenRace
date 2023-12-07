@@ -6,37 +6,58 @@ using UnityEngine.Events;
 public class Obstacle_Arrow : Obstacle
 {
     [SerializeField]
-    float ShotCnt;
+    float shotCnt;
 
     [SerializeField]
-    bool ShotFlg;
+    bool isShotFlg;
 
+    [SerializeField]
+    GameObject arrowShot;
+    [SerializeField]
+    GameObject arrowChild;
     /// <summary>
     /// èâä˙âª
     /// </summary>
     public override void Init()
     {
-        ObstacleCenterPos = new Vector2Int(0, 0);
-        ShotCnt = 3.0f;
-        ShotFlg = false;
+        obstacleCenterPos = new Vector2Int(0, 0);
+        shotCnt = 3.0f;
+        isShotFlg = true;
     }
     public override void update()
     {
-        ShotCnt -= Time.deltaTime;
-        if (ShotCnt < 0.0f)
+        if (isShotFlg)
         {
-            ShotFlg = true;
+            if (shotCnt > 0.0f)
+            {
+                shotCnt -= Time.deltaTime;
+            }
+            if (shotCnt < 0.0f)
+            {
+                ShotObj();
+                shotCnt = 3.0f;
+            }
         }
     }
     public override void ObjStart()
     {
-        if(ShotFlg)
-        {
-            ShotObj();
-        }
+        shotCnt = 3.0f;
+        isShotFlg = true;
     }
     void ShotObj()
     {
         Debug.Log("î≠éÀ");
+
+        myRotation = this.transform.localEulerAngles.z;
+        var ars = Instantiate(arrowShot,arrowChild.transform.position, Quaternion.identity);
+        ars.GetComponent<Obstacle_ArrowShot>().ArrowShot(myRotation);
+    }
+    void OnTrggerEnter2D(Collision other)
+    {
+        Destoroy();
+    }
+    void Destoroy()
+    {
+        Destroy(this.gameObject);
     }
 }

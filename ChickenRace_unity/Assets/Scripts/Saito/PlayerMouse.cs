@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,9 @@ public class PlayerMouse : MonoBehaviour
     [SerializeField] GameObject instanceObj; // 生成した画像.
     [SerializeField] GameObject Map;
     Vector2Int gridPos;
+
+    [SerializeField] float angle;
+    [SerializeField] float saveAngle;
 
     /// <summary>
     /// 初期化用関数.
@@ -65,6 +69,7 @@ public class PlayerMouse : MonoBehaviour
     private void OnClick()
     {
         // Debug.Log("クリック");
+
         // アイテムが設置可能なら.
         if (isInstalled == false)
         {
@@ -86,8 +91,35 @@ public class PlayerMouse : MonoBehaviour
         //instanceObj = PhotonNetwork.Instantiate("MouseImage", transform.position, transform.rotation);
     }
 
+    /// <summary>
+    /// マウスのポジションセット.
+    /// </summary>
     private void MouseTransform()
     {
         instanceObj.GetComponent<Character>().PositionUpdate(transform.position);
+    }
+
+    /// <summary>
+    /// オブジェクトを回転させる.
+    /// </summary>
+    public float SetObjRotation()
+    {
+        return saveAngle;
+    }
+
+    /// <summary>
+    /// オブジェクト左回転用
+    /// </summary>
+    private void OnLeftRotate()
+    {
+        saveAngle -= angle;
+    }
+
+    /// <summary>
+    /// オブジェクト右回転用.
+    /// </summary>
+    private void OnRightRotate()
+    {
+        saveAngle += angle;
     }
 }
