@@ -11,6 +11,10 @@ public class Obstacle_Arrow : Obstacle
     [SerializeField]
     bool isShotFlg;
 
+    [SerializeField]
+    GameObject arrowShot;
+    [SerializeField]
+    GameObject arrowChild;
     /// <summary>
     /// èâä˙âª
     /// </summary>
@@ -43,5 +47,17 @@ public class Obstacle_Arrow : Obstacle
     void ShotObj()
     {
         Debug.Log("î≠éÀ");
+
+        myRotation = this.transform.localEulerAngles.z;
+        var ars = Instantiate(arrowShot,arrowChild.transform.position, Quaternion.identity);
+        ars.GetComponent<Obstacle_ArrowShot>().ArrowShot(myRotation);
+    }
+    void OnTrggerEnter2D(Collision other)
+    {
+        Destoroy();
+    }
+    void Destoroy()
+    {
+        Destroy(this.gameObject);
     }
 }

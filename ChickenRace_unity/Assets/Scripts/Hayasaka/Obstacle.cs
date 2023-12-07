@@ -14,7 +14,7 @@ public class Obstacle : MonoBehaviour
     [SerializeField]
     int obstacleKindID; // í—Ş‚ÌID
     [SerializeField]
-    int myRotation; // ‰ñ“]
+    protected float myRotation; // ‰ñ“]
     [SerializeField]
     UnityEvent ue; // ƒCƒxƒ“ƒgŠÖ”
     void Awake()
