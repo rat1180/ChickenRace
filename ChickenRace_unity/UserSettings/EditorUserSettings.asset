@@ -9,10 +9,29 @@ EditorUserSettings:
       value: 0753015504535c095b0b082613260f4417151a7d7c2b7f627578486ae1b1306b
       flags: 0
     RecentlyUsedSceneGuid-1:
+<<<<<<< HEAD
       value: 0107020755025e08545c0e2342265d444f4f1c7a797c75357b2c4b67b5b4606a
       flags: 0
     RecentlyUsedSceneGuid-2:
       value: 015207565350595a5c0b5a26417b0c44124e4d2f7d2b76602e784e60b3b7303d
+=======
+      value: 5455025f53060b5d550c557a14225c44474e1929297a70327b711f63b2e5653b
+      flags: 0
+    RecentlyUsedSceneGuid-2:
+      value: 0753015504535c095b0b082613260f4417151a7d7c2b7f627578486ae1b1306b
+      flags: 0
+    RecentlyUsedSceneGuid-3:
+      value: 56550c00570c0c02595c582447220844454e4a782a7e246074791867e4b7646b
+      flags: 0
+    RecentlyUsedSceneGuid-4:
+      value: 54050c555d03590f545d542745700744414f4e7a797a23367878186ae6b96669
+      flags: 0
+    RecentlyUsedSceneGuid-5:
+      value: 0107020755025e08545c0e2342265d444f4f1c7a797c75357b2c4b67b5b4606a
+      flags: 0
+    RecentlyUsedSceneGuid-6:
+      value: 5a040d5456065e08090d5473127a0e44444e4d7d7f7b76347b7d1c65e0e3663d
+>>>>>>> origin/develop/Nojiri
       flags: 0
     RecentlyUsedSceneGuid-3:
       value: 5653550706570f0c0b5f082611720c4415154d2c2e2a70607d2b4a30b7b5326b
