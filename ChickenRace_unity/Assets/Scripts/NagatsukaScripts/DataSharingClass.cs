@@ -56,7 +56,7 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
     /// </summary>
     public void ResetID(int index)
     {
-        photonView.RPC(nameof(ResetID), RpcTarget.All, index);
+        photonView.RPC(nameof(ResetIDRPC), RpcTarget.All, index);
     }
 
     /// <summary>
@@ -73,7 +73,7 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
     /// </summary>
     public void ResetIDList()
     {
-        photonView.RPC(nameof(ResetIDList), RpcTarget.All);
+        photonView.RPC(nameof(ResetIDListRPC), RpcTarget.All);
     }
 
     /// <summary>
@@ -86,13 +86,40 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     /// <summary>
-    /// スコア加算タイミングでこの関数を呼び出す
-    /// 引数にActorNumber、プラスするスコアの数値を指定
+    /// 外部からindexを受け取って指定された場所を0にする関数
+    /// 引数にはindexを1つずつ指定.
+    /// </summary>
+    public float ReturnTime(int index)
+    {
+        return rankTime[index];
+    }
+
+    /// <summary>
+    /// 指定されたindexの値を返すRPC.
     /// </summary>
     [PunRPC]
-    void PushGoalTime(int number,int point)
+    private void ReturnTimeRPC()
     {
-        score[number] += point;
+        rankTime = new List<float>();
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            rankTime.Add(0);
+        }
+    }
+
+    public void PushGoalTime(int index, float time)
+    {
+        photonView.RPC(nameof(PushGoalTimeRPC), RpcTarget.All,index,time);
+    }
+
+    /// <summary>
+    /// ゴールしたタイミングで関数を呼び出す
+    /// </summary>
+    [PunRPC]
+    void PushGoalTimeRPC(int index,float time)
+    {
+        //score[number] += point;
+        rankTime[index] = time; 
     }
 
     /// <summary>
