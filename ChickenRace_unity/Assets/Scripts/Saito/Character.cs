@@ -7,10 +7,10 @@ using Photon.Realtime;
 public class Character : MonoBehaviourPun, IPunObservable
 {
     Vector3 targetPos;
-
+    
     void Start()
     {
-
+        
     }
 
     void FixedUpdate()
