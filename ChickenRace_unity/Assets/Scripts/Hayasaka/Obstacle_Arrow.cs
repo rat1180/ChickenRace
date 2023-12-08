@@ -18,13 +18,13 @@ public class Obstacle_Arrow : Obstacle
     /// <summary>
     /// èâä˙âª
     /// </summary>
-    public override void Init()
+    protected override void Init()
     {
         obstacleCenterPos = new Vector2Int(0, 0);
         shotCnt = 3.0f;
         isShotFlg = true;
     }
-    public override void update()
+    protected override void update()
     {
         if (isShotFlg)
         {
@@ -39,7 +39,7 @@ public class Obstacle_Arrow : Obstacle
             }
         }
     }
-    public override void ObjStart()
+    protected override void ObjStart()
     {
         shotCnt = 3.0f;
         isShotFlg = true;

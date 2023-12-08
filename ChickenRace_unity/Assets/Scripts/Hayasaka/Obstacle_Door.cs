@@ -20,7 +20,7 @@ public class Obstacle_Door : Obstacle
     /// <summary>
     /// èâä˙âª
     /// </summary>
-    public override void Init()
+    protected override void Init()
     {
         obstacleCenterPos = new Vector2Int(0, 0);
         colCnt = 3.0f;
@@ -34,7 +34,7 @@ public class Obstacle_Door : Obstacle
         cbc2d = ChildObj.GetComponent<BoxCollider2D>();
         cbc2d2 = ChildObj2.GetComponent<BoxCollider2D>();
     }
-    public override void update()
+    protected override void update()
     {
         if (isColFlg)
         {
@@ -49,7 +49,7 @@ public class Obstacle_Door : Obstacle
             }
         }
     }
-    public override void ObjStart()
+    protected override void ObjStart()
     {
         colCnt = 3.0f;
         isColFlg = true;
