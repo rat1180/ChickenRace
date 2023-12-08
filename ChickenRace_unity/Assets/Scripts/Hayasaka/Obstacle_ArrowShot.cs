@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Obstacle_ArrowShot : MonoBehaviour
 {
-    Rigidbody2D rb;
-    float speed;
+    protected Rigidbody2D rb;
+    protected float speed;
     // Start is called before the first frame update
     void Start()
     {
