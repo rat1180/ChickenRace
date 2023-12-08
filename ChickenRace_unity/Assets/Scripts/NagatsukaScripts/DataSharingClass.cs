@@ -38,7 +38,7 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
     /// </summary>
     public void PushID(int iD)
     {
-        photonView.RPC(nameof(PushID), RpcTarget.All, iD);
+        photonView.RPC(nameof(PushIDRPC), RpcTarget.All, iD);
     }
 
     /// <summary>

@@ -92,6 +92,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void ClearCoroutine()
     {
+        StopCoroutine(stateCoroutine);
+
         stateCoroutine = null;
         isFazeEnd = false;
     }
@@ -208,6 +210,7 @@ public class GameManager : MonoBehaviour
             gameState = GameStatus.READY;
             isFazeEnd = false;
             stateCoroutine = null;
+            Instance = this;
 
             //各マネージャーを生成
             //データ共有クラスを生成
@@ -281,6 +284,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         DebugLog("ゲームスタート");
+        gameState++;
         //ステートコルーチンの終了処理
         ClearCoroutine();
     }
@@ -312,11 +316,15 @@ public class GameManager : MonoBehaviour
             yield return new WaitUntil(() => gameProgress.dataSharingClass.ID[gameProgress.dataSharingClass.ID.Count-1] == 0);
         }
 
+        //選択クラスを生成
+
         //選択クラスによって終了呼び出し
         while (!isFazeEnd)
         {
             //障害物候補を表示
             var list = gameProgress.dataSharingClass.ID;
+
+            //時間制限にかかれば終了
 
             //障害物選択まで待機
             yield return null;
