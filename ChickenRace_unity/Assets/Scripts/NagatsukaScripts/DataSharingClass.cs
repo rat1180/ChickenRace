@@ -9,6 +9,7 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
     public List<int> ID = new List<int>();
     public List<int> score = new List<int>();
     public List<float> rankTime = new List<float>();
+    public float elapsedTime;//Œo‰ßŠÔ.
 
     // Start is called before the first frame update
     void Start()
@@ -83,6 +84,23 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
     private void ResetIDListRPC()
     {
         ID = new List<int>();
+    }
+
+    /// <summary>
+    /// Œo‰ßŠÔ‚ğ“ü‚ê‚éŠÖ”
+    /// </summary>
+    public void PushElapsedTime(float time)
+    {
+        photonView.RPC(nameof(PushElapsedTimeRPC), RpcTarget.All, time);
+    }
+
+    /// <summary>
+    /// w’è‚³‚ê‚½index‚ğ0‚É‚·‚éRPC.
+    /// </summary>
+    [PunRPC]
+    private void PushElapsedTimeRPC(float time)
+    {
+        elapsedTime = time;
     }
 
     /// <summary>
