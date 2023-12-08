@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
-//using ConstList_old;
+using ConstList;
 
 
 public class LobbyManager : MonoBehaviourPunCallbacks
@@ -61,7 +61,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         ConectServer.RoomProperties.RoomName = roomNameDropdown.value.ToString(); //入室するルームの名前を設定.
         ConectServer.RoomProperties.MaxPlayer = maxPlayer;        //ルームに参加できる人数の設定.
         PhotonNetwork.NickName = inputNickName.text;
-        SceneManager.LoadScene("WaitRoom");                       //ゲーム待機シーンに移動.
+        SceneManager.LoadScene(SceneNames.WaitRoom.ToString());                       //ゲーム待機シーンに移動.
     }
 
     public void SoloMode()
