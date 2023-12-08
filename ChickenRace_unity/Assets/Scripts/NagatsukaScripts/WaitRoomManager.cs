@@ -96,7 +96,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         photonView.RPC(nameof(SendChat), RpcTarget.All, name, chat,BLACK16);
     }
     /// <summary>
-    /// Player側で打つチャットの関数.
+    /// Player側で打つチャットを送信する関数.
     /// </summary>
     [PunRPC]
     void SendChat(string name, string message, string color16)
@@ -105,7 +105,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         PushChat(chat, color16);
     }
     /// <summary>
-    /// システムメッセージ関連のチャット関数.
+    /// システムメッセージ(入退室など)を送信する関数.
     /// </summary>
     [PunRPC]
     void SendChat(string message,string color16)
