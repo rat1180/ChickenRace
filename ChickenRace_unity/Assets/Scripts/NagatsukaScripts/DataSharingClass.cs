@@ -13,7 +13,7 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
     // Start is called before the first frame update
     void Start()
     {
-        ProtTypeManager.Instance.SetDataSheringClass(gameObject.GetComponent<DataSharingClass>());
+        GameManager.Instance.SetDataSheringClass(gameObject.GetComponent<DataSharingClass>());
         //人数分スコアの入れ物を用意する.
         for(int i=0;i< ConectServer.RoomProperties.MaxPlayer; i++)
         {
