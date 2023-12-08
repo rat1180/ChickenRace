@@ -5,19 +5,20 @@ using UnityEngine.Events;
 
 public class Obstacle_Cannon : Obstacle
 {
-    Vector2 look;
+    [SerializeField]
+    Quaternion look;
     float pow;
     /// <summary>
     /// èâä˙âª
     /// </summary>
-    public override void Init()
+    protected override void Init()
     {
         obstacleCenterPos = new Vector2Int(0, 0);
-        look = new Vector3(0, 0,1);
         pow = 1.5f;
     }
     void OnTriggerEnter2D(Collider2D other)
     {
+        look = this.transform.rotation;
         other.GetComponent<Obstacle_ArrowShot>().BlowArrow(look, pow);
     }
 }

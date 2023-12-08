@@ -19,7 +19,7 @@ public class Obstacle_ArrowShot : MonoBehaviour
         Moving();
     }
     //íºêiÇ≥ÇπÇÈ
-    void Moving()
+    protected virtual void Moving()
     {
         rb.velocity = this.transform.up * speed;
     }
@@ -27,12 +27,18 @@ public class Obstacle_ArrowShot : MonoBehaviour
     {
         this.transform.rotation = Quaternion.Euler(0, 0, rot);
     }
-    public void BlowArrow(Vector3 qtn,float power)
+    public void BlowArrow(Quaternion qtn,float power)
     {
-        this.transform.eulerAngles = qtn;
+        StartCoroutine(DelayBA(qtn, power,0.25f));
+    }
+    IEnumerator DelayBA(Quaternion qtn, float power,float dt)
+    {
+        yield return new WaitForSeconds(dt);
+        this.transform.rotation = qtn;
 
         speed *= power;
         Debug.Log(speed);
+        
     }
     //void OnBecameInvisible()
     //{
