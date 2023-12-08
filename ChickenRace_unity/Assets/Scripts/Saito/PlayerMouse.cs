@@ -7,7 +7,7 @@ public class PlayerMouse : MonoBehaviour
 {
     [SerializeField] Vector3 moveVector;     // InputActionから受け取った値を入れる.
     [SerializeField] float moveSpeed;        // 動く速さ.
-    [SerializeField] int itemId;             // アイテム番号.
+    [SerializeField] int index;             // アイテム番号.
     [SerializeField] bool isInstalled;         // アイテムの設置が可能か.
     [SerializeField] GameObject mouseImage;  // 自身の画像.
     [SerializeField] GameObject instanceObj; // 生成した画像.
@@ -43,7 +43,7 @@ public class PlayerMouse : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collision)
     {
         // 当たった画像のIDを取得.
-        itemId = collision.GetComponent<SelectImage>().itemId;
+        index = collision.GetComponent<SelectImage>().itemId;
     }
 
     /// <summary>
