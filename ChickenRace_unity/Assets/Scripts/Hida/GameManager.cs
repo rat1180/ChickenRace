@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 
-public class ProtTypeManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     enum GameStatus
     {
@@ -45,7 +45,7 @@ public class ProtTypeManager : MonoBehaviour
     [SerializeField, Tooltip("デバッグ用のログを表示するかどうか")] bool isDebug;
 
 
-    public static ProtTypeManager Instance;
+    public static GameManager Instance;
 
     #region Unityイベント
 
@@ -276,6 +276,8 @@ public class ProtTypeManager : MonoBehaviour
         while (!isFazeEnd)
         {
             DebugLog("演出中...");
+            yield return new WaitForSeconds(3.0f);
+            EndFaze();
             yield return null;
         }
         DebugLog("ゲームスタート");
