@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using PhotonMethods;
 
 public class GameManager : MonoBehaviour
 {
     enum GameStatus
     {
+        SLEEP,
         READY,  //開始準備中
         START,  //ゲーム開始前
         SELECT, //障害物選択中
@@ -52,6 +54,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gameState = GameStatus.SLEEP;
         StartCoroutine(GameInit());
     }
 
@@ -60,7 +63,7 @@ public class GameManager : MonoBehaviour
     {
         GameLoop();
 
-        if(Input.GetKeyDown(KeyCode.Space)){
+        if(Input.GetKeyDown(KeyCode.RightArrow)){
             DebugNextState();
         }
     }
@@ -81,9 +84,11 @@ public class GameManager : MonoBehaviour
     bool CheckInitState(InitStatus status)
     {
         //全員の初期化状態を確認
-        InitStatus playerinitlist = status;
-        if (playerinitlist == status) return true;
-        else return false;
+        foreach(var player in PhotonNetwork.CurrentRoom.Players)
+        {
+            if (player.Value.GetInitStatus() != (int)status) return false;
+        }
+        return true;
     }
 
     /// <summary>
@@ -152,6 +157,9 @@ public class GameManager : MonoBehaviour
         string coroutinename = "null";
         switch (gameState)
         {
+            case GameStatus.SLEEP:
+                return;
+                break;
             case GameStatus.READY:
                 coroutinename = "StateREADY";
                 break;
@@ -185,7 +193,8 @@ public class GameManager : MonoBehaviour
 
     IEnumerator GameInit()
     {
-        //状態を送信
+        //自分自身を取得
+        var user = PhotonNetwork.LocalPlayer;
         InitStatus initStatus = InitStatus.CONECT;
 
         //1.接続を確認<CONECT
@@ -199,12 +208,36 @@ public class GameManager : MonoBehaviour
             }
 
             //状態を送信
-            initStatus = InitStatus.RESET;
+            initStatus = InitStatus.CONECT;
+            user.SetInitStatus((int)initStatus);
+
             //他のプレイヤーを待機
-            yield return new WaitUntil(() => CheckInitState(InitStatus.RESET));
+            yield return new WaitUntil(() => CheckInitState(InitStatus.CONECT));
             DebugLog("接続確認!");
 
         }
+
+        //マスターの開始を待機
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log("開始まで待機");
+            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.S));
+            //状態を送信
+            initStatus = InitStatus.RESET;
+            user.SetInitStatus((int)initStatus);
+        }
+        else
+        {
+            Debug.Log("開始まで待機");
+            yield return new WaitUntil(() => PhotonNetwork.MasterClient.GetInitStatus() == (int)InitStatus.RESET);
+            //状態を送信
+            initStatus = InitStatus.RESET;
+            user.SetInitStatus((int)initStatus);
+        }
+
+        //他のプレイヤーを待機
+        yield return new WaitUntil(() => CheckInitState(InitStatus.RESET));
+
         //2.各値を初期化<RESET
         {
             gameState = GameStatus.READY;
@@ -227,8 +260,10 @@ public class GameManager : MonoBehaviour
 
             //Userクラス生成
 
+
             //状態を送信
             initStatus = InitStatus.WAIT;
+            user.SetInitStatus((int)initStatus);
             //他のプレイヤーを待機
             yield return new WaitUntil(() => CheckInitState(InitStatus.WAIT));
         }
@@ -237,6 +272,7 @@ public class GameManager : MonoBehaviour
             //同時にゲーム開始
             //状態を送信
             initStatus = InitStatus.START;
+            user.SetInitStatus((int)initStatus);
             //他のプレイヤーを待機
             yield return new WaitUntil(() => CheckInitState(InitStatus.START));
         }
