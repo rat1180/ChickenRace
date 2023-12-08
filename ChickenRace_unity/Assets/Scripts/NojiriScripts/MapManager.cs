@@ -5,8 +5,6 @@ using UnityEngine.Tilemaps;
 
 public class MapManager : MonoBehaviour
 {
-    public Vector3Int gridPos; // テスト用設置位置
-
     [Header("テスト用設置オブジェクト")]
     [SerializeField] private GameObject gameObj; // 移動したいオブジェクトの情報取得
 
@@ -67,8 +65,6 @@ public class MapManager : MonoBehaviour
 
             yield return null;
         }
-
-        Debug.Log("コルーチン終了");
     }
     #endregion
 
@@ -122,7 +118,6 @@ public class MapManager : MonoBehaviour
         {
             if (installPos == UsedGridList[i])
             {
-                Debug.LogError("障害物が配置済みです");
                 return true;
             }
         }
@@ -143,7 +138,7 @@ public class MapManager : MonoBehaviour
             return;
         }
 
-        // カーソルの位置に障害物を生成
+        // 生成する障害物を選択
         //gameObj = (GameObject)Resources.Load("Square"); // 仮Square
 
         // 障害物の生成
@@ -159,7 +154,7 @@ public class MapManager : MonoBehaviour
     /// <summary>
     /// フラグ参照メソッド
     /// </summary>
-    /// <returns>設置フラグ　true：設置済み　false：未設置</returns>
+    /// <returns>設置フラグ　true:設置済み　false:未設置</returns>
     public bool IsInstallReference()
     {
         return isInstall;
