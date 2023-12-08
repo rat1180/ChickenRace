@@ -41,21 +41,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         connectRoomButton.transform.GetChild(0).gameObject.GetComponent<Text>().text = "入室";
     }
 
-
-
     /// <summary>
-    /// ルームのボタンを押したら部屋を移動する.
+    /// 入室ボタンを押したらルームに入る.
     /// </summary>
-    public void JoinRoom(int RoomNm)
-    {
-        //ButtonRoot.interactable = false;                          //他のルームのボタンを押下不可にする.
-        connectRoomButton.interactable = false;                          //他のルームのボタンを押下不可にする.
-        SceneManager.LoadScene("WaitRoom");                       //ゲーム待機シーンに移動.
-    }
-
     public void JoinRoom()
     {
-        //Debug.Log(roomNameDropdown.value + "の部屋");
         ConectServer.RoomProperties.MaxPlayer = maxPlayer;
         connectRoomButton.interactable = false;                          //他のルームのボタンを押下不可にする.
         ConectServer.RoomProperties.RoomName = roomNameDropdown.value.ToString(); //入室するルームの名前を設定.
@@ -68,7 +58,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         ButtonRoot.interactable = false;
         ConectServer.RoomProperties.RoomName = "Offline";
-        SceneManager.LoadScene("WaitRoom");
+        SceneManager.LoadScene(SceneNames.WaitRoom.ToString());
     }
 
     public void TitleBack()
@@ -100,7 +90,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     void Start()
     {
         //参加処理中かロビー参加前は押せなくする
-        //ButtonRoot.interactable = false;
         connectRoomButton.interactable = false;
         connectRoomButton.transform.GetChild(0).gameObject.GetComponent<Text>().text = "接続中";
     }

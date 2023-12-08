@@ -8,12 +8,12 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
 {
     public List<int> ID = new List<int>();
     public List<int> score = new List<int>();
-
     public List<float> rankTime = new List<float>();
 
     // Start is called before the first frame update
     void Start()
     {
+        ProtTypeManager.Instance.SetDataSheringClass(gameObject.GetComponent<DataSharingClass>());
         //人数分スコアの入れ物を用意する.
         for(int i=0;i< ConectServer.RoomProperties.MaxPlayer; i++)
         {
@@ -40,21 +40,6 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
     {
         photonView.RPC(nameof(PushID), RpcTarget.All, iD);
     }
-    /// <summary>
-    /// 外部からindexを受け取って指定された場所を0にする関数
-    /// 引数にはindexを1つずつ指定.
-    /// </summary>
-    private void ResetID(int index)
-    {
-        photonView.RPC(nameof(ResetID), RpcTarget.All, index);
-    }
-    /// <summary>
-    /// 外部からリストを初期化する関数.
-    /// </summary>
-    private void ResetIDList()
-    {
-        photonView.RPC(nameof(ResetIDList), RpcTarget.All);
-    }
 
     /// <summary>
     /// IDを入れるRPC.
@@ -66,12 +51,29 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     /// <summary>
-    /// IDを0にするRPC.
+    /// 外部からindexを受け取って指定された場所を0にする関数
+    /// 引数にはindexを1つずつ指定.
+    /// </summary>
+    public void ResetID(int index)
+    {
+        photonView.RPC(nameof(ResetID), RpcTarget.All, index);
+    }
+
+    /// <summary>
+    /// 指定されたindexを0にするRPC.
     /// </summary>
     [PunRPC]
     private void ResetIDRPC(int index)
     {
         ID[index] = 0;
+    }
+
+    /// <summary>
+    /// 外部からリストを初期化する関数.
+    /// </summary>
+    public void ResetIDList()
+    {
+        photonView.RPC(nameof(ResetIDList), RpcTarget.All);
     }
 
     /// <summary>
@@ -82,7 +84,6 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
     {
         ID = new List<int>();
     }
-
 
     /// <summary>
     /// スコア加算タイミングでこの関数を呼び出す
