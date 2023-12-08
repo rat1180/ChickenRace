@@ -19,12 +19,12 @@ public class User : MonoBehaviour
         
     }
 
-    private void GeneratePlayer()
+    public void GeneratePlayer()
     {
         Instantiate(player, transform.position, transform.rotation);
     }
 
-    private void GenerateMouse(bool mode)
+    public void GenerateMouse(bool mode)
     {
         isMode = mode;
         Instantiate(mouse, transform.position, transform.rotation);
