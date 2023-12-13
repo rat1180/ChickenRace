@@ -39,6 +39,14 @@ public class User : MonoBehaviour
         Instantiate(mouse, transform.position, transform.rotation);
     }
 
+    /// <summary>
+    /// ƒ}ƒEƒX‚ğíœ.
+    /// </summary>
+    public void DestroyMouse()
+    {
+        Destroy(gameObject);
+    }
+
     public int SetMode()
     {
         return isMode;

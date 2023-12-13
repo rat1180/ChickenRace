@@ -74,6 +74,7 @@ public class PlayerMouse : MonoBehaviour
         //if (User.GetComponent<User>().SetMode() == false)
         //{
         //    // 選択フェーズ.
+        //GameManager.Instance.MouseSelected(index);
            
         //}
         //else
