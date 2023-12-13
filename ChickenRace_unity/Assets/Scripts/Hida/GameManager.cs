@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
     [SerializeField, Tooltip("デバッグ用のログを表示するかどうか")] bool isDebug;
 
 
-    public static GameManager Instance;
+    public static GameManager instance;
 
     #region Unityイベント
 
@@ -189,6 +189,11 @@ public class GameManager : MonoBehaviour
         gameProgress.dataSharingClass = datasharingclass;
     }
 
+    public GameObject GetMapManager()
+    {
+        return gameProgress.mapManager.gameObject;
+    }
+
     #endregion
 
     #region デバッグ用
@@ -240,8 +245,10 @@ public class GameManager : MonoBehaviour
                 coroutinename = "StatePLANT";
                 break;
             case GameStatus.RACE:
+                coroutinename = "StateRACE";
                 break;
             case GameStatus.RESULT:
+                coroutinename = "StateRESULT";
                 break;
             case GameStatus.END:
                 break;
@@ -312,7 +319,7 @@ public class GameManager : MonoBehaviour
             gameState = GameStatus.READY;
             isFazeEnd = false;
             stateCoroutine = null;
-            Instance = this;
+            instance = this;
 
             //各マネージャーを生成
             //データ共有クラスを生成
@@ -440,7 +447,7 @@ public class GameManager : MonoBehaviour
             if (false)
             {
                 //マウス削除
-                //gameProgress.user
+                gameProgress.user.DestroyMouse();
 
                 //仮のアイテム渡し
                 {
@@ -459,6 +466,7 @@ public class GameManager : MonoBehaviour
             if (CheckUserIsHave())
             {
                 //マウス削除
+                gameProgress.user.DestroyMouse();
                 EndFaze();
             }
 
@@ -511,12 +519,14 @@ public class GameManager : MonoBehaviour
                 EndFaze();
             }
 
+
             yield return null;
         }
 
         //設置終了指示
         gameProgress.mapManager.CreativeModeEnd();
         //マウス削除
+        gameProgress.user.DestroyMouse();
 
         //状態送信
         PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
@@ -525,6 +535,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitUntil(() => CheckInGameState(InGameStatus.END));
 
         DebugLog("障害物設置終了");
+        gameState++;
 
         //ステートコルーチンの終了処理
         ClearCoroutine();

@@ -9,6 +9,9 @@ public class User : MonoBehaviour
     int isMode;
     int itemId;
 
+    //âº
+    GameObject mouseObjcet;
+
     void Start()
     {
         
@@ -36,7 +39,16 @@ public class User : MonoBehaviour
             GetItemId(mode);
         }
 
-        Instantiate(mouse, transform.position, transform.rotation);
+        mouseObjcet = Instantiate(mouse, transform.position, transform.rotation);
+    }
+
+    /// <summary>
+    /// É}ÉEÉXÇçÌèú.
+    /// </summary>
+    public void DestroyMouse()
+    {
+        Destroy(mouseObjcet);
+        //Destroy(gameObject);
     }
 
     public int SetMode()

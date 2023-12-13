@@ -45,4 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 6990167391782563444, guid: 97f29c69ac67e9741ba987c162c49308, type: 3}
-  mouse: {fileID: 6990167391782563444, guid: 97f29c69ac67e9741ba987c162c49308, type: 3}
+  mouse: {fileID: 6455344753330370069, guid: 846a7c95f399daa45a1f3e69f30598af, type: 3}

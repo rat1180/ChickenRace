@@ -24,6 +24,7 @@ public class PlayerMouse : MonoBehaviour
     private void Init()
     {
         ImageInstance();
+        SetMapObject();
     }
 
     void Start()
@@ -69,11 +70,12 @@ public class PlayerMouse : MonoBehaviour
     /// </summary>
     private void OnClick()
     {
-        // Debug.Log("クリック");
+         Debug.Log("クリック");
 
         //if (User.GetComponent<User>().SetMode() == false)
         //{
         //    // 選択フェーズ.
+        //GameManager.Instance.MouseSelected(index);
            
         //}
         //else
@@ -124,5 +126,10 @@ public class PlayerMouse : MonoBehaviour
     private void OnRightRotate()
     {
         saveAngle -= angle;
+    }
+
+    private void SetMapObject()
+    {
+        Map = GameManager.instance.GetMapManager();
     }
 }
