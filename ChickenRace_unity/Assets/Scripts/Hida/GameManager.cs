@@ -180,7 +180,7 @@ public class GameManager : MonoBehaviour
         if (id == -1 || id == 0) return false;
 
         gameProgress.dataSharingClass.ResetID(index);
-        //userにid渡し
+        //gameProgress.user. = id;
         return true;
     }
 
@@ -427,7 +427,7 @@ public class GameManager : MonoBehaviour
         }
 
         //選択クラスを生成
-        //gameProgress.user.GenerateMouse();
+        gameProgress.user.GenerateMouse(0);
         PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.READY);
 
         //選択クラスによって終了呼び出し
@@ -440,6 +440,7 @@ public class GameManager : MonoBehaviour
             if (false)
             {
                 //マウス削除
+                //gameProgress.user
 
                 //仮のアイテム渡し
                 {
@@ -455,11 +456,11 @@ public class GameManager : MonoBehaviour
             }
 
             //マウスから障害物情報が送られ、userに渡れば終了
-            //if (CheckUserIsHave())
-            //{
-            //    //マウス削除
-            //    EndFaze();
-            //}
+            if (CheckUserIsHave())
+            {
+                //マウス削除
+                EndFaze();
+            }
 
             //テスト用
             if (Input.GetKeyDown(KeyCode.S)) EndFaze();
@@ -489,27 +490,71 @@ public class GameManager : MonoBehaviour
     IEnumerator StatePLANT()
     {
         DebugLog("障害物設置開始");
+        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.READY);
         gameProgress.mapManager.CreativeModeStart();
+
+        //マウス生成
+        gameProgress.user.GenerateMouse(1);
 
         while (!isFazeEnd)
         {
             //設置中
             //設置されたかどうかをmapManagerから受取
-            if (true)
-            {
-
+            if (gameProgress.mapManager.IsInstallReference())
+            { 
+                EndFaze();
             }
 
-            //全員が設置完了するか時間切れで設置完了
-            if (true)
+            //時間切れで設置終了
+            if (false)
             {
-
+                EndFaze();
             }
 
             yield return null;
         }
 
+        //設置終了指示
+        gameProgress.mapManager.CreativeModeEnd();
+        //マウス削除
+
+        //状態送信
+        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
+
+        //全員の障害物選択まで待機
+        yield return new WaitUntil(() => CheckInGameState(InGameStatus.END));
+
         DebugLog("障害物設置終了");
+
+        //ステートコルーチンの終了処理
+        ClearCoroutine();
+    }
+
+    /// <summary>
+    /// RACE状態の時に呼ばれるコルーチン
+    /// キャラが全て終了するまで待機し、
+    /// 終了時に結果をまとめる
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator StateRACE()
+    {
+        DebugLog("レースフェーズ開始");
+        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.READY);
+
+        //全員が待機状態になるまで待機
+        yield return new WaitUntil(() => CheckInGameState(InGameStatus.READY));
+
+        //キャラの出現
+        gameProgress.user.GeneratePlayer();
+
+        DebugLog("READY演出");
+
+        while (gameState != GameStatus.START)
+        {
+            //準備中であることを表示
+
+            yield return null;
+        }
 
         //ステートコルーチンの終了処理
         ClearCoroutine();
