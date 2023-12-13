@@ -15,7 +15,10 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            ChangeObstacleImage();
+        }
     }
 
     /// <summary>
@@ -23,6 +26,21 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void ChangeObstacleImage()
     {
-
+        imageObjects.transform.GetChild(0).GetComponent<Image>().sprite =
+            ResorceManager.instance.GetObstacleImage(ResorceNames.OBSTACLE_IMAGE_NAMES.cutter);
+        imageObjects.transform.GetChild(1).GetComponent<Image>().sprite =
+            ResorceManager.instance.GetObstacleImage(ResorceNames.OBSTACLE_IMAGE_NAMES.cutter);
+        imageObjects.transform.GetChild(2).GetComponent<Image>().sprite =
+            ResorceManager.instance.GetObstacleImage(ResorceNames.OBSTACLE_IMAGE_NAMES.taihou);
+        imageObjects.transform.GetChild(3).GetComponent<Image>().sprite =
+            ResorceManager.instance.GetObstacleImage(ResorceNames.OBSTACLE_IMAGE_NAMES.blackhole);
+        //imageObjects.transform.GetChild(0).GetComponent<Image>().sprite =
+        //    ResorceManager.instance.GetObstacleImage(0);
+        //imageObjects.transform.GetChild(1).GetComponent<Image>().sprite =
+        //    ResorceManager.instance.GetObstacleImage(1);
+        //imageObjects.transform.GetChild(2).GetComponent<Image>().sprite =
+        //    ResorceManager.instance.GetObstacleImage(2);
+        //imageObjects.transform.GetChild(3).GetComponent<Image>().sprite =
+        //    ResorceManager.instance.GetObstacleImage(3);
     }
 }
