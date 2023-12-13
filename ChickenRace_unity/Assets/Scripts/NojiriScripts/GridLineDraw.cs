@@ -6,6 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class GridLineDraw : MonoBehaviour
 {
+    public int diff = 2;
+
     // Inspector用
     public float gridSize = 1f;
     public Vector2Int size = new Vector2Int(8, 8); // 縦線と横線の数
@@ -41,14 +43,8 @@ public class GridLineDraw : MonoBehaviour
 
     private Mesh ReGrid(Mesh mesh)
     {
-        if (back)
-        {
-            GetComponent<MeshRenderer>().material = new Material(Shader.Find("Sprites/Default"));
-        }
-        else
-        {
-            GetComponent<MeshRenderer>().material = new Material(Shader.Find("GUI/Text Shader"));
-        }
+        // グリッド描画で使用するマテリアルの設定
+        GetComponent<MeshRenderer>().material = new Material(Shader.Find("Sprites/Default"));
 
         mesh.Clear();
 
@@ -70,14 +66,37 @@ public class GridLineDraw : MonoBehaviour
         float horizontalDiff = horizontalWidth / horizontalDrawSize;
         float verticalDiff = verticalWidth / verticalDrawSize;
 
+        //int horizontalResolution;
+        //int verticalResolution;
+
+        //if (horizontalDrawSize > verticalDrawSize)
+        //{
+        //    horizontalResolution = (horizontalDrawSize + ) * 2;
+        //    verticalResolution = (verticalDrawSize + 2) * 2;
+        //}
+        //else if (verticalDrawSize > horizontalDrawSize)
+        //{
+        //    verticalResolution = (verticalDrawSize + diff) * 2;
+
+        //}
+        //else
+        //{
+        //    horizontalResolution = (horizontalDrawSize + 2) * 2;
+        //    verticalResolution = (verticalDrawSize + 2) * 2;
+        //}
+
         // 最後の２辺を追加(頂点の総数)
         int horizontalResolution = (horizontalDrawSize + 2) * 2;
         int verticalResolution = (verticalDrawSize + 2) * 2;
 
+        // 横線と縦線の頂点、UV座標、ラインのインデックス、色のデータを初期化
         Vector3[] vertices = new Vector3[horizontalResolution + verticalResolution];
         Vector2[] uvs = new Vector2[horizontalResolution + verticalResolution];
         int[] lines = new int[horizontalResolution + verticalResolution];
         Color[] colors = new Color[horizontalResolution + verticalResolution];
+
+        //int difference = 2 - Mathf.Abs(size.x - size.y);
+        //Debug.Log(difference);
 
         // 横線の頂点を設定
         for (int i = 0; i < horizontalResolution; i += 4)
@@ -97,6 +116,7 @@ public class GridLineDraw : MonoBehaviour
             vertices[i + 3] = new Vector3(verticalEndPosition.x, verticalEndPosition.y - (verticalDiff * (float)(i - horizontalResolution)), 0);
         }
 
+        // 全ての頂点に対してUV座標、ラインのインデックス、色のデータを設定
         for (int i = 0; i < horizontalResolution + verticalResolution; i++)
         {
             uvs[i] = Vector2.zero;
@@ -106,11 +126,13 @@ public class GridLineDraw : MonoBehaviour
 
         Vector3 rotDirection = Vector3.forward;
 
+        // 頂点を指定の方向に回転移動させる
         mesh.vertices = RotationVertices(vertices, rotDirection);
         mesh.uv = uvs;
         mesh.colors = colors;
         mesh.SetIndices(lines, MeshTopology.Lines, 0);
 
+        // 更新前の値を保存
         originGridSize = gridSize;
         originSize.x = size.x;
         originSize.y = size.y;
@@ -120,6 +142,12 @@ public class GridLineDraw : MonoBehaviour
         return mesh;
     }
 
+    /// <summary>
+    /// 頂点配列データーをすべて指定の方向へ回転移動させるメソッド
+    /// </summary>
+    /// <param name="vertices">横線と縦線の頂点</param>
+    /// <param name="rotDirection">指定の方向</param>
+    /// <returns></returns>
     private Vector3[] RotationVertices(Vector3[] vertices, Vector3 rotDirection)
     {
         Vector3[] ret = new Vector3[vertices.Length];
