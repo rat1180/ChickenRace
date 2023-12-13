@@ -560,7 +560,9 @@ public class GameManager : MonoBehaviour
 
         DebugLog("READY演出");
 
-        while (gameState != GameStatus.START)
+        DebugLog("レーススタート");
+        //キャラの操作
+        while (!isFazeEnd)
         {
             //準備中であることを表示
 
