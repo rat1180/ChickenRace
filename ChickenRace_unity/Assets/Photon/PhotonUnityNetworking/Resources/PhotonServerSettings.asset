@@ -48,6 +48,10 @@ MonoBehaviour:
   - PushIDRPC
   - ResetIDListRPC
   - ResetIDRPC
+  - ReturnTimeRPC
+  - PushGoalTimeRPC
+  - PushTimeRPC
+  - PushElapsedTimeRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
