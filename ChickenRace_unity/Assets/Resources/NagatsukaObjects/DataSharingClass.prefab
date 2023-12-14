@@ -48,6 +48,7 @@ MonoBehaviour:
   ID: 
   score: 
   rankTime: []
+  elapsedTime: 0
 --- !u!114 &-3906939933775308792
 MonoBehaviour:
   m_ObjectHideFlags: 0
