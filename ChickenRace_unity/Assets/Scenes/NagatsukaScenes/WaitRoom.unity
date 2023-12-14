@@ -1147,6 +1147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageObjects: {fileID: 593841675}
   id: 
+  testSoldOutInex: 0
 --- !u!4 &676629885
 Transform:
   m_ObjectHideFlags: 0
@@ -2735,8 +2736,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b61aca331518ab94c9c26ca1a8e75aee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MessageText: {fileID: 2033806403}
-  SceanMoveButton: {fileID: 1680006325}
+  messageText: {fileID: 2033806403}
+  sceanMoveButton: {fileID: 1680006325}
   chatGroup: {fileID: 1815832718}
   roomInformation: {fileID: 889178361}
   player: {fileID: 6990167391782563444, guid: 97f29c69ac67e9741ba987c162c49308, type: 3}

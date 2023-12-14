@@ -38,6 +38,11 @@ public class GameManager : MonoBehaviour
         END,
     }
 
+    const float DEAD = -1f;
+    const int BONUS_SCORE = 1;
+    const int BASE_SCORE = 3;
+    const int GAME_END_SCORE = 10;
+
     /// <summary>
     /// ゲームの進行に必要なマネージャー等をまとめたクラス
     /// </summary>
@@ -153,6 +158,83 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// データ共有クラスのタイムリストから自身の順位を判定する
+    /// 返り値で順位を戻すが、全員死亡の場合のみ0を返す
+    /// 自身が死んでいる場合はDEAD
+    /// </summary>
+    /// <returns></returns>
+    int CheckRaceRank()
+    {
+        var times = gameProgress.dataSharingClass.rankTime;
+        float mytime = times[PhotonNetwork.LocalPlayer.ActorNumber];
+        int rank = 1;
+        int deadcnt = 0;
+        for (int i = 0; i < times.Count; i++)
+        {
+            //自身の状態をチェック
+            if (i == PhotonNetwork.LocalPlayer.ActorNumber)
+            {
+                if (mytime == DEAD) return (int)DEAD;
+            }
+
+            //対象の死亡をチェック
+            if (times[i] == DEAD)
+            {
+                deadcnt++;
+                continue;
+            }
+
+            //タイムを比較
+            if (mytime > times[i])
+            {
+                rank++;
+            }
+        }
+
+        //全員死亡
+        if (deadcnt == times.Count-1)
+        {
+            rank = 0;
+        }
+
+        return rank;
+    }
+
+    /// <summary>
+    /// 順位を渡すとそれに応じたスコアを計算し、返す
+    /// </summary>
+    /// <param name="rank"></param>
+    /// <returns></returns>
+    int SumScore(int rank)
+    {
+        //死亡時はポイントなし
+        if (rank == DEAD) return 0;
+
+        int addScore = BONUS_SCORE;
+        return BASE_SCORE + addScore;
+    }
+
+    List<int> ScoreCalculation()
+    {
+        List<int> scores = new List<int>();
+        foreach(var player in PhotonNetwork.PlayerList)
+        {
+            scores.Add(SumScore(player.GetRankStatus()));
+        }
+
+        return scores;
+    }
+
+    bool CheckGameEnd()
+    {
+        foreach(var score in gameProgress.dataSharingClass.score)
+        {
+            if (score >= GAME_END_SCORE) return true;
+        }
+        return false;
+    }
+
     #endregion
 
     #region クラス外で使用する関数
@@ -185,16 +267,39 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// 死亡時に呼ばれる関数
+    /// 自身のタイムを死亡定数にする
+    /// </summary>
     public void DeadPlayer()
     {
+        gameProgress.dataSharingClass.rankTime[PhotonNetwork.LocalPlayer.ActorNumber] = DEAD;
         EndFaze();
     }
 
+    /// <summary>
+    /// ゴール時に呼ばれる関数
+    /// その時点でのタイムを自身のタイムに保存する
+    /// </summary>
+    public void GoalPlayer()
+    {
+        gameProgress.dataSharingClass.rankTime[PhotonNetwork.LocalPlayer.ActorNumber] = (float)PhotonNetwork.Time;
+        EndFaze();
+    }
+
+    /// <summary>
+    /// ホストによって作成されたデータ共有クラスをセットする
+    /// </summary>
+    /// <param name="datasharingclass"></param>
     public void SetDataSheringClass(DataSharingClass datasharingclass)
     {
         gameProgress.dataSharingClass = datasharingclass;
     }
 
+    /// <summary>
+    /// マップマネージャーを要求する
+    /// </summary>
+    /// <returns></returns>
     public GameObject GetMapManager()
     {
         return gameProgress.mapManager.gameObject;
@@ -423,6 +528,9 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     IEnumerator StateSELECT()
     {
+        //生成済みの障害物を再生成
+        //gameProgress.mapManager
+
         DebugLog("障害物選択開始");
 
         //ホストなら障害物を抽選
@@ -589,20 +697,19 @@ public class GameManager : MonoBehaviour
 
             DebugLog("レース中");
 
+            if (Input.GetKeyDown(KeyCode.G)) GoalPlayer();
+            if(Input.GetKeyDown(KeyCode.U)) DeadPlayer();
+
             yield return null;
         }
 
         //自身の状態を送信
         PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
 
-        while (!CheckInGameState(InGameStatus.END))
-        {
-            //死亡後、ゴール後の観戦
+        //全員が待機状態になるまで待機
+        yield return new WaitUntil(() => CheckInGameState(InGameStatus.END));
 
-            yield return null;
-        }
-
-        //スコアの送信
+        gameState++;
 
         //ステートコルーチンの終了処理
         ClearCoroutine();
@@ -610,11 +717,42 @@ public class GameManager : MonoBehaviour
 
     IEnumerator StateRESULT()
     {
-        while (true)
+        DebugLog("リザルトフェーズ開始");
+        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.READY);
+
+        //全員が待機状態になるまで待機
+        yield return new WaitUntil(() => CheckInGameState(InGameStatus.READY));
+
+        //順位の計算
+        int rank = CheckRaceRank();
+        PhotonNetwork.LocalPlayer.SetRankStatus(rank);
+
+        //スコアの計算
+        var scorelist = ScoreCalculation();
+
+        DebugLog("順位、スコアの反映演出");
+
+        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.INGAME);
+        yield return new WaitUntil(() => CheckInGameState(InGameStatus.INGAME));
+        yield return new WaitForSeconds(2.0f);
+
+        DebugLog("演出終了");
+        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
+        yield return new WaitUntil(() => CheckInGameState(InGameStatus.END));
+
+        if (CheckGameEnd())
         {
-            yield return null;
+            DebugLog("ゲーム終了");
         }
-        
+        else
+        {
+            DebugLog("選択フェーズに返る");
+            gameState = GameStatus.SELECT;
+        }
+
+        //ステートコルーチンの終了処理
+        ClearCoroutine();
+
     }
 
     #endregion

@@ -49,7 +49,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         ConectServer.RoomProperties.MaxPlayer = maxPlayer;
         connectRoomButton.interactable = false;                          //他のルームのボタンを押下不可にする.
         ConectServer.RoomProperties.RoomName = roomNameDropdown.value.ToString(); //入室するルームの名前を設定.
-        ConectServer.RoomProperties.MaxPlayer = maxPlayer;        //ルームに参加できる人数の設定.
         PhotonNetwork.NickName = inputNickName.text;
         SceneManager.LoadScene(SceneNames.WaitRoom.ToString());                       //ゲーム待機シーンに移動.
     }
