@@ -698,7 +698,7 @@ public class GameManager : MonoBehaviour
             DebugLog("ÉåÅ[ÉXíÜ");
 
             if (Input.GetKeyDown(KeyCode.G)) GoalPlayer();
-            if(Input.GetKeyDown(KeyCode.K)) DeadPlayer();
+            if(Input.GetKeyDown(KeyCode.U)) DeadPlayer();
 
             yield return null;
         }
