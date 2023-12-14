@@ -1,15 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
+using Photon.Pun;
 
 public class MapManager : MonoBehaviour
 {
-    public Vector3Int gridPos; // テスト用設置位置
-
-    [Header("テスト用設置オブジェクト")]
     [SerializeField] private GameObject gameObj; // 移動したいオブジェクトの情報取得
-
     [SerializeField] private List<int> InstalledList;       // 設置した障害物リスト
     [SerializeField] private List<Vector2Int> UsedGridList; // 使用済みグリッドの位置リスト
 
@@ -67,8 +63,14 @@ public class MapManager : MonoBehaviour
 
             yield return null;
         }
+    }
 
-        Debug.Log("コルーチン終了");
+    /// <summary>
+    /// ResourcesManagerからidに対応するオブジェクトを取得する
+    /// </summary>
+    private GameObject GetObstaclePrefab()
+    {
+        return gameObj;
     }
     #endregion
 
@@ -122,7 +124,6 @@ public class MapManager : MonoBehaviour
         {
             if (installPos == UsedGridList[i])
             {
-                Debug.LogError("障害物が配置済みです");
                 return true;
             }
         }
@@ -135,6 +136,9 @@ public class MapManager : MonoBehaviour
     /// JudgeInstallメソッドからtrueが返った時に呼ばれる
     /// ID、グリッド位置を取得後、その位置に障害物生成
     /// </summary>
+    /// <param name="id">生成するオブジェクト番号</param>
+    /// <param name="angle">生成する際の向き</param>
+    /// <param name="gridPos">生成する位置</param>
     public void GenerateMapObject(int id, float angle, Vector2Int gridPos)
     {
         if (!isRunning)
@@ -143,8 +147,27 @@ public class MapManager : MonoBehaviour
             return;
         }
 
-        // カーソルの位置に障害物を生成
-        //gameObj = (GameObject)Resources.Load("Square"); // 仮Square
+        // 障害物生成
+        SpawnObstacle(id, angle, gridPos);
+
+        // 他のプレイヤーでSpawnObstacleメソッドの実行
+        var Obj = PhotonNetwork.Instantiate("GenerateObstacle", new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
+        Obj.GetComponent<GenerateObstacle>().SetObstacleID(id, angle, gridPos);
+
+        isInstall = true;
+    }
+
+    /// <summary>
+    /// 障害物の生成メソッド
+    /// 同時に他プレイヤーから呼ばれる
+    /// </summary>
+    /// <param name="id">生成するオブジェクト番号</param>
+    /// <param name="angle">生成する際の向き</param>
+    /// <param name="gridPos">生成する位置</param>
+    public void SpawnObstacle(int id, float angle, Vector2Int gridPos)
+    {
+        // 障害物の取得
+        gameObj = GetObstaclePrefab();
 
         // 障害物の生成
         Instantiate(gameObj, new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
@@ -152,14 +175,12 @@ public class MapManager : MonoBehaviour
         // 設置したオブジェクトIDと位置をリストに追加
         InstalledList.Add(id);
         UsedGridList.Add(gridPos);
-
-        isInstall = true;
     }
 
     /// <summary>
     /// フラグ参照メソッド
     /// </summary>
-    /// <returns>設置フラグ　true：設置済み　false：未設置</returns>
+    /// <returns>設置フラグ　true:設置済み　false:未設置</returns>
     public bool IsInstallReference()
     {
         return isInstall;
