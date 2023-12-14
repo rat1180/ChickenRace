@@ -439,6 +439,7 @@ public class GameManager : MonoBehaviour
         //ゲストなら抽選まで待機
         else
         {
+            yield return new WaitUntil(() => gameProgress.dataSharingClass.ID.Count != 0 ? true : false);
             yield return new WaitUntil(() => gameProgress.dataSharingClass.ID[gameProgress.dataSharingClass.ID.Count - 1] == 0);
         }
 

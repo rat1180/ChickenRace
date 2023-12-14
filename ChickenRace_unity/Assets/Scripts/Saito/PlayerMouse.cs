@@ -100,7 +100,7 @@ public class PlayerMouse : MonoBehaviour
     /// </summary>
     private void ImageInstance()
     {
-        instanceObj = Instantiate(mouseImage, transform.position, transform.rotation);
+        instanceObj = Photon.Pun.PhotonNetwork.Instantiate("mouseImage", transform.position, transform.rotation);
         //instanceObj = PhotonNetwork.Instantiate("MouseImage", transform.position, transform.rotation);
     }
 
