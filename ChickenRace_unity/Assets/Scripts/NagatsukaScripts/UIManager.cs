@@ -2,15 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using ResorceNames;
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] GameObject imageObjects;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public List<OBSTACLE_IMAGE_NAMES> id;
 
     // Update is called once per frame
     void Update()
@@ -22,25 +19,35 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
+    /// GameManagerÇ©ÇÁIDÇì¸ÇÍÇÈä÷êî
+    /// </summary>
+    public void PushID(List<OBSTACLE_IMAGE_NAMES> iD)
+    {
+        id = new List<OBSTACLE_IMAGE_NAMES>();
+        id = iD;
+        ChangeObstacleImage();
+    }
+
+    /// <summary>
+    /// IDÇÃÉäÉXÉgÇèâä˙âªÇ∑ÇÈ.
+    /// </summary>
+    public void ResetID()
+    {
+
+    }
+
+    /// <summary>
     /// 4Ç¬ÇÃâÊëúÇïœÇ¶ÇÈ
     /// </summary>
     public void ChangeObstacleImage()
     {
         imageObjects.transform.GetChild(0).GetComponent<Image>().sprite =
-            ResorceManager.instance.GetObstacleImage(ResorceNames.OBSTACLE_IMAGE_NAMES.cutter);
+            ResorceManager.instance.GetObstacleImage(id[0]);
         imageObjects.transform.GetChild(1).GetComponent<Image>().sprite =
-            ResorceManager.instance.GetObstacleImage(ResorceNames.OBSTACLE_IMAGE_NAMES.cutter);
+            ResorceManager.instance.GetObstacleImage(id[1]);
         imageObjects.transform.GetChild(2).GetComponent<Image>().sprite =
-            ResorceManager.instance.GetObstacleImage(ResorceNames.OBSTACLE_IMAGE_NAMES.taihou);
+            ResorceManager.instance.GetObstacleImage(id[2]);
         imageObjects.transform.GetChild(3).GetComponent<Image>().sprite =
-            ResorceManager.instance.GetObstacleImage(ResorceNames.OBSTACLE_IMAGE_NAMES.blackhole);
-        //imageObjects.transform.GetChild(0).GetComponent<Image>().sprite =
-        //    ResorceManager.instance.GetObstacleImage(0);
-        //imageObjects.transform.GetChild(1).GetComponent<Image>().sprite =
-        //    ResorceManager.instance.GetObstacleImage(1);
-        //imageObjects.transform.GetChild(2).GetComponent<Image>().sprite =
-        //    ResorceManager.instance.GetObstacleImage(2);
-        //imageObjects.transform.GetChild(3).GetComponent<Image>().sprite =
-        //    ResorceManager.instance.GetObstacleImage(3);
+            ResorceManager.instance.GetObstacleImage(id[3]);
     }
 }
