@@ -89,20 +89,20 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
 
     /// <summary>
     /// 外部から順位(Rank)を受け取ってリストに入れる関数
-    /// 引数には自分の順位を指定.
+    /// 引数には自分のアクターナンバー,順位を指定.
     /// </summary>
-    public void PushRank(int myrank)
+    public void PushScore(int index,int myscore)
     {
-        photonView.RPC(nameof(PushRankRPC), RpcTarget.All, myrank);
+        photonView.RPC(nameof(PushScoreRPC), RpcTarget.All,index, myscore);
     }
 
     /// <summary>
     /// 順位を入れるRPC.
     /// </summary>
     [PunRPC]
-    private void PushRankRPC(int myrank)
+    private void PushScoreRPC(int index,int myscore)
     {
-        rank.Add(myrank);
+        score[index] += myscore;
     }
 
 
