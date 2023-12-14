@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using PhotonMethods;
+using ResorceNames;
 
 public class GameManager : MonoBehaviour
 {
@@ -144,7 +145,7 @@ public class GameManager : MonoBehaviour
     bool CheckUserIsHave()
     {
         //正常に持っているか確認
-        if (/*gameProgress.user. != -1*/true)
+        if (/*gameProgress.user. != -1*/false)
         {
             PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
             return true;
@@ -449,9 +450,14 @@ public class GameManager : MonoBehaviour
         while (!isFazeEnd)
         {
             //障害物候補を表示
-            var list = gameProgress.dataSharingClass.ID;
+            List<OBSTACLE_IMAGE_NAMES> list = new List<OBSTACLE_IMAGE_NAMES>();
 
-            //gameProgress.uiManager.PushIDList(list);
+            foreach(var id in gameProgress.dataSharingClass.ID)
+            {
+                list.Add((OBSTACLE_IMAGE_NAMES)id);
+            }
+
+            gameProgress.uiManager.PushID(list);
 
             //時間制限にかかれば終了
             if (false)
@@ -475,9 +481,6 @@ public class GameManager : MonoBehaviour
             //マウスから障害物情報が送られ、userに渡れば終了
             if (CheckUserIsHave())
             {
-                //マウス削除
-                gameProgress.user.DestroyMouse();
-
                 EndFaze();
             }
 
@@ -486,6 +489,9 @@ public class GameManager : MonoBehaviour
 
             yield return null;
         }
+
+        //マウス削除
+        gameProgress.user.DestroyMouse();
 
         //状態送信
         PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
