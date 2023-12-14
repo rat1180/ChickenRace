@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
+using Photon.Pun;
 
 public class MapManager : MonoBehaviour
 {
@@ -142,7 +142,8 @@ public class MapManager : MonoBehaviour
         //gameObj = (GameObject)Resources.Load("Square"); // 仮Square
 
         // 障害物の生成
-        Instantiate(gameObj, new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
+        var Obj = PhotonNetwork.Instantiate("GenerateObstacle", new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
+        Obj.GetComponent<GenerateObstacle>().SetObstacleID(id);
 
         // 設置したオブジェクトIDと位置をリストに追加
         InstalledList.Add(id);
