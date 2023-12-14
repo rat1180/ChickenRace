@@ -6,19 +6,18 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class GridLineDraw : MonoBehaviour
 {
-    public int diff = 2;
-
     // Inspector用
     public float gridSize = 1f;
-    public Vector2Int size = new Vector2Int(8, 8); // 縦線と横線の数
     public Color color = Color.white;
-    public bool back = true;
+    public Vector2Int size = new Vector2Int(8, 8); // 縦線と横線の数
+    [Header("グリッド位置調整用")]
+    public Vector2 posRetouch = new Vector2(0, 0);
 
     // 値が変更されたとき用に、元のInspectorの値を保持しておく
     float originGridSize = 0;
-    Vector2Int originSize = new Vector2Int();
     Color originColor = Color.white;
-    bool originBack = true;
+    Vector2Int originSize = new Vector2Int(0, 0);
+    Vector2 originPosRetouch = new Vector2(0, 0);
 
     Mesh mesh;
 
@@ -32,7 +31,7 @@ public class GridLineDraw : MonoBehaviour
     {
         // 処理軽減、値が更新されたときにメッシュを再取得
         if (gridSize != originGridSize || size.x != originSize.x ||
-            size.y != originSize.y || originColor != color || originBack != back)
+            size.y != originSize.y || originColor != color || originPosRetouch != posRetouch)
         {
             if (gridSize < 0) { gridSize = 0.000001f; }
             if (size.x < 0) { size.x = 1; }
@@ -57,33 +56,14 @@ public class GridLineDraw : MonoBehaviour
         float verticalWidth = gridSize * verticalDrawSize / 4.0f;
 
         // 横線と縦線の始点終点
-        Vector2 horizontalStartPosition = new Vector2(-horizontalWidth, -verticalWidth);
-        Vector2 verticalStartPosition = new Vector2(-horizontalWidth, -verticalWidth);
-        Vector2 horizontalEndPosition = new Vector2(horizontalWidth, verticalWidth);
-        Vector2 verticalEndPosition = new Vector2(horizontalWidth, verticalWidth);
+        Vector2 horizontalStartPosition = new Vector2(-horizontalWidth + posRetouch.x, -verticalWidth + posRetouch.y);
+        Vector2 verticalStartPosition = new Vector2(-horizontalWidth + posRetouch.x, -verticalWidth + posRetouch.y);
+        Vector2 horizontalEndPosition = new Vector2(horizontalWidth + posRetouch.x, verticalWidth + posRetouch.y);
+        Vector2 verticalEndPosition = new Vector2(horizontalWidth + posRetouch.x, verticalWidth + posRetouch.y);
 
         // 描画間隔
         float horizontalDiff = horizontalWidth / horizontalDrawSize;
         float verticalDiff = verticalWidth / verticalDrawSize;
-
-        //int horizontalResolution;
-        //int verticalResolution;
-
-        //if (horizontalDrawSize > verticalDrawSize)
-        //{
-        //    horizontalResolution = (horizontalDrawSize + ) * 2;
-        //    verticalResolution = (verticalDrawSize + 2) * 2;
-        //}
-        //else if (verticalDrawSize > horizontalDrawSize)
-        //{
-        //    verticalResolution = (verticalDrawSize + diff) * 2;
-
-        //}
-        //else
-        //{
-        //    horizontalResolution = (horizontalDrawSize + 2) * 2;
-        //    verticalResolution = (verticalDrawSize + 2) * 2;
-        //}
 
         // 最後の２辺を追加(頂点の総数)
         int horizontalResolution = (horizontalDrawSize + 2) * 2;
@@ -94,9 +74,6 @@ public class GridLineDraw : MonoBehaviour
         Vector2[] uvs = new Vector2[horizontalResolution + verticalResolution];
         int[] lines = new int[horizontalResolution + verticalResolution];
         Color[] colors = new Color[horizontalResolution + verticalResolution];
-
-        //int difference = 2 - Mathf.Abs(size.x - size.y);
-        //Debug.Log(difference);
 
         // 横線の頂点を設定
         for (int i = 0; i < horizontalResolution; i += 4)
@@ -137,7 +114,7 @@ public class GridLineDraw : MonoBehaviour
         originSize.x = size.x;
         originSize.y = size.y;
         originColor = color;
-        originBack = back;
+        originPosRetouch = posRetouch;
 
         return mesh;
     }
