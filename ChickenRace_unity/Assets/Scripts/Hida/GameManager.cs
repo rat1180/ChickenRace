@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
         public UIManager uiManager;
         public DataSharingClass dataSharingClass;
         public User user;
+        public int userActorNumber;
     }
 
     [SerializeField, Tooltip("現在のゲーム状態")] GameStatus gameState;
@@ -167,13 +168,13 @@ public class GameManager : MonoBehaviour
     int CheckRaceRank()
     {
         var times = gameProgress.dataSharingClass.rankTime;
-        float mytime = times[PhotonNetwork.LocalPlayer.ActorNumber];
+        float mytime = times[gameProgress.userActorNumber];
         int rank = 1;
         int deadcnt = 0;
         for (int i = 0; i < times.Count; i++)
         {
             //自身の状態をチェック
-            if (i == PhotonNetwork.LocalPlayer.ActorNumber)
+            if (i == gameProgress.userActorNumber)
             {
                 if (mytime == DEAD) return (int)DEAD;
             }
@@ -209,7 +210,7 @@ public class GameManager : MonoBehaviour
     int SumScore(int rank)
     {
         //死亡時はポイントなし
-        if (rank == DEAD) return 0;
+        if (rank == (int)DEAD) return 0;
 
         int addScore = BONUS_SCORE;
         return BASE_SCORE + addScore;
@@ -273,7 +274,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void DeadPlayer()
     {
-        gameProgress.dataSharingClass.rankTime[PhotonNetwork.LocalPlayer.ActorNumber] = DEAD;
+        gameProgress.dataSharingClass.PushGoalTime(gameProgress.userActorNumber, DEAD);
         EndFaze();
     }
 
@@ -283,7 +284,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GoalPlayer()
     {
-        gameProgress.dataSharingClass.rankTime[PhotonNetwork.LocalPlayer.ActorNumber] = (float)PhotonNetwork.Time;
+        gameProgress.dataSharingClass.PushGoalTime(gameProgress.userActorNumber, (float)PhotonNetwork.Time);
         EndFaze();
     }
 
@@ -432,6 +433,7 @@ public class GameManager : MonoBehaviour
             isFazeEnd = false;
             stateCoroutine = null;
             instance = this;
+            gameProgress.userActorNumber = PhotonNetwork.LocalPlayer.ActorNumber - 1;
 
             //各マネージャーを生成
             //データ共有クラスを生成
@@ -609,6 +611,8 @@ public class GameManager : MonoBehaviour
         //マウス削除
         gameProgress.user.DestroyMouse();
 
+        //障害物をリセット
+
         //状態送信
         PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
 
@@ -733,20 +737,20 @@ public class GameManager : MonoBehaviour
         //全員が待機状態になるまで待機
         yield return new WaitUntil(() => CheckInGameState(InGameStatus.READY));
 
-        var playerID = PhotonNetwork.LocalPlayer.ActorNumber;
-
         //順位の計算
         int rank = CheckRaceRank();
         PhotonNetwork.LocalPlayer.SetRankStatus(rank);
 
-        //スコアの計算
-        var scorelist = ScoreCalculation();
-        gameProgress.dataSharingClass.PushScore(playerID, scorelist[playerID]);
-
-        DebugLog("順位、スコアの反映演出");
-
+        //送信のために待機
         PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.INGAME);
         yield return new WaitUntil(() => CheckInGameState(InGameStatus.INGAME));
+
+
+        //スコアの計算
+        var scorelist = ScoreCalculation();
+        gameProgress.dataSharingClass.PushScore(gameProgress.userActorNumber, scorelist[gameProgress.userActorNumber]);
+
+        DebugLog("順位、スコアの反映演出");
         yield return new WaitForSeconds(2.0f);
 
         DebugLog("演出終了");
