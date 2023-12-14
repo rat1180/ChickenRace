@@ -64,7 +64,7 @@ public class User : MonoBehaviour
     /// GenerateMouse‚©‚çˆø”‚Ì’l‚ğó‚¯æ‚Á‚½‚ÉŒÄ‚Ô.
     /// </summary>
     /// <param name="mode"></param>
-    void GetItemId(int mode)
+    private void GetItemId(int mode)
     {
         itemId = isMode;
 
