@@ -192,6 +192,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             var roomOptions = new RoomOptions();
             roomOptions.MaxPlayers = ConectServer.RoomProperties.MaxPlayer;
+            roomOptions.IsOpen = true;
             //PhotonNetwork.CurrentRoom.MaxPlayers = (byte)ConectServer.RoomProperties.MaxPlayer;
             //タイトルで確立した情報で接続
             PhotonNetwork.JoinOrCreateRoom(ConectServer.RoomProperties.RoomName, roomOptions, TypedLobby.Default);
