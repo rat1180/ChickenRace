@@ -119,6 +119,11 @@ namespace ResorceNames
         cutter,
         blackhole,
     }
+
+    public enum OBSTACLE_OBJECT
+    {
+
+    }
 }
 
 
