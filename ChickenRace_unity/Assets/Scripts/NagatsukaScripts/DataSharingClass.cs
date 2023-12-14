@@ -9,11 +9,12 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
     public List<int> ID = new List<int>();
     public List<int> score = new List<int>();
     public List<float> rankTime = new List<float>();
+    public float elapsedTime;//経過時間.
 
     // Start is called before the first frame update
     void Start()
     {
-        GameManager.Instance.SetDataSheringClass(gameObject.GetComponent<DataSharingClass>());
+        GameManager.instance.SetDataSheringClass(gameObject.GetComponent<DataSharingClass>());
         //人数分スコアの入れ物を用意する.
         for(int i=0;i< ConectServer.RoomProperties.MaxPlayer; i++)
         {
@@ -38,7 +39,7 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
     /// </summary>
     public void PushID(int iD)
     {
-        photonView.RPC(nameof(PushID), RpcTarget.All, iD);
+        photonView.RPC(nameof(PushIDRPC), RpcTarget.All, iD);
     }
 
     /// <summary>
@@ -56,7 +57,7 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
     /// </summary>
     public void ResetID(int index)
     {
-        photonView.RPC(nameof(ResetID), RpcTarget.All, index);
+        photonView.RPC(nameof(ResetIDRPC), RpcTarget.All, index);
     }
 
     /// <summary>
@@ -73,7 +74,7 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
     /// </summary>
     public void ResetIDList()
     {
-        photonView.RPC(nameof(ResetIDList), RpcTarget.All);
+        photonView.RPC(nameof(ResetIDListRPC), RpcTarget.All);
     }
 
     /// <summary>
@@ -86,13 +87,57 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     /// <summary>
-    /// スコア加算タイミングでこの関数を呼び出す
-    /// 引数にActorNumber、プラスするスコアの数値を指定
+    /// 経過時間を入れる関数
+    /// </summary>
+    public void PushElapsedTime(float time)
+    {
+        photonView.RPC(nameof(PushElapsedTimeRPC), RpcTarget.All, time);
+    }
+
+    /// <summary>
+    /// 指定されたindexを0にするRPC.
     /// </summary>
     [PunRPC]
-    void PushGoalTime(int number,int point)
+    private void PushElapsedTimeRPC(float time)
     {
-        score[number] += point;
+        elapsedTime = time;
+    }
+
+    /// <summary>
+    /// 外部からindexを受け取って指定された場所を0にする関数
+    /// 引数にはindexを1つずつ指定.
+    /// </summary>
+    public float ReturnTime(int index)
+    {
+        return rankTime[index];
+    }
+
+    /// <summary>
+    /// 指定されたindexの値を返すRPC.
+    /// </summary>
+    [PunRPC]
+    private void ReturnTimeRPC()
+    {
+        rankTime = new List<float>();
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            rankTime.Add(0);
+        }
+    }
+
+    public void PushGoalTime(int index, float time)
+    {
+        photonView.RPC(nameof(PushGoalTimeRPC), RpcTarget.All,index,time);
+    }
+
+    /// <summary>
+    /// ゴールしたタイミングで関数を呼び出す
+    /// </summary>
+    [PunRPC]
+    void PushGoalTimeRPC(int index,float time)
+    {
+        //score[number] += point;
+        rankTime[index] = time; 
     }
 
     /// <summary>
