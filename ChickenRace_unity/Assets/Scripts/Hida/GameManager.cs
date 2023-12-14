@@ -706,12 +706,8 @@ public class GameManager : MonoBehaviour
         //自身の状態を送信
         PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
 
-        while (!CheckInGameState(InGameStatus.END))
-        {
-            //死亡後、ゴール後の観戦
-
-            yield return null;
-        }
+        //全員が待機状態になるまで待機
+        yield return new WaitUntil(() => CheckInGameState(InGameStatus.END));
 
         gameState++;
 
