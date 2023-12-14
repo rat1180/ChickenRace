@@ -438,7 +438,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   imageObjects: {fileID: 58778347}
-  id: 
+  id: 01000000000000000200000000000000
 --- !u!4 &662420214
 Transform:
   m_ObjectHideFlags: 0
