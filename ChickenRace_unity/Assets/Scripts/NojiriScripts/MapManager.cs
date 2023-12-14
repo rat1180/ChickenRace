@@ -64,6 +64,14 @@ public class MapManager : MonoBehaviour
             yield return null;
         }
     }
+
+    /// <summary>
+    /// ResourcesManagerからidに対応するオブジェクトを取得する
+    /// </summary>
+    private GameObject GetObstaclePrefab()
+    {
+        return gameObj;
+    }
     #endregion
 
     #region 外部用メソッド
@@ -128,6 +136,9 @@ public class MapManager : MonoBehaviour
     /// JudgeInstallメソッドからtrueが返った時に呼ばれる
     /// ID、グリッド位置を取得後、その位置に障害物生成
     /// </summary>
+    /// <param name="id">生成するオブジェクト番号</param>
+    /// <param name="angle">生成する際の向き</param>
+    /// <param name="gridPos">生成する位置</param>
     public void GenerateMapObject(int id, float angle, Vector2Int gridPos)
     {
         if (!isRunning)
@@ -136,16 +147,34 @@ public class MapManager : MonoBehaviour
             return;
         }
 
-        // 障害物の生成
-        gameObj = GetObstaclePrefab();
+        // 障害物生成
+        SpawnObstacle(id, angle, gridPos);
+
+        // 他のプレイヤーでSpawnObstacleメソッドの実行
         var Obj = PhotonNetwork.Instantiate("GenerateObstacle", new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
-        Obj.GetComponent<GenerateObstacle>().SetObstacleID(id,angle,gridPos);
+        Obj.GetComponent<GenerateObstacle>().SetObstacleID(id, angle, gridPos);
+
+        isInstall = true;
+    }
+
+    /// <summary>
+    /// 障害物の生成メソッド
+    /// 同時に他プレイヤーから呼ばれる
+    /// </summary>
+    /// <param name="id">生成するオブジェクト番号</param>
+    /// <param name="angle">生成する際の向き</param>
+    /// <param name="gridPos">生成する位置</param>
+    public void SpawnObstacle(int id, float angle, Vector2Int gridPos)
+    {
+        // 障害物の取得
+        gameObj = GetObstaclePrefab();
+
+        // 障害物の生成
+        Instantiate(gameObj, new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
 
         // 設置したオブジェクトIDと位置をリストに追加
         InstalledList.Add(id);
         UsedGridList.Add(gridPos);
-
-        isInstall = true;
     }
 
     /// <summary>
@@ -157,12 +186,4 @@ public class MapManager : MonoBehaviour
         return isInstall;
     }
     #endregion
-
-    /// <summary>
-    /// ResourcesManagerからidに対応するオブジェクトを取得する
-    /// </summary>
-    private GameObject GetObstaclePrefab()
-    {
-        return gameObj;
-    }
 }
