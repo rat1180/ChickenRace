@@ -5,7 +5,7 @@ using Photon.Pun;
 
 public class GenerateObstacle : MonoBehaviourPun
 {
-    [SerializeField] string obstacleName;
+    [SerializeField] GameObject obstacle;
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +32,6 @@ public class GenerateObstacle : MonoBehaviourPun
     [PunRPC]
     void Generate()
     {
-        PhotonNetwork.Instantiate(obstacleName, transform.position, Quaternion.identity);
+        Instantiate(obstacle, transform.position, Quaternion.identity);
     }
 }
