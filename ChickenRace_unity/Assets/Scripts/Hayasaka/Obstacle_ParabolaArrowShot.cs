@@ -4,51 +4,75 @@ using UnityEngine;
 
 public class Obstacle_ParabolaArrowShot : Obstacle_ArrowShot
 {
-    float hheight;
+    [SerializeField]
+    float throwingAngle;
+    [SerializeField]
     Vector3 eend;
+    [SerializeField]
     Vector3 sstart;
+    [SerializeField]
+    Rigidbody2D rrb;
     // Start is called before the first frame update
     void Start()
     {
-        hheight = 3.0f;
+        rrb = this.gameObject.GetComponent<Rigidbody2D>();
+
+        throwingAngle = 45.0f;
         sstart = this.transform.position;
         eend = sstart;
         eend.x += 5.0f;
         eend.y += 5.0f;
+        speed = 1.5f;
+        //ThrowingArrow();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Moving(hheight, sstart, eend);
+        ThrowingArrow();
     }
-    protected void Moving(float height, Vector3 start, Vector3 end)
+    /// <summary>
+    /// ボールを射出する
+    /// </summary>
+    void ThrowingArrow()
     {
-        Vector3 half = end - start * 0.50f + start;
-        half.y += Vector3.up.y + height;
+            // 射出角度
+            float angle = throwingAngle;
 
-        StartCoroutine(LerpThrow(this.gameObject, start, half, end, speed));
+            // 射出速度を算出
+            Vector3 velocity = CalculateVelocity(this.transform.position, eend, angle);
+
+            // 射出
+            
+            rrb.AddForce(velocity * rb.mass, ForceMode2D.Impulse);
+        
+       
     }
-    IEnumerator LerpThrow(GameObject target, Vector3 start, Vector3 half, Vector3 end, float duration)
+
+    /// <summary>
+    /// 標的に命中する射出速度の計算
+    Vector3 CalculateVelocity(Vector3 pointA, Vector3 pointB, float angle)
     {
-        float startTime = Time.timeSinceLevelLoad;
-        float rate = 0f;
-        while (true)
+        // 射出角をラジアンに変換
+        float rad = angle * Mathf.PI / 180;
+
+        // 水平方向の距離x
+        float x = Vector2.Distance(new Vector2(pointA.x, pointA.z), new Vector2(pointB.x, pointB.z));
+
+        // 垂直方向の距離y
+        float y = pointA.y - pointB.y;
+
+        // 斜方投射の公式を初速度について解く
+        float speed = Mathf.Sqrt(-Physics.gravity.y * Mathf.Pow(x, 2) / (2 * Mathf.Pow(Mathf.Cos(rad), 2) * (x * Mathf.Tan(rad) + y)));
+
+        if (float.IsNaN(speed))
         {
-            if (rate >= 1.0f)
-                yield break;
-
-            float diff = Time.timeSinceLevelLoad - startTime;
-            rate = diff / (duration / 60f);
-            target.transform.position = CalcLerpPoint(start, half, end, rate);
-
-            yield return null;
+            // 条件を満たす初速を算出できなければVector3.zeroを返す
+            return Vector3.zero;
         }
-    }
-    Vector3 CalcLerpPoint(Vector3 p0, Vector3 p1, Vector3 p2, float t)
-    {
-        var a = Vector3.Lerp(p0, p1, t);
-        var b = Vector3.Lerp(p1, p2, t);
-        return Vector3.Lerp(a, b, t);
+        else
+        {
+            return (new Vector3(pointB.x - pointA.x, x * Mathf.Tan(rad), pointB.z - pointA.z).normalized * speed);
+        }
     }
 }
