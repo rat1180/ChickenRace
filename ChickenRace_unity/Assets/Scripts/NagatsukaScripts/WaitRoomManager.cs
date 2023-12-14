@@ -184,7 +184,6 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     /// </summary>
     void TryRoomJoin()
     {
-        //Debug.Log("RoomName:" + ConectServer.RoomProperties.RoomName);
         //オフライン以外の時に接続
         if (ConectServer.RoomProperties.RoomName != "Offline")
         {
