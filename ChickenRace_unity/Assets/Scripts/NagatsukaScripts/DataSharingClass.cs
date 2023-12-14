@@ -8,7 +8,7 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
 {
     public List<int> ID = new List<int>();
     public List<int> score = new List<int>();
-    public List<int> rank = new List<int>();
+    //public List<int> rank = new List<int>();
     public List<float> rankTime = new List<float>();
     public float elapsedTime;//Œo‰ßŽžŠÔ.
 
@@ -20,6 +20,7 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
         for(int i=0;i< ConectServer.RoomProperties.MaxPlayer; i++)
         {
             score.Add(0);
+            rankTime.Add(0);
         }
     }
 

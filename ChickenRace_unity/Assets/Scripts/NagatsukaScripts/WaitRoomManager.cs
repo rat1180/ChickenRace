@@ -290,7 +290,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
             }
             if (!createPlayerFlg)//Player‚ğ¶¬‚µ‚Ä‚¢‚È‚¯‚ê‚Î¶¬‚·‚é.
             {
-                Instantiate(player, Vector3.zero, Quaternion.identity);//Player‚ğ¶¬‚·‚é.
+               // Instantiate(player, Vector3.zero, Quaternion.identity);//Player‚ğ¶¬‚·‚é.
                 createPlayerFlg = true;
             }
             //SceanMoveButton.transform.GetChild(0).gameObject.GetComponent<Text>().text
