@@ -14,8 +14,8 @@ using ConstList;
  */
 public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
 {
-    [SerializeField, Tooltip("情報を表示するメッセージ")] Text MessageText;
-    [SerializeField, Tooltip("開始ボタン")] Button SceanMoveButton;
+    [SerializeField, Tooltip("情報を表示するメッセージ")] Text messageText;
+    [SerializeField, Tooltip("開始ボタン")] Button sceanMoveButton;
 
     private DataSharingClass dataSharingClass;//データ共有クラス.
 
@@ -49,7 +49,6 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         SharDataText,
     }
 
-    private bool isMaster;       //マスターかどうか
     private bool isInRoom;       //ルーム内で接続できているか
     private bool isStart;        //スタートしたかどうか
     private bool createPlayerFlg;//プレイヤーを生成したか判定.
@@ -64,7 +63,6 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
-        isMaster = false;
         isInRoom = false;
         isStart = false;
         createPlayerFlg = false;
@@ -78,7 +76,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             RoomStatusUpDate();
             ShowRoomInformation();
-            if (Input.GetKeyDown(KeyCode.Space) && SceanMoveButton.IsInteractable())
+            if (Input.GetKeyDown(KeyCode.Space) && sceanMoveButton.IsInteractable())
             {
                 MoveGameScean();
             }
@@ -173,7 +171,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     public void MoveGameScean()
     {
         if (isStart) return;
-        if (isMaster)
+        if (PhotonNetwork.IsMasterClient)
         {
             isStart = true;
             PhotonNetwork.CurrentRoom.IsOpen = false;
@@ -186,13 +184,12 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     /// </summary>
     void TryRoomJoin()
     {
-        //Debug.Log("RoomName:" + ConectServer.RoomProperties.RoomName);
         //オフライン以外の時に接続
         if (ConectServer.RoomProperties.RoomName != "Offline")
         {
             var roomOptions = new RoomOptions();
             roomOptions.MaxPlayers = ConectServer.RoomProperties.MaxPlayer;
-            //PhotonNetwork.CurrentRoom.MaxPlayers = (byte)ConectServer.RoomProperties.MaxPlayer;
+            
             //タイトルで確立した情報で接続
             PhotonNetwork.JoinOrCreateRoom(ConectServer.RoomProperties.RoomName, roomOptions, TypedLobby.Default);
         }
@@ -233,21 +230,10 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     /// </summary>
     public override void OnJoinedRoom()
     {
-        isMaster = PhotonNetwork.IsMasterClient;
-        isInRoom = true;
-        if (isMaster)
-        {
-            // ルームの参加人数を2人に設定する
-            //var roomOptions = new RoomOptions();
-            //roomOptions.MaxPlayers = ConectServer.RoomProperties.MaxPlayer;
-            //PhotonNetwork.CurrentRoom.MaxPlayers = (byte)ConectServer.RoomProperties.MaxPlayer;
-            Debug.Log("最大人数" + PhotonNetwork.CurrentRoom.MaxPlayers);
-            //var obj = PhotonNetwork.Instantiate("NagatsukaObjects/DataSharingClass", Vector3.zero, Quaternion.identity);//データ共有クラスを生成する.
-            //obj.SetActive(true);
-        }
+        isInRoom = true;//接続成功.
+        if (PhotonNetwork.IsMasterClient){}
         PhotonNetwork.AutomaticallySyncScene = true;
-        Debug.Log("OnJoin");
-
+        //Debug.Log("OnJoin");
 
         //カスタムプロパティの設定(GAMESTATUS).
         // GAMESTATUS status = GAMESTATUS.NONE;
@@ -265,7 +251,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         base.OnJoinRoomFailed(returnCode, message);
 
-        MessageText.text = message + " によって接続出来ません";
+        messageText.text = message + " によって接続出来ません";
     }
 
     /// <summary>
@@ -273,30 +259,34 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     /// </summary>
     void RoomStatusUpDate()
     {
-        //if (PhotonNetwork.CurrentRoom.PlayerCount >= PhotonNetwork.CurrentRoom.MaxPlayers)
-        //{
-        //    //PhotonNetwork.CurrentRoom.IsOpen = false;
-        //}
-
-        if (!isInRoom)
+        // ルームの参加人数を4人に設定する
+        if (PhotonNetwork.CurrentRoom.PlayerCount == ConectServer.RoomProperties.MaxPlayer)
         {
-            SceanMoveButton.interactable = false;
+            PhotonNetwork.CurrentRoom.IsOpen = false;
         }
         else
         {
-            if (isMaster)
+            PhotonNetwork.CurrentRoom.IsOpen = true;
+        }
+        if (!isInRoom)
+        {
+            sceanMoveButton.interactable = false;
+        }
+        else
+        {
+            if (PhotonNetwork.IsMasterClient)
             {
-                SceanMoveButton.interactable = true;
-                SceanMoveButton.transform.GetChild(0).gameObject.GetComponent<Text>().text
+                sceanMoveButton.interactable = true;
+                sceanMoveButton.transform.GetChild(0).gameObject.GetComponent<Text>().text
                 = "ゲームヲ始メル(" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + ")";
-                MessageText.text = "ボタンを押すとゲームが始まります";
+                messageText.text = "ボタンを押すとゲームが始まります";
             }
             else
             {
-                SceanMoveButton.interactable = false;
-                SceanMoveButton.transform.GetChild(0).gameObject.GetComponent<Text>().text
+                sceanMoveButton.interactable = false;
+                sceanMoveButton.transform.GetChild(0).gameObject.GetComponent<Text>().text
                 = "開始ヲ待ッテル(" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + ")";
-                MessageText.text = "ホストの開始をまっています...";
+                messageText.text = "ホストの開始をまっています...";
             }
             if (!createPlayerFlg)//Playerを生成していなければ生成する.
             {
@@ -331,7 +321,6 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         string message = otherPlayer.NickName + "が退出しました";
         photonView.RPC(nameof(SendChat), RpcTarget.All, message,RED16);
-        //Debug.Log(otherPlayer.NickName + "が退出しました。");
     }
 
     #region Photon関連(変数送信)

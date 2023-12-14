@@ -39,6 +39,8 @@ public class GameManager : MonoBehaviour
     }
 
     const float DEAD = -1f;
+    const int BONUS_SCORE = 1;
+    const int BASE_SCORE = 3;
 
     /// <summary>
     /// ゲームの進行に必要なマネージャー等をまとめたクラス
@@ -158,6 +160,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// データ共有クラスのタイムリストから自身の順位を判定する
     /// 返り値で順位を戻すが、全員死亡の場合のみ0を返す
+    /// 自身が死んでいる場合はDEAD
     /// </summary>
     /// <returns></returns>
     int CheckRaceRank()
@@ -171,8 +174,7 @@ public class GameManager : MonoBehaviour
             //自身の状態をチェック
             if (i == PhotonNetwork.LocalPlayer.ActorNumber)
             {
-                if (mytime == DEAD) deadcnt++;
-                continue;
+                if (mytime == DEAD) return (int)DEAD;
             }
 
             //対象の死亡をチェック
@@ -190,12 +192,37 @@ public class GameManager : MonoBehaviour
         }
 
         //全員死亡
-        if (deadcnt == times.Count)
+        if (deadcnt == times.Count-1)
         {
             rank = 0;
         }
 
         return rank;
+    }
+
+    /// <summary>
+    /// 順位を渡すとそれに応じたスコアを計算し、返す
+    /// </summary>
+    /// <param name="rank"></param>
+    /// <returns></returns>
+    int SumScore(int rank)
+    {
+        //死亡時はポイントなし
+        if (rank == DEAD) return 0;
+
+        int addScore = BONUS_SCORE;
+        return BASE_SCORE + addScore;
+    }
+
+    List<int> ScoreCalculation()
+    {
+        List<int> scores = new List<int>();
+        foreach(var player in gameProgress.dataSharingClass.rankTime)
+        {
+            //scores.Add(SumScore())
+        }
+
+        return scores;
     }
 
     #endregion
@@ -677,7 +704,7 @@ public class GameManager : MonoBehaviour
         int rank = CheckRaceRank();
 
         //スコアの計算
-
+        //gameProgress.dataSharingClass.score[PhotonNetwork.LocalPlayer.ActorNumber] = 
 
         //ステートコルーチンの終了処理
         ClearCoroutine();

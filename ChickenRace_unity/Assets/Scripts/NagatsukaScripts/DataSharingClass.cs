@@ -8,6 +8,7 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
 {
     public List<int> ID = new List<int>();
     public List<int> score = new List<int>();
+    public List<int> rank = new List<int>();
     public List<float> rankTime = new List<float>();
     public float elapsedTime;//経過時間.
 
@@ -85,6 +86,25 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
     {
         ID = new List<int>();
     }
+
+    /// <summary>
+    /// 外部から順位(Rank)を受け取ってリストに入れる関数
+    /// 引数には自分の順位を指定.
+    /// </summary>
+    public void PushRank(int myrank)
+    {
+        photonView.RPC(nameof(PushRankRPC), RpcTarget.All, myrank);
+    }
+
+    /// <summary>
+    /// 順位を入れるRPC.
+    /// </summary>
+    [PunRPC]
+    private void PushRankRPC(int myrank)
+    {
+        rank.Add(myrank);
+    }
+
 
     /// <summary>
     /// 経過時間を入れる関数
