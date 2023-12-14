@@ -187,7 +187,13 @@ public class GameManager : MonoBehaviour
 
     public void DeadPlayer()
     {
+        gameProgress.dataSharingClass.rankTime[PhotonNetwork.LocalPlayer.ActorNumber] = -1f;
         EndFaze();
+    }
+
+    public void GoalPlayer()
+    {
+
     }
 
     public void SetDataSheringClass(DataSharingClass datasharingclass)
