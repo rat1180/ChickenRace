@@ -5,9 +5,7 @@ using Photon.Pun;
 
 public class MapManager : MonoBehaviour
 {
-    [Header("テスト用設置オブジェクト")]
     [SerializeField] private GameObject gameObj; // 移動したいオブジェクトの情報取得
-
     [SerializeField] private List<int> InstalledList;       // 設置した障害物リスト
     [SerializeField] private List<Vector2Int> UsedGridList; // 使用済みグリッドの位置リスト
 
@@ -138,12 +136,10 @@ public class MapManager : MonoBehaviour
             return;
         }
 
-        // 生成する障害物を選択
-        //gameObj = (GameObject)Resources.Load("Square"); // 仮Square
-
         // 障害物の生成
-        var Obj = PhotonNetwork.Instantiate("GenerateObstacle", new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
-        Obj.GetComponent<GenerateObstacle>().SetObstacleID(id);
+        gameObj = GetObstaclePrefab();
+        //var Obj = PhotonNetwork.Instantiate("GenerateObstacle", new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
+        //Obj.GetComponent<GenerateObstacle>().SetObstacleID(id);
 
         // 設置したオブジェクトIDと位置をリストに追加
         InstalledList.Add(id);
@@ -161,4 +157,12 @@ public class MapManager : MonoBehaviour
         return isInstall;
     }
     #endregion
+
+    /// <summary>
+    /// ResourcesManagerからidに対応するオブジェクトを取得する
+    /// </summary>
+    private GameObject GetObstaclePrefab()
+    {
+        return gameObj;
+    }
 }
