@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
         END,
     }
 
+    const float DEAD = -1f;
+
     /// <summary>
     /// ゲームの進行に必要なマネージャー等をまとめたクラス
     /// </summary>
@@ -153,6 +155,49 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// データ共有クラスのタイムリストから自身の順位を判定する
+    /// 返り値で順位を戻すが、全員死亡の場合のみ0を返す
+    /// </summary>
+    /// <returns></returns>
+    int CheckRaceRank()
+    {
+        var times = gameProgress.dataSharingClass.rankTime;
+        float mytime = times[PhotonNetwork.LocalPlayer.ActorNumber];
+        int rank = 1;
+        int deadcnt = 0;
+        for (int i = 0; i < times.Count; i++)
+        {
+            //自身の状態をチェック
+            if (i == PhotonNetwork.LocalPlayer.ActorNumber)
+            {
+                if (mytime == DEAD) deadcnt++;
+                continue;
+            }
+
+            //対象の死亡をチェック
+            if (times[i] == DEAD)
+            {
+                deadcnt++;
+                continue;
+            }
+
+            //タイムを比較
+            if (mytime > times[i])
+            {
+                rank++;
+            }
+        }
+
+        //全員死亡
+        if (deadcnt == times.Count)
+        {
+            rank = 0;
+        }
+
+        return rank;
+    }
+
     #endregion
 
     #region クラス外で使用する関数
@@ -185,22 +230,39 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// 死亡時に呼ばれる関数
+    /// 自身のタイムを死亡定数にする
+    /// </summary>
     public void DeadPlayer()
     {
-        gameProgress.dataSharingClass.rankTime[PhotonNetwork.LocalPlayer.ActorNumber] = -1f;
+        gameProgress.dataSharingClass.rankTime[PhotonNetwork.LocalPlayer.ActorNumber] = DEAD;
         EndFaze();
     }
 
+    /// <summary>
+    /// ゴール時に呼ばれる関数
+    /// その時点でのタイムを自身のタイムに保存する
+    /// </summary>
     public void GoalPlayer()
     {
-
+        gameProgress.dataSharingClass.rankTime[PhotonNetwork.LocalPlayer.ActorNumber] = (float)PhotonNetwork.Time;
+        EndFaze();
     }
 
+    /// <summary>
+    /// ホストによって作成されたデータ共有クラスをセットする
+    /// </summary>
+    /// <param name="datasharingclass"></param>
     public void SetDataSheringClass(DataSharingClass datasharingclass)
     {
         gameProgress.dataSharingClass = datasharingclass;
     }
 
+    /// <summary>
+    /// マップマネージャーを要求する
+    /// </summary>
+    /// <returns></returns>
     public GameObject GetMapManager()
     {
         return gameProgress.mapManager.gameObject;
@@ -429,6 +491,9 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     IEnumerator StateSELECT()
     {
+        //生成済みの障害物を再生成
+        //gameProgress.mapManager
+
         DebugLog("障害物選択開始");
 
         //ホストなら障害物を抽選
@@ -608,7 +673,11 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        //スコアの送信
+        //順位の計算
+        int rank = CheckRaceRank();
+
+        //スコアの計算
+
 
         //ステートコルーチンの終了処理
         ClearCoroutine();
