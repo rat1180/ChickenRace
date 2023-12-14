@@ -27,8 +27,7 @@ public class Obstacle_Paunch : Obstacle
         if (isPaunchFlg)
         {       
            ShotObj();
-        }
-       
+        }      
     }
     protected override void ObjStart()
     {

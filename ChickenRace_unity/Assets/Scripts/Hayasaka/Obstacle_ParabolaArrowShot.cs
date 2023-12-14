@@ -44,9 +44,7 @@ public class Obstacle_ParabolaArrowShot : Obstacle_ArrowShot
 
             // éÀèo
             
-            rrb.AddForce(velocity * rb.mass, ForceMode2D.Impulse);
-        
-       
+            rrb.AddForce(velocity * rb.mass, ForceMode2D.Impulse);              
     }
 
     /// <summary>
