@@ -142,8 +142,8 @@ public class MapManager : MonoBehaviour
         //gameObj = (GameObject)Resources.Load("Square"); // 仮Square
 
         // 障害物の生成
-        var Obj = PhotonNetwork.Instantiate("GenerateObstacle", new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
-        Obj.GetComponent<GenerateObstacle>().SetObstacleID(id);
+        //var Obj = PhotonNetwork.Instantiate("GenerateObstacle", new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
+        //Obj.GetComponent<GenerateObstacle>().SetObstacleID(id);
 
         // 設置したオブジェクトIDと位置をリストに追加
         InstalledList.Add(id);

@@ -19,19 +19,23 @@ public class GenerateObstacle : MonoBehaviourPun
 
     }
 
-    public void SetObstacleID(int id)
+    public void SetObstacleID(int id, float angle, Vector2Int gridPos)
     {
         //idÇ©ÇÁè·äQï®Çåüçı
         //obstacleName = 
 
-        photonView.RPC("Generate", RpcTarget.All);
+        int x, y;
+        x = gridPos.x;
+        y = gridPos.y;
+        photonView.RPC("Generate", RpcTarget.Others,id,angle,x,y);
 
         Destroy(gameObject);
     }
 
     [PunRPC]
-    void Generate()
+    void Generate(int id, float angle,int x,int y)
     {
-        Instantiate(obstacle, transform.position, Quaternion.identity);
+        Vector2Int vector2int = new Vector2Int(x, y);
+        GameManager.instance.GetMapManager().GetComponent<MapManager>().GenerateMapObject(id, angle, vector2int);
     }
 }
