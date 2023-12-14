@@ -194,4 +194,12 @@ public class Player : MonoBehaviour
     {
         instanceObj.GetComponent<Character>().PositionUpdate(transform.position);
     }
+
+    /// <summary>
+    /// ©g‚ğíœ.
+    /// </summary>
+    public void PlayerDestroy()
+    {
+        Destroy(gameObject);
+    }
 }
