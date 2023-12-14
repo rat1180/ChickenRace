@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
     const float DEAD = -1f;
     const int BONUS_SCORE = 1;
     const int BASE_SCORE = 3;
+    const int GAME_END_SCORE = 10;
 
     /// <summary>
     /// ゲームの進行に必要なマネージャー等をまとめたクラス
@@ -217,12 +218,21 @@ public class GameManager : MonoBehaviour
     List<int> ScoreCalculation()
     {
         List<int> scores = new List<int>();
-        foreach(var player in gameProgress.dataSharingClass.rankTime)
+        foreach(var player in PhotonNetwork.PlayerList)
         {
-            //scores.Add(SumScore())
+            scores.Add(SumScore(player.GetRankStatus()));
         }
 
         return scores;
+    }
+
+    bool CheckGameEnd()
+    {
+        foreach(var score in gameProgress.dataSharingClass.score)
+        {
+            if (score >= GAME_END_SCORE) return true;
+        }
+        return false;
     }
 
     #endregion
@@ -687,6 +697,9 @@ public class GameManager : MonoBehaviour
 
             DebugLog("レース中");
 
+            if (Input.GetKeyDown(KeyCode.G)) GoalPlayer();
+            if(Input.GetKeyDown(KeyCode.K)) DeadPlayer();
+
             yield return null;
         }
 
@@ -700,11 +713,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        //順位の計算
-        int rank = CheckRaceRank();
-
-        //スコアの計算
-        //gameProgress.dataSharingClass.score[PhotonNetwork.LocalPlayer.ActorNumber] = 
+        gameState++;
 
         //ステートコルーチンの終了処理
         ClearCoroutine();
@@ -712,11 +721,42 @@ public class GameManager : MonoBehaviour
 
     IEnumerator StateRESULT()
     {
-        while (true)
+        DebugLog("リザルトフェーズ開始");
+        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.READY);
+
+        //全員が待機状態になるまで待機
+        yield return new WaitUntil(() => CheckInGameState(InGameStatus.READY));
+
+        //順位の計算
+        int rank = CheckRaceRank();
+        PhotonNetwork.LocalPlayer.SetRankStatus(rank);
+
+        //スコアの計算
+        var scorelist = ScoreCalculation();
+
+        DebugLog("順位、スコアの反映演出");
+
+        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.INGAME);
+        yield return new WaitUntil(() => CheckInGameState(InGameStatus.INGAME));
+        yield return new WaitForSeconds(2.0f);
+
+        DebugLog("演出終了");
+        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
+        yield return new WaitUntil(() => CheckInGameState(InGameStatus.END));
+
+        if (CheckGameEnd())
         {
-            yield return null;
+            DebugLog("ゲーム終了");
         }
-        
+        else
+        {
+            DebugLog("選択フェーズに返る");
+            gameState = GameStatus.SELECT;
+        }
+
+        //ステートコルーチンの終了処理
+        ClearCoroutine();
+
     }
 
     #endregion
