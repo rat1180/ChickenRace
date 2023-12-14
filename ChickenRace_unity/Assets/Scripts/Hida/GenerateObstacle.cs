@@ -36,6 +36,6 @@ public class GenerateObstacle : MonoBehaviourPun
     void Generate(int id, float angle,int x,int y)
     {
         Vector2Int vector2int = new Vector2Int(x, y);
-        GameManager.instance.GetMapManager().GetComponent<MapManager>().GenerateMapObject(id, angle, vector2int);
+        GameManager.instance.GetMapManager().GetComponent<MapManager>().SpawnObstacle(id, angle, vector2int);
     }
 }

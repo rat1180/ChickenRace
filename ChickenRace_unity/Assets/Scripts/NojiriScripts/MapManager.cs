@@ -3,11 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
+/// <summary>
+/// 障害物の情報保持用クラス
+/// </summary>
+[System.Serializable]
+public struct ObjectStatus
+{
+    public List<int> InstalledList;        // 設置した障害物idリスト
+    public List<float> AngleList;          // 障害物の設置方向リスト
+    public List<Vector2Int> UsedGridList;  // 使用済みグリッドの位置リスト
+}
+
 public class MapManager : MonoBehaviour
 {
+    [SerializeField] private ObjectStatus objStatus;
     [SerializeField] private GameObject gameObj; // 移動したいオブジェクトの情報取得
-    [SerializeField] private List<int> InstalledList;       // 設置した障害物リスト
-    [SerializeField] private List<Vector2Int> UsedGridList; // 使用済みグリッドの位置リスト
+    //[SerializeField] private List<int> InstalledList;       // 設置した障害物リスト
+    //[SerializeField] private List<Vector2Int> UsedGridList; // 使用済みグリッドの位置リスト
 
     private bool isRunning = false; // コルーチン実行判定フラグ
     private bool isInstall = false; // 設置フラグ
@@ -21,15 +33,9 @@ public class MapManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // テスト用
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            CreativeModeStart();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            CreativeModeEnd();
+            ReInstallObject();
         }
     }
 
@@ -39,9 +45,11 @@ public class MapManager : MonoBehaviour
     /// </summary>
     private void MapInit()
     {
-        // リストの初期化
-        InstalledList = new List<int>();
-        UsedGridList = new List<Vector2Int>();
+        // 初期化
+        objStatus.InstalledList = new List<int>();
+        objStatus.AngleList = new List<float>();
+        objStatus.UsedGridList = new List<Vector2Int>();
+        gameObj = new GameObject();
     }
 
     /// <summary>
@@ -54,11 +62,16 @@ public class MapManager : MonoBehaviour
         while (true)
         {
             /* 
-            コルーチン実行中に
+            コルーチン実行時
             ・設置判定　　　：JudgeInstall()
-            ・障害物生成　　：GenerateMapObject()
+            ・障害物生成　　：GenerateMapObject()、SpawnObstacle()
             ・コルーチン終了：CreativeModeEnd()
-            のメソッドを呼び出せる
+
+            コルーチン未実行時
+            ・障害物再配置　：ReInstallObject()
+            ・コルーチン開始：CreativeModeStart()
+
+            上記のメソッドを呼び出せる
             */
 
             yield return null;
@@ -68,7 +81,7 @@ public class MapManager : MonoBehaviour
     /// <summary>
     /// ResourcesManagerからidに対応するオブジェクトを取得する
     /// </summary>
-    private GameObject GetObstaclePrefab()
+    private GameObject GetObstaclePrefab(int id)
     {
         return gameObj;
     }
@@ -83,7 +96,7 @@ public class MapManager : MonoBehaviour
     {
         if (isRunning)
         {
-            Debug.LogError("クリエイティブモード実行中です。エラー１");
+            Debug.LogError("クリエイティブモード実行中です。");
             return;
         }
 
@@ -102,7 +115,7 @@ public class MapManager : MonoBehaviour
     {
         if (!isRunning)
         {
-            Debug.LogError("クリエイティブモードが開始されていません。エラー２");
+            Debug.LogError("クリエイティブモードが開始されていません。");
             return;
         }
 
@@ -120,9 +133,9 @@ public class MapManager : MonoBehaviour
     public bool JudgeInstall(Vector2Int installPos)
     {
         // 設置判定
-        for (int i = 0; i < UsedGridList.Count; i++)
+        for (int i = 0; i < objStatus.UsedGridList.Count; i++)
         {
-            if (installPos == UsedGridList[i])
+            if (installPos == objStatus.UsedGridList[i])
             {
                 return true;
             }
@@ -132,9 +145,9 @@ public class MapManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 障害物設置用メソッド
-    /// JudgeInstallメソッドからtrueが返った時に呼ばれる
-    /// ID、グリッド位置を取得後、その位置に障害物生成
+    /// 全プレイヤー障害物生成メソッド
+    /// ID、生成方向、グリッド位置を取得
+    /// SpawnObstacleメソッドにて障害物生成後、全プレイヤーが同じメソッドを実行
     /// </summary>
     /// <param name="id">生成するオブジェクト番号</param>
     /// <param name="angle">生成する際の向き</param>
@@ -143,7 +156,7 @@ public class MapManager : MonoBehaviour
     {
         if (!isRunning)
         {
-            Debug.LogError("クリエイティブモードが開始されていません。エラー３");
+            Debug.LogError("クリエイティブモードが開始されていません。");
             return;
         }
 
@@ -158,23 +171,29 @@ public class MapManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 障害物の生成メソッド
-    /// 同時に他プレイヤーから呼ばれる
+    /// 障害物生成メソッド
     /// </summary>
     /// <param name="id">生成するオブジェクト番号</param>
     /// <param name="angle">生成する際の向き</param>
     /// <param name="gridPos">生成する位置</param>
     public void SpawnObstacle(int id, float angle, Vector2Int gridPos)
     {
+        if (!isRunning)
+        {
+            Debug.LogError("クリエイティブモードが開始されていません。");
+            return;
+        }
+
         // 障害物の取得
-        gameObj = GetObstaclePrefab();
+        gameObj = GetObstaclePrefab(id);
 
         // 障害物の生成
         Instantiate(gameObj, new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
 
         // 設置したオブジェクトIDと位置をリストに追加
-        InstalledList.Add(id);
-        UsedGridList.Add(gridPos);
+        objStatus.InstalledList.Add(id);
+        objStatus.UsedGridList.Add(gridPos);
+        objStatus.AngleList.Add(angle);
     }
 
     /// <summary>
@@ -184,6 +203,25 @@ public class MapManager : MonoBehaviour
     public bool IsInstallReference()
     {
         return isInstall;
+    }
+
+    /// <summary>
+    /// 障害物の再設置メソッド
+    /// ラウンド終了時、障害物を再設置することで初期状態に戻す
+    /// </summary>
+    public void ReInstallObject()
+    {
+        if (isRunning)
+        {
+            Debug.Log("クリエイティブモードが実行中のため、再配置できません。");
+            return;
+        }
+
+        for (int i = 0; i < objStatus.InstalledList.Count; i++)
+        {
+            gameObj = GetObstaclePrefab(objStatus.InstalledList[i]);
+            Instantiate(gameObj, new Vector3(objStatus.UsedGridList[i].x, objStatus.UsedGridList[i].y), Quaternion.Euler(0, 0, objStatus.AngleList[i]));
+        }
     }
     #endregion
 }
