@@ -423,6 +423,7 @@ public class GameManager : MonoBehaviour
 
         //他のプレイヤーを待機
         yield return new WaitUntil(() => CheckInitState(InitStatus.RESET));
+        DebugLog("値の初期化開始");
 
         //2.各値を初期化<RESET
         {
@@ -459,6 +460,8 @@ public class GameManager : MonoBehaviour
             //状態を送信
             initStatus = InitStatus.WAIT;
             localplayer.SetInitStatus((int)initStatus);
+
+            DebugLog("各値の初期化完了");
             //他のプレイヤーを待機
             yield return new WaitUntil(() => CheckInitState(InitStatus.WAIT));
         }
@@ -543,13 +546,17 @@ public class GameManager : MonoBehaviour
                 //障害物追加
                 gameProgress.dataSharingClass.PushID(i == 3 ? 0 : id);
             }
+            
         }
         //ゲストなら抽選まで待機
         else
         {
+            DebugLog("抽選を待機");
             yield return new WaitUntil(() => gameProgress.dataSharingClass.ID.Count != 0 ? true : false);
             yield return new WaitUntil(() => gameProgress.dataSharingClass.ID[gameProgress.dataSharingClass.ID.Count - 1] == 0);
         }
+
+        DebugLog("抽選終了");
 
         //選択クラスを生成
         gameProgress.user.GenerateMouse(0);
@@ -605,6 +612,7 @@ public class GameManager : MonoBehaviour
         //状態送信
         PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
 
+        DebugLog("選択終了待機");
         //全員の障害物選択まで待機
         yield return new WaitUntil(() => CheckInGameState(InGameStatus.END));
 
@@ -635,7 +643,8 @@ public class GameManager : MonoBehaviour
             //設置中
             //設置されたかどうかをmapManagerから受取
             if (gameProgress.mapManager.IsInstallReference())
-            { 
+            {
+                DebugLog("設置完了");
                 EndFaze();
             }
 
@@ -657,6 +666,7 @@ public class GameManager : MonoBehaviour
         //状態送信
         PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
 
+        DebugLog("設置終了待機");
         //全員の障害物選択まで待機
         yield return new WaitUntil(() => CheckInGameState(InGameStatus.END));
 
@@ -723,12 +733,15 @@ public class GameManager : MonoBehaviour
         //全員が待機状態になるまで待機
         yield return new WaitUntil(() => CheckInGameState(InGameStatus.READY));
 
+        var playerID = PhotonNetwork.LocalPlayer.ActorNumber;
+
         //順位の計算
         int rank = CheckRaceRank();
         PhotonNetwork.LocalPlayer.SetRankStatus(rank);
 
         //スコアの計算
         var scorelist = ScoreCalculation();
+        gameProgress.dataSharingClass.PushScore(playerID, scorelist[playerID]);
 
         DebugLog("順位、スコアの反映演出");
 
