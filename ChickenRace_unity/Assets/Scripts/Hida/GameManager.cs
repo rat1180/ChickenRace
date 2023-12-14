@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     public class GameProgress
     {
         public MapManager mapManager;
-        public Image uiManager;
+        public UIManager uiManager;
         public DataSharingClass dataSharingClass;
         public User user;
     }
@@ -174,14 +174,19 @@ public class GameManager : MonoBehaviour
     /// <param name="id"></param>
     /// <param name="index"></param>
     /// <returns></returns>
-    public bool MaouseSelected(int index)
+    public bool MouseSelected(int index)
     {
         var id = CheckObstacleIndex(gameProgress.dataSharingClass.ID, index);
         if (id == -1 || id == 0) return false;
 
         gameProgress.dataSharingClass.ResetID(index);
-        //gameProgress.user. = id;
+        //gameProgress.user = id;
         return true;
+    }
+
+    public void DeadPlayer()
+    {
+        EndFaze();
     }
 
     public void SetDataSheringClass(DataSharingClass datasharingclass)
@@ -342,6 +347,9 @@ public class GameManager : MonoBehaviour
             var map_class = Instantiate((GameObject)Resources.Load("MapManager"), Vector3.zero, Quaternion.identity);
             gameProgress.mapManager = map_class.GetComponent<MapManager>();
 
+            //UIManagerを検索
+            gameProgress.uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+
             //状態を送信
             initStatus = InitStatus.WAIT;
             localplayer.SetInitStatus((int)initStatus);
@@ -443,6 +451,8 @@ public class GameManager : MonoBehaviour
             //障害物候補を表示
             var list = gameProgress.dataSharingClass.ID;
 
+            //gameProgress.uiManager.PushIDList(list);
+
             //時間制限にかかれば終了
             if (false)
             {
@@ -467,6 +477,7 @@ public class GameManager : MonoBehaviour
             {
                 //マウス削除
                 gameProgress.user.DestroyMouse();
+
                 EndFaze();
             }
 
@@ -561,16 +572,42 @@ public class GameManager : MonoBehaviour
         DebugLog("READY演出");
 
         DebugLog("レーススタート");
-        //キャラの操作
+        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.INGAME);
+        //キャラの操作のロックを解除
+
+        //プレイ中の演出
         while (!isFazeEnd)
         {
-            //準備中であることを表示
+            //レース中の表示、演出
+
+            DebugLog("レース中");
 
             yield return null;
         }
 
+        //自身の状態を送信
+        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
+
+        while (!CheckInGameState(InGameStatus.END))
+        {
+            //死亡後、ゴール後の観戦
+
+            yield return null;
+        }
+
+        //スコアの送信
+
         //ステートコルーチンの終了処理
         ClearCoroutine();
+    }
+
+    IEnumerator StateRESULT()
+    {
+        while (true)
+        {
+            yield return null;
+        }
+        
     }
 
     #endregion
