@@ -191,5 +191,5 @@ MonoBehaviour:
       m_Calls: []
   shotCnt: 0
   isShotFlg: 0
-  arrowShot: {fileID: 638628872632947973, guid: 356441f7341ca914caa9a2cf4ac9cac5, type: 3}
+  arrowShot: {fileID: 638628872632947973, guid: 0a21fc14e9509bd488419ff55d1d8c19, type: 3}
   arrowChild: {fileID: 18801414704810749}

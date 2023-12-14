@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 9144148510852925347}
   - component: {fileID: 2058211192171295430}
   - component: {fileID: 4446450219759406784}
-  - component: {fileID: 7444481126672650141}
   - component: {fileID: 6956346809804059600}
+  - component: {fileID: 3619897614707373058}
   m_Layer: 0
-  m_Name: ArrowShot
+  m_Name: ParabolaArrowShot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -108,18 +108,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &7444481126672650141
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 638628872632947973}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa8240ce6ddb5bd448011f572c75e845, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!61 &6956346809804059600
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -146,3 +134,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &3619897614707373058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 638628872632947973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 683d41b2cab0af545b30f841f690c498, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

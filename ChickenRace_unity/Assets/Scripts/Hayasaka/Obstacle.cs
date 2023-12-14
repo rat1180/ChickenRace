@@ -7,16 +7,16 @@ public class Obstacle : MonoBehaviour
 {
     protected Vector2Int obstacleCenterPos; // 中心グリッド位置
     [SerializeField]
-    List<Vector2Int> collisionList; // 相対グリッド
+    protected List<Vector2Int> collisionList; // 相対グリッド
 
     [SerializeField]
-    int obstacleID; // 障害物のID
+    protected int obstacleID; // 障害物のID
     [SerializeField]
-    int obstacleKindID; // 種類のID
+    protected int obstacleKindID; // 種類のID
     [SerializeField]
     protected float myRotation; // 回転
     [SerializeField]
-    UnityEvent ue; // イベント関数
+    protected UnityEvent ue; // イベント関数
     void Awake()
     {
         Init();
@@ -24,7 +24,7 @@ public class Obstacle : MonoBehaviour
     /// <summary>
     /// 初期化
     /// </summary>
-    public virtual void Init()
+    protected virtual void Init()
     {
         obstacleCenterPos = new Vector2Int(0, 0);
     }
@@ -33,7 +33,7 @@ public class Obstacle : MonoBehaviour
     {
         update();
     }
-    public virtual void update()
+    protected virtual void update()
     {
         
     }
@@ -41,7 +41,7 @@ public class Obstacle : MonoBehaviour
     /// 生成時の回転等の情報受け取り
     /// </summary>
     /// <param name="rot"></param>
-    public void Generation(int rot)
+    protected void Generation(int rot)
     {
         myRotation = rot;
     }
@@ -57,7 +57,7 @@ public class Obstacle : MonoBehaviour
     {
         return collisionList;
     }
-    public virtual void ObjStart()
+    protected virtual void ObjStart()
     {
 
     }
