@@ -83,7 +83,7 @@ namespace PhotonMethods
 
         public static void SetGameEndStatus(this Photon.Realtime.Player player, bool status)
         {
-            propsToSet[GameReadyStatusKey] = status;
+            propsToSet[GameEndStatusKey] = status;
             player.SetCustomProperties(propsToSet);
             propsToSet.Clear();
         }

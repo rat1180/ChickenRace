@@ -112,16 +112,6 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    bool CheckInGameState(InGameStatus status)
-    {
-        //全員の初期化状態を確認
-        foreach (var player in PhotonNetwork.CurrentRoom.Players)
-        {
-            if (!player.Value.GetInGameStatus()) return false;
-        }
-        return true;
-    }
-
     /// <summary>
     /// ステートコルーチンをクリアする
     /// ステートコルーチン終了時に必ず呼ぶこと
@@ -158,7 +148,6 @@ public class GameManager : MonoBehaviour
         //正常に持っているか確認
         if (/*gameProgress.user. != -1*/false)
         {
-            PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
             return true;
         }
         return false;
@@ -232,7 +221,7 @@ public class GameManager : MonoBehaviour
         return scores;
     }
 
-    bool CheckGameEnd()
+    bool GameEnd()
     {
         foreach(var score in gameProgress.dataSharingClass.score)
         {
@@ -461,12 +450,8 @@ public class GameManager : MonoBehaviour
                 yield return null;
             }
 
-            //状態を送信
-            initStatus = InitStatus.CONECT;
-            localplayer.SetInitStatus((int)initStatus);
-
-            //他のプレイヤーを待機
-            yield return new WaitUntil(() => CheckInitState(InitStatus.CONECT));
+            //進行待機
+            yield return new WaitUntil(() => CheckReady());
             DebugLog("接続確認!");
 
         }
@@ -477,15 +462,12 @@ public class GameManager : MonoBehaviour
             Debug.Log("開始まで待機");
             yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.S));
             //状態を送信
-            CheckInGame();
+            PhotonNetwork.LocalPlayer.SetGameInGameStatus(true);
         }
         else
         {
             Debug.Log("開始まで待機");
             yield return new WaitUntil(() => PhotonNetwork.MasterClient.GetGameInGameStatus());
-            //状態を送信
-            initStatus = InitStatus.RESET;
-            localplayer.SetInitStatus((int)initStatus);
         }
 
         //他のプレイヤーを待機
@@ -529,6 +511,8 @@ public class GameManager : MonoBehaviour
         }
         //3.初期化完了・他プレイヤーを待機<WAIT
         {
+            DebugLog("完了まで待機中");
+
             //同時にゲーム開始
             //他のプレイヤーを待機
             yield return new WaitUntil(() => CheckEnd());
@@ -737,7 +721,7 @@ public class GameManager : MonoBehaviour
 
         DebugLog("設置終了待機");
         //全員の障害物選択まで待機
-        yield return new WaitUntil(() => CheckGameEnd());
+        yield return new WaitUntil(() => CheckEnd());
 
         DebugLog("障害物設置終了");
         gameState++;
@@ -816,7 +800,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitUntil(() => CheckEnd());
 
 
-        if (CheckGameEnd())
+        if (GameEnd())
         {
             DebugLog("ゲーム終了");
         }
