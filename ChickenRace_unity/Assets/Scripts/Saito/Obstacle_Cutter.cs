@@ -10,7 +10,7 @@ public class Obstacle_Cutter : Obstacle
     [SerializeField] bool isTurn;  // âEÇ…êiÇﬁÇ©ç∂Ç…êiÇﬁÇ©.
     Vector3 BladeStartPos;
 
-    public override void Init()
+    protected override void Init()
     {
         elasticitySpeed = 2.0f;
         Blade = transform.GetChild(0).gameObject;
@@ -18,7 +18,7 @@ public class Obstacle_Cutter : Obstacle
         BladeStartPos = Blade.transform.position;
     }
 
-    public override void update()
+    protected override void update()
     {
         Elasticity();
     }

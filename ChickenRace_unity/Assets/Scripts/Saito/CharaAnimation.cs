@@ -30,7 +30,7 @@ public class CharaAnimation : MonoBehaviour
 
     void Update()
     {
-        //StartAnimation(nowAnimations);  // テスト用.
+        StartAnimation(nowAnimations);  // テスト用.
     }
 
     /// <summary>
