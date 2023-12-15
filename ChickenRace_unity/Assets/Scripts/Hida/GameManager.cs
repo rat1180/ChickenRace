@@ -70,6 +70,11 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
+    }
+
+    private void Awake()
+    {
         gameState = GameStatus.SLEEP;
         StartCoroutine(GameInit());
     }
@@ -399,7 +404,7 @@ public class GameManager : MonoBehaviour
             localplayer.SetInitStatus((int)initStatus);
 
             //他のプレイヤーを待機
-            yield return new WaitUntil(() => CheckInitState(InitStatus.CONECT));
+            yield return new WaitUntil(() => CheckInitState(InitStatus.CONECT) == true);
             DebugLog("接続確認!");
 
         }
@@ -408,7 +413,7 @@ public class GameManager : MonoBehaviour
         if (PhotonNetwork.IsMasterClient)
         {
             Debug.Log("開始まで待機");
-            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.S));
+            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.S) == true);
             //状態を送信
             initStatus = InitStatus.RESET;
             localplayer.SetInitStatus((int)initStatus);
@@ -416,14 +421,14 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.Log("開始まで待機");
-            yield return new WaitUntil(() => PhotonNetwork.MasterClient.GetInitStatus() == (int)InitStatus.RESET);
+            yield return new WaitUntil(() => (PhotonNetwork.MasterClient.GetInitStatus() == (int)InitStatus.RESET) == true);
             //状態を送信
             initStatus = InitStatus.RESET;
             localplayer.SetInitStatus((int)initStatus);
         }
 
         //他のプレイヤーを待機
-        yield return new WaitUntil(() => CheckInitState(InitStatus.RESET));
+        yield return new WaitUntil(() => CheckInitState(InitStatus.RESET) == true);
         DebugLog("値の初期化開始");
 
         //2.各値を初期化<RESET
@@ -445,7 +450,7 @@ public class GameManager : MonoBehaviour
             else                                          //ゲスト
             {
                 //データ共有クラスが生成されるまで待機
-                yield return new WaitUntil(() => gameProgress.dataSharingClass != null);
+                yield return new WaitUntil(() => (gameProgress.dataSharingClass != null) == true);
             }
 
             //Userクラス生成
@@ -465,7 +470,7 @@ public class GameManager : MonoBehaviour
 
             DebugLog("各値の初期化完了");
             //他のプレイヤーを待機
-            yield return new WaitUntil(() => CheckInitState(InitStatus.WAIT));
+            yield return new WaitUntil(() => CheckInitState(InitStatus.WAIT) == true);
         }
         //3.初期化完了・他プレイヤーを待機<WAIT
         {
@@ -474,7 +479,7 @@ public class GameManager : MonoBehaviour
             initStatus = InitStatus.START;
             localplayer.SetInitStatus((int)initStatus);
             //他のプレイヤーを待機
-            yield return new WaitUntil(() => CheckInitState(InitStatus.START));
+            yield return new WaitUntil(() => CheckInitState(InitStatus.START) == true);
         }
         DebugLog("初期化完了");
         gameState = GameStatus.START;
@@ -554,8 +559,8 @@ public class GameManager : MonoBehaviour
         else
         {
             DebugLog("抽選を待機");
-            yield return new WaitUntil(() => gameProgress.dataSharingClass.ID.Count != 0 ? true : false);
-            yield return new WaitUntil(() => gameProgress.dataSharingClass.ID[gameProgress.dataSharingClass.ID.Count - 1] == 0);
+            yield return new WaitUntil(() => (gameProgress.dataSharingClass.ID.Count != 0 ? true : false) == true);
+            yield return new WaitUntil(() => (gameProgress.dataSharingClass.ID[gameProgress.dataSharingClass.ID.Count - 1] == 0) == true);
         }
 
         DebugLog("抽選終了");
@@ -618,7 +623,7 @@ public class GameManager : MonoBehaviour
 
         DebugLog("選択終了待機");
         //全員の障害物選択まで待機
-        yield return new WaitUntil(() => CheckInGameState(InGameStatus.END));
+        yield return new WaitUntil(() => CheckInGameState(InGameStatus.END) == true);
 
         DebugLog("障害物選択終了");
         gameState++;
@@ -675,7 +680,7 @@ public class GameManager : MonoBehaviour
 
         DebugLog("設置終了待機");
         //全員の障害物選択まで待機
-        yield return new WaitUntil(() => CheckInGameState(InGameStatus.END));
+        yield return new WaitUntil(() => CheckInGameState(InGameStatus.END) == true);
 
         DebugLog("障害物設置終了");
         gameState++;
@@ -696,7 +701,7 @@ public class GameManager : MonoBehaviour
         PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.READY);
 
         //全員が待機状態になるまで待機
-        yield return new WaitUntil(() => CheckInGameState(InGameStatus.READY));
+        yield return new WaitUntil(() => CheckInGameState(InGameStatus.READY) == true);
 
         //キャラの出現
         gameProgress.user.GeneratePlayer();
@@ -724,7 +729,7 @@ public class GameManager : MonoBehaviour
         PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
 
         //全員が待機状態になるまで待機
-        yield return new WaitUntil(() => CheckInGameState(InGameStatus.END));
+        yield return new WaitUntil(() => CheckInGameState(InGameStatus.END) == true);
 
         gameState++;
 
@@ -738,7 +743,7 @@ public class GameManager : MonoBehaviour
         PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.READY);
 
         //全員が待機状態になるまで待機
-        yield return new WaitUntil(() => CheckInGameState(InGameStatus.READY));
+        yield return new WaitUntil(() => CheckInGameState(InGameStatus.READY) == true);
 
         //順位の計算
         int rank = CheckRaceRank();
@@ -746,7 +751,7 @@ public class GameManager : MonoBehaviour
 
         //送信のために待機
         PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.INGAME);
-        yield return new WaitUntil(() => CheckInGameState(InGameStatus.INGAME));
+        yield return new WaitUntil(() => CheckInGameState(InGameStatus.INGAME) == true);
 
 
         //スコアの計算
@@ -758,7 +763,7 @@ public class GameManager : MonoBehaviour
 
         DebugLog("演出終了");
         PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
-        yield return new WaitUntil(() => CheckInGameState(InGameStatus.END));
+        yield return new WaitUntil(() => CheckInGameState(InGameStatus.END) == true);
 
         if (CheckGameEnd())
         {
