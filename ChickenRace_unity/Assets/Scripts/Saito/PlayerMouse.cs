@@ -26,6 +26,7 @@ public class PlayerMouse : MonoBehaviour
     {
         error = -1;
         ImageInstance();
+        Map = GameManager.instance.GetMapManager();
     }
 
     void Start()
