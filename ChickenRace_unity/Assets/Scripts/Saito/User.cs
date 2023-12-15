@@ -61,7 +61,7 @@ public class User : MonoBehaviour
     /// </summary>
     void GetItemId()
     {
-
+        itemId = -1;
     }
 
     /// <summary>
@@ -71,6 +71,5 @@ public class User : MonoBehaviour
     private void GetItemId(int mode)
     {
         itemId = isMode;
-
     }
 }

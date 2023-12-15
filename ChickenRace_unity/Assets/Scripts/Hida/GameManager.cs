@@ -599,11 +599,11 @@ public class GameManager : MonoBehaviour
         while (!isFazeEnd)
         {
             //áŠQ•¨Œó•â‚ğ•\¦
-            List<OBSTACLE_IMAGE_NAMES> list = new List<OBSTACLE_IMAGE_NAMES>();
+            List<int> list = new List<int>();
 
             foreach (var id in gameProgress.dataSharingClass.ID)
             {
-                list.Add((OBSTACLE_IMAGE_NAMES)id);
+                list.Add(id);
             }
 
             gameProgress.uiManager.PushID(list);

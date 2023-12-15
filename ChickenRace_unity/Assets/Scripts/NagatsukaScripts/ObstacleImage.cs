@@ -5,9 +5,9 @@ using ResorceNames;
 
 public class ObstacleImage : MonoBehaviour
 {
-    public OBSTACLE_IMAGE_NAMES id;
+    public int id;
 
-    public OBSTACLE_IMAGE_NAMES ReturnID()
+    public int ReturnID()
     {
         return id;
     }

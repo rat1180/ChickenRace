@@ -184,7 +184,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void ImageInstance()
     {
-        instanceObj = PhotonNetwork.Instantiate("PlayerImage", transform.position, transform.rotation);
+        //instanceObj = PhotonNetwork.Instantiate("PlayerImage", transform.position, transform.rotation);
     }
 
     /// <summary>
@@ -192,7 +192,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void PlayerTransform()
     {
-        instanceObj.GetComponent<Character>().PositionUpdate(transform.position);
+        //instanceObj.GetComponent<Character>().PositionUpdate(transform.position);
     }
 
     /// <summary>
