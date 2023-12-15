@@ -45,11 +45,11 @@ public class UIManager : MonoBehaviour
             ResorceManager.instance.GetObstacleImage(id[i]);//‰æ‘œ‚ğ•ÏX.
             if (imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>() == null)
             {
-                imageObjects.transform.GetChild(i).gameObject.AddComponent<ObstacleImage>().id = id[i];
+                imageObjects.transform.GetChild(i).gameObject.AddComponent<ObstacleImage>().id = i;
             }
             else
             {
-                imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>().id = id[i];
+                imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>().id = i;
             }
         }
     }
