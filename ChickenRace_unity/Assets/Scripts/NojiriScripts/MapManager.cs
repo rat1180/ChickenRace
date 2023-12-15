@@ -16,10 +16,9 @@ public struct ObjectStatus
 
 public class MapManager : MonoBehaviour
 {
-    [SerializeField] private ObjectStatus objStatus;
-    [SerializeField] private GameObject gameObj; // 移動したいオブジェクトの情報取得
-    //[SerializeField] private List<int> InstalledList;       // 設置した障害物リスト
-    //[SerializeField] private List<Vector2Int> UsedGridList; // 使用済みグリッドの位置リスト
+    [SerializeField] private ObjectStatus objStatus; // 障害物用の構造体情報
+    [SerializeField] private GameObject obstacleObj; // 移動したいオブジェクトの情報取得
+    [SerializeField] private GameObject panelObject; // グリッド用パネル
 
     private bool isRunning = false; // コルーチン実行判定フラグ
     private bool isInstall = false; // 設置フラグ
@@ -35,7 +34,7 @@ public class MapManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            ReInstallObject();
+            GridDraw();
         }
     }
 
@@ -49,7 +48,7 @@ public class MapManager : MonoBehaviour
         objStatus.InstalledList = new List<int>();
         objStatus.AngleList = new List<float>();
         objStatus.UsedGridList = new List<Vector2Int>();
-        gameObj = new GameObject();
+        obstacleObj = new GameObject();
     }
 
     /// <summary>
@@ -83,7 +82,7 @@ public class MapManager : MonoBehaviour
     /// </summary>
     private GameObject GetObstaclePrefab(int id)
     {
-        return gameObj;
+        return obstacleObj;
     }
     #endregion
 
@@ -185,10 +184,10 @@ public class MapManager : MonoBehaviour
         }
 
         // 障害物の取得
-        gameObj = GetObstaclePrefab(id);
+        obstacleObj = GetObstaclePrefab(id);
 
         // 障害物の生成
-        Instantiate(gameObj, new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
+        Instantiate(obstacleObj, new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
 
         // 設置したオブジェクトIDと位置をリストに追加
         objStatus.InstalledList.Add(id);
@@ -219,9 +218,18 @@ public class MapManager : MonoBehaviour
 
         for (int i = 0; i < objStatus.InstalledList.Count; i++)
         {
-            gameObj = GetObstaclePrefab(objStatus.InstalledList[i]);
-            Instantiate(gameObj, new Vector3(objStatus.UsedGridList[i].x, objStatus.UsedGridList[i].y), Quaternion.Euler(0, 0, objStatus.AngleList[i]));
+            obstacleObj = GetObstaclePrefab(objStatus.InstalledList[i]);
+            Instantiate(obstacleObj, new Vector3(objStatus.UsedGridList[i].x, objStatus.UsedGridList[i].y), Quaternion.Euler(0, 0, objStatus.AngleList[i]));
         }
+    }
+
+    public void GridDraw()
+    {
+        var gridObj = (GameObject)Resources.Load("GridObject");
+
+        Instantiate(gridObj);
+        //panelObject.SetActive(true);
+        //panelObject.transform.localScale = new Vector3(0.1f, 0.1f, 1f);
     }
     #endregion
 }

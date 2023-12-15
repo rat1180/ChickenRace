@@ -19,6 +19,8 @@ public class GridLineDraw : MonoBehaviour
     Vector2Int originSize = new Vector2Int(0, 0);
     Vector2 originPosRetouch = new Vector2(0, 0);
 
+    private Vector2 backGroundSize;
+
     Mesh mesh;
 
     void Start()
@@ -74,6 +76,10 @@ public class GridLineDraw : MonoBehaviour
         Vector2[] uvs = new Vector2[horizontalResolution + verticalResolution];
         int[] lines = new int[horizontalResolution + verticalResolution];
         Color[] colors = new Color[horizontalResolution + verticalResolution];
+
+        // サイズ変更用
+        backGroundSize.x = Vector2.Distance(horizontalStartPosition, horizontalEndPosition);
+        backGroundSize.y = Vector2.Distance(verticalStartPosition, verticalEndPosition);
 
         // 横線の頂点を設定
         for (int i = 0; i < horizontalResolution; i += 4)
@@ -133,5 +139,16 @@ public class GridLineDraw : MonoBehaviour
             ret[i] = Quaternion.LookRotation(rotDirection) * vertices[i];
         }
         return ret;
+    }
+
+    private void GridBackGround()
+    {
+        GameObject gridChildObj;
+        Vector2 childSize;
+
+        gridChildObj = gameObject.transform.GetChild(0).gameObject;
+        childSize = gridChildObj.transform.GetComponent<RectTransform>().sizeDelta;
+        childSize = backGroundSize;
+
     }
 }
