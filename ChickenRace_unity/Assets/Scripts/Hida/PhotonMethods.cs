@@ -16,6 +16,7 @@ namespace PhotonMethods
         private const string InitStatusKey = "Is";
         private const string InGameStatusKey = "IGs";
         private const string RankStatusKey = "Rs";
+        private const string CheckStatusKey = "Cs";
 
         private static readonly ExitGames.Client.Photon.Hashtable propsToSet = new ExitGames.Client.Photon.Hashtable();
 
@@ -85,6 +86,19 @@ namespace PhotonMethods
         public static void SetRankStatus(this Photon.Realtime.Player player, int status)
         {
             propsToSet[RankStatusKey] = status;
+            player.SetCustomProperties(propsToSet);
+            propsToSet.Clear();
+        }
+
+        
+        public static bool GetCheckStatus(this Photon.Realtime.Player player)
+        {
+            return (player.CustomProperties[CheckStatusKey] is bool status) ? status : false;
+        }
+
+        public static void SetCheckStatus(this Photon.Realtime.Player player, bool status)
+        {
+            propsToSet[CheckStatusKey] = status;
             player.SetCustomProperties(propsToSet);
             propsToSet.Clear();
         }
