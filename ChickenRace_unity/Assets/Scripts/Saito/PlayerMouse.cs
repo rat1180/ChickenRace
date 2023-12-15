@@ -102,9 +102,10 @@ public class PlayerMouse : MonoBehaviour
             // Debug.Log("İ’u‚Å‚«‚Ü‚¹‚ñ");
         }
 
-        if (index != error)
+        if (itemId != error)
         {
             index = itemId; // itemId‚ğŠÖ”‚É‚·‚é.
+            User.GetComponent<User>().GetIndex(index);
         }
     }
 
@@ -140,4 +141,6 @@ public class PlayerMouse : MonoBehaviour
     {
         saveAngle -= angle;
     }
+
+    
 }
