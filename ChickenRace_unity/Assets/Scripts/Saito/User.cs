@@ -8,9 +8,11 @@ public class User : MonoBehaviour
     [SerializeField] GameObject mouse;
     int isMode;
     int itemId;
+    [SerializeField] int index;
 
     //‰¼
     GameObject mouseObjcet;
+    GameObject playerObjcet;
 
     void Start()
     {
@@ -51,6 +53,14 @@ public class User : MonoBehaviour
         //Destroy(gameObject);
     }
 
+    /// <summary>
+    /// ƒvƒŒƒCƒ„[‚ğíœ.
+    /// </summary>
+    public void DestroyPlayer()
+    {
+        Destroy(playerObjcet);
+    }
+
     public int SetMode()
     {
         return isMode;
@@ -71,5 +81,10 @@ public class User : MonoBehaviour
     private void GetItemId(int mode)
     {
         itemId = isMode;
+    }
+
+    public void GetIndex(int getindex)
+    {
+        index = getindex;
     }
 }
