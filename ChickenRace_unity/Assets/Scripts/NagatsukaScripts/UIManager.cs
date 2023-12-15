@@ -7,7 +7,7 @@ using ResorceNames;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] GameObject imageObjects;
-    public List<OBSTACLE_IMAGE_NAMES> id;
+    public List<int> id;
     [SerializeField, Range(0, 3)] int testSoldOutInex;
 
     // Update is called once per frame
@@ -26,9 +26,9 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// GameManager‚©‚çID‚ğ“ü‚ê‚éŠÖ”
     /// </summary>
-    public void PushID(List<OBSTACLE_IMAGE_NAMES> iD)
+    public void PushID(List<int> iD)
     {
-        id = new List<OBSTACLE_IMAGE_NAMES>();
+        id = new List<int>();
         id = iD;
         ChangeObstacleImage();
     }
@@ -45,11 +45,11 @@ public class UIManager : MonoBehaviour
             ResorceManager.instance.GetObstacleImage(id[i]);//‰æ‘œ‚ğ•ÏX.
             if (imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>() == null)
             {
-                imageObjects.transform.GetChild(i).gameObject.AddComponent<ObstacleImage>().id = id[i];
+                imageObjects.transform.GetChild(i).gameObject.AddComponent<ObstacleImage>().id = i;
             }
             else
             {
-                imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>().id = id[i];
+                imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>().id = i;
             }
         }
     }

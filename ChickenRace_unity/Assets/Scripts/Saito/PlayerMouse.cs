@@ -7,6 +7,7 @@ public class PlayerMouse : MonoBehaviour
 {
     [SerializeField] Vector3 moveVector;     // InputActionから受け取った値を入れる.
     [SerializeField] float moveSpeed;        // 動く速さ.
+    [SerializeField] int itemId;
     [SerializeField] int index;             // アイテム番号.
     int error;                              // エラー番号.
     [SerializeField] bool isInstalled;         // アイテムの設置が可能か.
@@ -26,7 +27,7 @@ public class PlayerMouse : MonoBehaviour
     {
         error = -1;
         ImageInstance();
-        Map = GameManager.instance.GetMapManager();
+        //Map = GameManager.instance.GetMapManager();
     }
 
     void Start()
@@ -46,12 +47,12 @@ public class PlayerMouse : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collision)
     {
         // 当たった画像のIDを取得.
-        
+        itemId = collision.gameObject.GetComponent<ObstacleImage>().ReturnID();
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        index = error;
+        itemId = error;
     }
 
     /// <summary>
@@ -101,10 +102,10 @@ public class PlayerMouse : MonoBehaviour
             // Debug.Log("設置できません");
         }
 
-        //if(index != error)
-        //{
-        //    index = GetComponent<SelectImage>().itemId; // itemIdを関数にする
-        //}
+        if (index != error)
+        {
+            index = itemId; // itemIdを関数にする.
+        }
     }
 
     /// <summary>

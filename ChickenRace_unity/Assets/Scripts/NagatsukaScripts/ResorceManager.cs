@@ -124,7 +124,7 @@ public class ResorceManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 障害物の画像を直接名前指定して読み込む.
+    /// 障害物のオブジェクトを直接名前指定して読み込む.
     /// </summary>
     public GameObject GetObstacleObject(OBSTACLE_OBJECT name)
     {
@@ -157,7 +157,23 @@ namespace ResorceNames
     }
     public enum OBSTACLE_OBJECT
     {
-
+        Arrow,
+        Cannon,
+        Paunch,      
+    }
+    //床プレファブは別フォルダらしい
+    public enum SCAFFOLD_OBJECT { 
+        FourScaffold,
+        HoleScaffold,
+        HoleScaffold2,
+        L_Scaffold,
+        MoveScaffold,
+        RotateFloorP,
+        Scaffold,
+        SquareScaffold,
+        StairsScaffold,
+        ThreeScaffold,
+        TwoScaffold,
     }
 }
 
@@ -170,7 +186,7 @@ public static class FolderObjectFinder
     //生成用フォルダへのパス
     const string DefalutGenerateFolderName = "Prefabs/";
 
-    //画像フォルダへのパス
+    //障害物オブジェクトへのパス
     const string OBSTACLE_FOLDER = "Obstacle/";
 
     //画像フォルダへのパス
