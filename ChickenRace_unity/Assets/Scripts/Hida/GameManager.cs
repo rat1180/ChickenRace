@@ -548,7 +548,7 @@ public class GameManager : MonoBehaviour
                 //障害物追加
                 gameProgress.dataSharingClass.PushID(i == 3 ? 0 : id);
             }
-            
+
         }
         //ゲストなら抽選まで待機
         else
@@ -570,7 +570,7 @@ public class GameManager : MonoBehaviour
             //障害物候補を表示
             List<OBSTACLE_IMAGE_NAMES> list = new List<OBSTACLE_IMAGE_NAMES>();
 
-            foreach(var id in gameProgress.dataSharingClass.ID)
+            foreach (var id in gameProgress.dataSharingClass.ID)
             {
                 list.Add((OBSTACLE_IMAGE_NAMES)id);
             }
@@ -622,6 +622,9 @@ public class GameManager : MonoBehaviour
 
         DebugLog("障害物選択終了");
         gameState++;
+
+        //選択フェーズ開始準備
+        if (PhotonNetwork.IsMasterClient) gameProgress.dataSharingClass.ResetIDList();
 
         //ステートコルーチンの終了処理
         ClearCoroutine();
