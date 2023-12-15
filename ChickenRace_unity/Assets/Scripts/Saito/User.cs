@@ -7,7 +7,7 @@ public class User : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] GameObject mouse;
     int isMode;
-    int index;
+    int itemId;
 
     //‰¼
     GameObject mouseObjcet;
@@ -20,7 +20,7 @@ public class User : MonoBehaviour
 
     void Update()
     {
-
+        
     }
 
     public void GeneratePlayer()
@@ -61,7 +61,7 @@ public class User : MonoBehaviour
     /// </summary>
     void GetItemId()
     {
-
+        itemId = -1;
     }
 
     /// <summary>
@@ -70,7 +70,6 @@ public class User : MonoBehaviour
     /// <param name="mode"></param>
     private void GetItemId(int mode)
     {
-        index = isMode;
-
+        itemId = isMode;
     }
 }
