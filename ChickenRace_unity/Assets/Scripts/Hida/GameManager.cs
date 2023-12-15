@@ -95,22 +95,6 @@ public class GameManager : MonoBehaviour
 
     #region クラス内で使用する関数
 
-    /// <summary>
-    /// 各プレイヤーの初期化状態を確認する
-    /// 全員が引数の状態の時にtrueを返す
-    /// この初期化状態はカスタムプロパティで管理する
-    /// </summary>
-    /// <param name="status"></param>
-    /// <returns></returns>
-    bool CheckInitState(InitStatus status)
-    {
-        //全員の初期化状態を確認
-        foreach(var player in PhotonNetwork.CurrentRoom.Players)
-        {
-            if (player.Value.GetInitStatus() != (int)status) return false;
-        }
-        return true;
-    }
 
     /// <summary>
     /// ステートコルーチンをクリアする
@@ -206,7 +190,8 @@ public class GameManager : MonoBehaviour
         //死亡時はポイントなし
         if (rank == (int)DEAD) return 0;
 
-        int addScore = BONUS_SCORE;
+        //順位に応じたボーナスを加算
+        int addScore = (rank == 1) ? BONUS_SCORE : 0;
         return BASE_SCORE + addScore;
     }
 
