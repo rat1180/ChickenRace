@@ -83,8 +83,17 @@ public class User : MonoBehaviour
         itemId = isMode;
     }
 
-    public void GetIndex(int getindex)
+    /// <summary>
+    /// インデックスを受け取る関数.
+    /// </summary>
+    /// <param name="setindex"></param>
+    public void SetIndex(int setindex)
     {
-        index = getindex;
+        index = setindex;
+    }
+
+    public int GetIndex(int getindex)
+    {
+        return index;
     }
 }
