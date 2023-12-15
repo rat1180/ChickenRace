@@ -6,7 +6,11 @@ public class User : MonoBehaviour
 {
     [SerializeField] GameObject player;
     [SerializeField] GameObject mouse;
-    bool isMode;
+    int isMode;
+    int itemId;
+
+    //仮
+    GameObject mouseObjcet;
 
     void Start()
     {
@@ -19,19 +23,54 @@ public class User : MonoBehaviour
         
     }
 
-    private void GeneratePlayer()
+    public void GeneratePlayer()
     {
         Instantiate(player, transform.position, transform.rotation);
     }
 
-    private void GenerateMouse(bool mode)
+    public void GenerateMouse(int mode)
     {
-        isMode = mode;
-        Instantiate(mouse, transform.position, transform.rotation);
+        if(mode == 0)
+        {
+            GetItemId();
+        }
+        else
+        {
+            GetItemId(mode);
+        }
+
+        mouseObjcet = Instantiate(mouse, transform.position, transform.rotation);
     }
 
-    public bool SetMode()
+    /// <summary>
+    /// マウスを削除.
+    /// </summary>
+    public void DestroyMouse()
+    {
+        Destroy(mouseObjcet);
+        //Destroy(gameObject);
+    }
+
+    public int SetMode()
     {
         return isMode;
+    }
+
+    /// <summary>
+    /// GenerateMouseから引数の値を受け取らなかった時に呼ぶ.
+    /// </summary>
+    void GetItemId()
+    {
+
+    }
+
+    /// <summary>
+    /// GenerateMouseから引数の値を受け取った時に呼ぶ.
+    /// </summary>
+    /// <param name="mode"></param>
+    private void GetItemId(int mode)
+    {
+        itemId = isMode;
+
     }
 }

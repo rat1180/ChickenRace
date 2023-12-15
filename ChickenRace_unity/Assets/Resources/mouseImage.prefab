@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 4384123820751128096}
   - component: {fileID: 4384123820751128097}
   - component: {fileID: 4384123820751128110}
+  - component: {fileID: 4337425717175853623}
   m_Layer: 0
-  m_Name: Circle
+  m_Name: mouseImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,15 +75,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: 388b307a9420cbb4ab55e7e9a2bdc48a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e79a9e9d6396eba438900afb0357e808, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 8, y: 7.08}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &4384123820751128110
@@ -97,3 +98,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3083ae201e703e45a5664ee5cb7df7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4337425717175853623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4384123820751128111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 4384123820751128110}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

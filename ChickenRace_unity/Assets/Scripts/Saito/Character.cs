@@ -7,10 +7,11 @@ using Photon.Realtime;
 public class Character : MonoBehaviourPun, IPunObservable
 {
     Vector3 targetPos;
-
+    GameObject target;
+    
     void Start()
     {
-
+        
     }
 
     void FixedUpdate()
@@ -46,6 +47,17 @@ public class Character : MonoBehaviourPun, IPunObservable
         {
             // プレイヤーオブジェクトの位置情報を受信
             targetPos = (Vector3)stream.ReceiveNext();
+        }
+    }
+
+    /// <summary>
+    /// 自身を削除.
+    /// </summary>
+    private void myDestroy()
+    {
+        if(target == null)
+        {
+            Destroy(gameObject);
         }
     }
 }
