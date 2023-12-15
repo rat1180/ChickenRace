@@ -630,6 +630,8 @@ public class GameManager : MonoBehaviour
             //マウスから障害物情報が送られ、userに渡れば終了
             if (CheckUserIsHave())
             {
+                //UserからIndexを受け取り、そのIndexに応じたアイテムをリストから削除
+                //gameProgress.dataSharingClass.ResetID(gameProgress.user.);
                 EndFaze();
             }
 
