@@ -50,6 +50,7 @@ public class User : MonoBehaviour
     {
         if(mode == 0)
         {
+            Init();
             GetModeId();
         }
         else
