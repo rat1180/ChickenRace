@@ -110,6 +110,11 @@ public class User : MonoBehaviour
         itemId = itemid;
     }
 
+    public int GetItemId()
+    {
+        return itemId;
+    }
+
     /// <summary>
     /// インデックスを受け取る関数.
     /// </summary>
