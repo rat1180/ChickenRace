@@ -125,11 +125,7 @@ GameObject:
   - component: {fileID: 3146932223898954306}
   - component: {fileID: 5028385998496920506}
   m_Layer: 0
-<<<<<<<< HEAD:ChickenRace_unity/Assets/Resources/Obstacle/Scaffold/TwoScaffold.prefab
-  m_Name: TwoScaffold
-========
   m_Name: Scaffold_Two
->>>>>>>> origin/NewHayasaka:ChickenRace_unity/Assets/Resources/Obstacle/Scaffold_Two.prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
