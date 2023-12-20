@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/NagatsukaScenes/WaitRoom.unity
     guid: a480dd2ee518cfa45b20820165f19200
+  - enabled: 1
+    path: Assets/Scenes/NagatsukaScenes/TestRoom.unity
+    guid: bf627f681cea3794aac3d78082c949da
   m_configObjects: {}

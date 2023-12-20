@@ -63,6 +63,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
+        PhotonNetwork.AutomaticallySyncScene = true;//ホストとシーンを同期する.
         isInRoom = false;
         isStart = false;
         createPlayerFlg = false;
@@ -175,7 +176,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             isStart = true;
             PhotonNetwork.CurrentRoom.IsOpen = false;
-           // PhotonNetwork.LoadLevel(/*"ProttypeSeacn");*/SceanNames.GAME.ToString());
+            PhotonNetwork.LoadLevel("TestRoom");
         }
     }
 
