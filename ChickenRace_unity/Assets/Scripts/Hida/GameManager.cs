@@ -822,6 +822,9 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(2.0f);
 
+        //ネットワークから切断
+        PhotonNetwork.Disconnect();
+
         //タイトルに移動
         SceneManager.LoadScene(SceneNames.Lobby.ToString());
     }
