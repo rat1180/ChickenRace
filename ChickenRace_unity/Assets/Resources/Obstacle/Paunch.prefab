@@ -219,6 +219,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   isPaunchFlg: 0
+  isPaunchWaitFlg: 0
   paunchShot: {fileID: 638628872632947973, guid: 80a9490e7d9d90e41adf4a6a64b96a3f, type: 3}
   paunchChild: {fileID: 5925611972725522751}
 --- !u!50 &6306360120521746551
@@ -241,7 +242,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 7
 --- !u!1 &9174519190030368102
 GameObject:
   m_ObjectHideFlags: 0

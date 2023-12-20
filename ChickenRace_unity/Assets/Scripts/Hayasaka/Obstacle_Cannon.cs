@@ -7,6 +7,7 @@ public class Obstacle_Cannon : Obstacle
 {
     [SerializeField]
     Quaternion look;
+    [SerializeField]
     float pow;
     /// <summary>
     /// ‰Šú‰»
