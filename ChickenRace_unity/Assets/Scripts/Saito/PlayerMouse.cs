@@ -142,5 +142,10 @@ public class PlayerMouse : MonoBehaviour
         saveAngle -= angle;
     }
 
+    public void SetUser(User user)
+    {
+        User = user.gameObject;
+    }
+
     
 }
