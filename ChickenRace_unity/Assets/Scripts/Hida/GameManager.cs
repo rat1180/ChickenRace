@@ -649,9 +649,6 @@ public class GameManager : MonoBehaviour
                 EndFaze();
             }
 
-            //テスト用
-            if (Input.GetKeyDown(KeyCode.S)) EndFaze();
-
             yield return null;
         }
 
@@ -663,7 +660,20 @@ public class GameManager : MonoBehaviour
 
         DebugLog("選択終了待機");
         //全員の障害物選択まで待機
-        yield return new WaitUntil(() => CheckEnd());
+        while (!CheckEnd())
+        {
+            //障害物候補を表示
+            List<int> list = new List<int>();
+
+            foreach (var id in gameProgress.dataSharingClass.ID)
+            {
+                list.Add(id);
+            }
+
+            gameProgress.uiManager.PushID(list);
+
+            yield return null;
+        }
 
         DebugLog("障害物選択終了");
         gameState++;
