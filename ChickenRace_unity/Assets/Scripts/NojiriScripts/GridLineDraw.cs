@@ -22,6 +22,7 @@ public class GridLineDraw : MonoBehaviour
     private Vector2 backGroundSize;
 
     Mesh mesh;
+    public MapManager mapManager;
 
     void Start()
     {
@@ -80,6 +81,7 @@ public class GridLineDraw : MonoBehaviour
         // サイズ変更用
         backGroundSize.x = Vector2.Distance(horizontalStartPosition, horizontalEndPosition);
         backGroundSize.y = Vector2.Distance(verticalStartPosition, verticalEndPosition);
+        Debug.Log(backGroundSize);
 
         // 横線の頂点を設定
         for (int i = 0; i < horizontalResolution; i += 4)
@@ -115,6 +117,10 @@ public class GridLineDraw : MonoBehaviour
         mesh.colors = colors;
         mesh.SetIndices(lines, MeshTopology.Lines, 0);
 
+        // テスト
+        // パネルの大きさ設定
+        //mapManager.GetGridSize(backGroundSize);
+
         // 更新前の値を保存
         originGridSize = gridSize;
         originSize.x = size.x;
@@ -139,16 +145,5 @@ public class GridLineDraw : MonoBehaviour
             ret[i] = Quaternion.LookRotation(rotDirection) * vertices[i];
         }
         return ret;
-    }
-
-    private void GridBackGround()
-    {
-        GameObject gridChildObj;
-        Vector2 childSize;
-
-        gridChildObj = gameObject.transform.GetChild(0).gameObject;
-        childSize = gridChildObj.transform.GetComponent<RectTransform>().sizeDelta;
-        childSize = backGroundSize;
-
     }
 }

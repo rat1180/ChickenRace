@@ -19,6 +19,9 @@ public class MapManager : MonoBehaviour
     [SerializeField] private ObjectStatus objStatus; // 障害物用の構造体情報
     [SerializeField] private GameObject obstacleObj; // 移動したいオブジェクトの情報取得
     [SerializeField] private GameObject panelObject; // グリッド用パネル
+    private GameObject gridObj;
+    private GameObject panelObj;
+    private Vector2 panelSize;
 
     private bool isRunning = false; // コルーチン実行判定フラグ
     private bool isInstall = false; // 設置フラグ
@@ -32,9 +35,13 @@ public class MapManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.X))
         {
-            GridDraw();
+            CreativeModeStart();
+        }
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            CreativeModeEnd();
         }
     }
 
@@ -49,6 +56,13 @@ public class MapManager : MonoBehaviour
         objStatus.AngleList = new List<float>();
         objStatus.UsedGridList = new List<Vector2Int>();
         obstacleObj = new GameObject();
+
+        gridObj = Instantiate((GameObject)Resources.Load("GridObject"));
+        panelObj = GameObject.Find("CanvasUI/GridPanel");
+        panelSize = panelObj.transform.GetComponent<RectTransform>().sizeDelta;
+
+        gridObj.SetActive(false);
+        panelObj.SetActive(false);
     }
 
     /// <summary>
@@ -102,6 +116,7 @@ public class MapManager : MonoBehaviour
         isRunning = true;
         isInstall = false;
         StartCoroutine(CreativeMode());
+        GridDraw();
 
         Debug.Log("クリエイティブモード開始");
     }
@@ -120,6 +135,7 @@ public class MapManager : MonoBehaviour
 
         isRunning = false;
         StopCoroutine(CreativeMode());
+        GridDraw();
 
         Debug.Log("クリエイティブモード終了");
     }
@@ -225,11 +241,25 @@ public class MapManager : MonoBehaviour
 
     public void GridDraw()
     {
-        var gridObj = (GameObject)Resources.Load("GridObject");
+        if (!isRunning)
+        {
+            Debug.Log("グリッド表示ができない状態です。");
+            gridObj.SetActive(false);
+            panelObj.SetActive(false);
+            return;
+        }
 
-        Instantiate(gridObj);
-        //panelObject.SetActive(true);
-        //panelObject.transform.localScale = new Vector3(0.1f, 0.1f, 1f);
+        gridObj.SetActive(true);
+        panelObj.SetActive(true);
+
+        //panelObj.transform.localScale = new Vector3(0.1f, 0.1f, 1f);
     }
+
+    // テスト
+    //public void GetGridSize(Vector2 gridSize)
+    //{
+    //    // サイズ変わらん
+    //    panelSize = gridSize;
+    //}
     #endregion
 }
