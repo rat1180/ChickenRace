@@ -105,7 +105,7 @@ public class PlayerMouse : MonoBehaviour
         if (itemId != error)
         {
             index = itemId; // itemId‚ğŠÖ”‚É‚·‚é.
-            User.GetComponent<User>().GetIndex(index);
+            User.GetComponent<User>().SetIndex(index);
         }
     }
 
