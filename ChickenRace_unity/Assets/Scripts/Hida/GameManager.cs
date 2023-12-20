@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour
     [SerializeField, Tooltip("他のクラスから渡される、現在のフェーズ終了を知らせる変数")] bool isFazeEnd; //Int型にして複数の状態に対応出来るようにするかも
     [SerializeField, Tooltip("ゲームの進行に必要なクラスのまとめ")] GameProgress gameProgress;
     [SerializeField, Tooltip("デバッグ用のログを表示するかどうか")] bool isDebug;
+    [SerializeField,Tooltip("デバッグ用のテキスト表示（Setは任意）")] 
 
 
     public static GameManager instance;
@@ -367,6 +368,11 @@ public class GameManager : MonoBehaviour
         ClearCoroutine();
     }
 
+    void DebugInfomation()
+    {
+
+    }
+
     #endregion
 
     /// <summary>
@@ -623,7 +629,8 @@ public class GameManager : MonoBehaviour
                         if (gameProgress.dataSharingClass.ID[random] != 0) break;
                     }
 
-                    //gameProgress.user. = gameProgress.dataSharingClass.ID[random];
+                    //アイテムのIndexをセット
+                    gameProgress.user.GetIndex(random);
                 }
             }
 
@@ -631,7 +638,7 @@ public class GameManager : MonoBehaviour
             if (CheckUserIsHave())
             {
                 //UserからIndexを受け取り、そのIndexに応じたアイテムをリストから削除
-                //gameProgress.dataSharingClass.ResetID(gameProgress.user.);
+                //gameProgress.dataSharingClass.ResetID(gameProgress.user.GetIndex());
                 EndFaze();
             }
 
@@ -754,6 +761,9 @@ public class GameManager : MonoBehaviour
 
         //進行待機
         yield return new WaitUntil(() => CheckEnd());
+
+        //キャラを削除
+        gameProgress.user.DestroyPlayer();
 
         gameState++;
 
