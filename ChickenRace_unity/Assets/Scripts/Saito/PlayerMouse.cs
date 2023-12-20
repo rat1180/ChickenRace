@@ -13,8 +13,8 @@ public class PlayerMouse : MonoBehaviour
     [SerializeField] bool isInstalled;         // アイテムの設置が可能か.
     [SerializeField] GameObject mouseImage;  // 自身の画像.
     [SerializeField] GameObject instanceObj; // 生成した画像.
-    [SerializeField] GameObject Map;
-    [SerializeField] GameObject User;
+    [SerializeField] GameObject map;
+    [SerializeField] GameObject user;
     Vector2Int gridPos;
 
     [SerializeField] float angle;
@@ -27,7 +27,7 @@ public class PlayerMouse : MonoBehaviour
     {
         error = -1;
         ImageInstance();
-        Map = GameManager.instance.GetMapManager();
+        map = GameManager.instance.GetMapManager();
     }
 
     void Start()
@@ -41,7 +41,7 @@ public class PlayerMouse : MonoBehaviour
         MouseMove();
         MouseTransform();
         gridPos = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
-        isInstalled = Map.GetComponent<MapManager>().JudgeInstall(gridPos);
+        isInstalled = map.GetComponent<MapManager>().JudgeInstall(gridPos);
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -95,7 +95,7 @@ public class PlayerMouse : MonoBehaviour
         if (isInstalled == false)
         {
             // アイテムの生成.
-           Map.GetComponent<MapManager>().GenerateMapObject(0,saveAngle, gridPos);
+           map.GetComponent<MapManager>().GenerateMapObject(0,saveAngle, gridPos);
         }
         else
         {
@@ -105,7 +105,7 @@ public class PlayerMouse : MonoBehaviour
         if (itemId != error)
         {
             index = itemId; // itemIdを関数にする.
-            User.GetComponent<User>().SetIndex(index);
+            user.GetComponent<User>().SetIndex(index);
         }
     }
 
@@ -142,9 +142,9 @@ public class PlayerMouse : MonoBehaviour
         saveAngle -= angle;
     }
 
-    public void SetUser(User user)
+    public void SetUser(User setuser)
     {
-        User = user.gameObject;
+        user = setuser.gameObject;
     }
 
     
