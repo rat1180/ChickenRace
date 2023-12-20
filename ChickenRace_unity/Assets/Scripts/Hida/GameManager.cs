@@ -630,7 +630,7 @@ public class GameManager : MonoBehaviour
                     }
 
                     //アイテムのIndexをセット
-                    gameProgress.user.GetIndex(random);
+                    gameProgress.user.SetIndex(random);
                 }
             }
 
@@ -638,7 +638,7 @@ public class GameManager : MonoBehaviour
             if (CheckUserIsHave())
             {
                 //UserからIndexを受け取り、そのIndexに応じたアイテムをリストから削除
-                //gameProgress.dataSharingClass.ResetID(gameProgress.user.GetIndex());
+                gameProgress.dataSharingClass.ResetID(gameProgress.user.GetIndex());
                 EndFaze();
             }
 
