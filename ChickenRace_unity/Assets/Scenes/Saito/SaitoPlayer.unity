@@ -208,7 +208,7 @@ MonoBehaviour:
   mouseImage: {fileID: 4384123820751128111, guid: 380291cd5af83394c98584b29215eb3b, type: 3}
   instanceObj: {fileID: 0}
   Map: {fileID: 1401999052}
-  User: {fileID: 0}
+  User: {fileID: 1047598941}
   angle: 45
   saveAngle: 0
 --- !u!50 &166799418
