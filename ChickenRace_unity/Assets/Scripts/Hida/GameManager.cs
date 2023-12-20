@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
     bool CheckUserIsHave()
     {
         //正常に持っているか確認
-        if (/*gameProgress.user. != -1*/false)
+        if (gameProgress.user.GetIndex() != -1 || gameProgress.dataSharingClass.ID[gameProgress.user.GetIndex()] == 0)
         {
             return true;
         }
@@ -640,6 +640,8 @@ public class GameManager : MonoBehaviour
             //マウスから障害物情報が送られ、userに渡れば終了
             if (CheckUserIsHave())
             {
+                //Userに障害物IDを渡す
+                gameProgress.user.SetItemId(gameProgress.dataSharingClass.ID[gameProgress.user.GetIndex()]);
                 //UserからIndexを受け取り、そのIndexに応じたアイテムをリストから削除
                 gameProgress.dataSharingClass.ResetID(gameProgress.user.GetIndex());
                 EndFaze();
@@ -686,7 +688,7 @@ public class GameManager : MonoBehaviour
         gameProgress.mapManager.CreativeModeStart();
 
         //マウス生成
-        gameProgress.user.GenerateMouse(1);
+        //gameProgress.user.GenerateMouse(gameProgress.user.GetItemID());
 
 
         //進行待機
