@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 4242550120382962801}
   - component: {fileID: 4242550120382962800}
   - component: {fileID: 3223944115481292466}
-  - component: {fileID: -1920697274835821353}
+  - component: {fileID: 7318262182144783061}
   m_Layer: 0
-  m_Name: MoveScaffold
+  m_Name: Scaffold_Surprise
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -112,7 +112,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &-1920697274835821353
+--- !u!114 &7318262182144783061
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -121,7 +121,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4242550120382962803}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14beec42d3ad9ae4c91de27b321efafa, type: 3}
+  m_Script: {fileID: 11500000, guid: c0cda8f04d30f014184b832f60ed5b0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   collisionList:
@@ -132,4 +132,5 @@ MonoBehaviour:
   ue:
     m_PersistentCalls:
       m_Calls: []
-  RF: {fileID: 4242550120382962803}
+  pos: {x: 0, y: 0, z: 0}
+  RF: {fileID: 0}

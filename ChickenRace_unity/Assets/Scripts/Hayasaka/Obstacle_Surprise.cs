@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Obstacle_Tracking : Obstacle
+public class Obstacle_Surprise : Obstacle
 {
-    public GameObject trakingTarget;
     /// <summary>
     /// èâä˙âª
     /// </summary>
@@ -15,18 +14,15 @@ public class Obstacle_Tracking : Obstacle
     }
     protected override void update()
     {
-        Tracking();
+       
     }
-    /// <summary>
-    /// ñ_Ç…Ç≠Ç¡Ç¬Ç≠
-    /// </summary>
-    void Tracking()
-    {
-        this.transform.position = trakingTarget.transform.position;
-    }
+    
     protected override void ObjStart()
     {
        
     }
-    
+    void OnCollsionEnter2D(Collision2D other)
+    {
+        
+    }
 }

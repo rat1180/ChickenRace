@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
         public UIManager uiManager;
         public DataSharingClass dataSharingClass;
         public User user;
+        public int userActorNumber;
     }
 
     [SerializeField, Tooltip("現在のゲーム状態")] GameStatus gameState;
@@ -60,6 +61,7 @@ public class GameManager : MonoBehaviour
     [SerializeField, Tooltip("他のクラスから渡される、現在のフェーズ終了を知らせる変数")] bool isFazeEnd; //Int型にして複数の状態に対応出来るようにするかも
     [SerializeField, Tooltip("ゲームの進行に必要なクラスのまとめ")] GameProgress gameProgress;
     [SerializeField, Tooltip("デバッグ用のログを表示するかどうか")] bool isDebug;
+    [SerializeField,Tooltip("デバッグ用のテキスト表示（Setは任意）")] 
 
 
     public static GameManager instance;
@@ -68,6 +70,11 @@ public class GameManager : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
+    {
+        
+    }
+
+    private void Awake()
     {
         gameState = GameStatus.SLEEP;
         StartCoroutine(GameInit());
@@ -89,32 +96,6 @@ public class GameManager : MonoBehaviour
 
     #region クラス内で使用する関数
 
-    /// <summary>
-    /// 各プレイヤーの初期化状態を確認する
-    /// 全員が引数の状態の時にtrueを返す
-    /// この初期化状態はカスタムプロパティで管理する
-    /// </summary>
-    /// <param name="status"></param>
-    /// <returns></returns>
-    bool CheckInitState(InitStatus status)
-    {
-        //全員の初期化状態を確認
-        foreach(var player in PhotonNetwork.CurrentRoom.Players)
-        {
-            if (player.Value.GetInitStatus() != (int)status) return false;
-        }
-        return true;
-    }
-
-    bool CheckInGameState(InGameStatus status)
-    {
-        //全員の初期化状態を確認
-        foreach (var player in PhotonNetwork.CurrentRoom.Players)
-        {
-            if (player.Value.GetInGameStatus() != (int)status) return false;
-        }
-        return true;
-    }
 
     /// <summary>
     /// ステートコルーチンをクリアする
@@ -152,7 +133,6 @@ public class GameManager : MonoBehaviour
         //正常に持っているか確認
         if (/*gameProgress.user. != -1*/false)
         {
-            PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
             return true;
         }
         return false;
@@ -167,13 +147,13 @@ public class GameManager : MonoBehaviour
     int CheckRaceRank()
     {
         var times = gameProgress.dataSharingClass.rankTime;
-        float mytime = times[PhotonNetwork.LocalPlayer.ActorNumber];
+        float mytime = times[gameProgress.userActorNumber];
         int rank = 1;
         int deadcnt = 0;
         for (int i = 0; i < times.Count; i++)
         {
             //自身の状態をチェック
-            if (i == PhotonNetwork.LocalPlayer.ActorNumber)
+            if (i == gameProgress.userActorNumber)
             {
                 if (mytime == DEAD) return (int)DEAD;
             }
@@ -209,9 +189,10 @@ public class GameManager : MonoBehaviour
     int SumScore(int rank)
     {
         //死亡時はポイントなし
-        if (rank == DEAD) return 0;
+        if (rank == (int)DEAD) return 0;
 
-        int addScore = BONUS_SCORE;
+        //順位に応じたボーナスを加算
+        int addScore = (rank == 1) ? BONUS_SCORE : 0;
         return BASE_SCORE + addScore;
     }
 
@@ -226,13 +207,75 @@ public class GameManager : MonoBehaviour
         return scores;
     }
 
-    bool CheckGameEnd()
+    bool GameEnd()
     {
         foreach(var score in gameProgress.dataSharingClass.score)
         {
             if (score >= GAME_END_SCORE) return true;
         }
         return false;
+    }
+
+    /// <summary>
+    /// すべてのGame系Keyをリセットする
+    /// 初期化等に行う
+    /// </summary>
+    void AllGameKeyReset()
+    {
+        PhotonNetwork.LocalPlayer.SetGameReadyStatus(false);
+        PhotonNetwork.LocalPlayer.SetGameInGameStatus(false);
+        PhotonNetwork.LocalPlayer.SetGameEndStatus(false);
+    }
+
+    /// <summary>
+    /// GameReadyKeyをtrueにし、全員がtrueであればtrueを返す
+    /// この際、GameInGameKeyはfalseに戻す
+    /// </summary>
+    /// <returns></returns>
+    bool CheckReady()
+    {
+        PhotonNetwork.LocalPlayer.SetGameReadyStatus(true);
+        PhotonNetwork.LocalPlayer.SetGameInGameStatus(false);
+
+        foreach(var player in PhotonNetwork.PlayerList)
+        {
+            if (!player.GetGameReadyStatus()) return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// GameInGameKeyをtrueにし、全員がtrueであればtrueを返す
+    /// この際、GameEndKeyはfalseに戻す
+    /// </summary>
+    /// <returns></returns>
+    bool CheckInGame()
+    {
+        PhotonNetwork.LocalPlayer.SetGameInGameStatus(true);
+        PhotonNetwork.LocalPlayer.SetGameEndStatus(false);
+
+        foreach (var player in PhotonNetwork.PlayerList)
+        {
+            if (!player.GetGameInGameStatus()) return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// GameEndKeyをtrueにし、全員がtrueであればtrueを返す
+    /// この際、GameReadyKeyはfalseに戻す
+    /// </summary>
+    /// <returns></returns>
+    bool CheckEnd()
+    {
+        PhotonNetwork.LocalPlayer.SetGameEndStatus(true);
+        PhotonNetwork.LocalPlayer.SetGameReadyStatus(false);
+
+        foreach (var player in PhotonNetwork.PlayerList)
+        {
+            if (!player.GetGameEndStatus()) return false;
+        }
+        return true;
     }
 
     #endregion
@@ -273,7 +316,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void DeadPlayer()
     {
-        gameProgress.dataSharingClass.rankTime[PhotonNetwork.LocalPlayer.ActorNumber] = DEAD;
+        gameProgress.dataSharingClass.PushGoalTime(gameProgress.userActorNumber, DEAD);
         EndFaze();
     }
 
@@ -283,7 +326,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GoalPlayer()
     {
-        gameProgress.dataSharingClass.rankTime[PhotonNetwork.LocalPlayer.ActorNumber] = (float)PhotonNetwork.Time;
+        gameProgress.dataSharingClass.PushGoalTime(gameProgress.userActorNumber, (float)PhotonNetwork.Time);
         EndFaze();
     }
 
@@ -323,6 +366,11 @@ public class GameManager : MonoBehaviour
     {
         gameState++;
         ClearCoroutine();
+    }
+
+    void DebugInfomation()
+    {
+
     }
 
     #endregion
@@ -393,12 +441,8 @@ public class GameManager : MonoBehaviour
                 yield return null;
             }
 
-            //状態を送信
-            initStatus = InitStatus.CONECT;
-            localplayer.SetInitStatus((int)initStatus);
-
-            //他のプレイヤーを待機
-            yield return new WaitUntil(() => CheckInitState(InitStatus.CONECT));
+            //進行待機
+            yield return new WaitUntil(() => CheckReady());
             DebugLog("接続確認!");
 
         }
@@ -409,20 +453,17 @@ public class GameManager : MonoBehaviour
             Debug.Log("開始まで待機");
             yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.S));
             //状態を送信
-            initStatus = InitStatus.RESET;
-            localplayer.SetInitStatus((int)initStatus);
+            PhotonNetwork.LocalPlayer.SetGameInGameStatus(true);
         }
         else
         {
             Debug.Log("開始まで待機");
-            yield return new WaitUntil(() => PhotonNetwork.MasterClient.GetInitStatus() == (int)InitStatus.RESET);
-            //状態を送信
-            initStatus = InitStatus.RESET;
-            localplayer.SetInitStatus((int)initStatus);
+            yield return new WaitUntil(() => PhotonNetwork.MasterClient.GetGameInGameStatus());
         }
 
         //他のプレイヤーを待機
-        yield return new WaitUntil(() => CheckInitState(InitStatus.RESET));
+        yield return new WaitUntil(() => CheckInGame());
+        DebugLog("値の初期化開始");
 
         //2.各値を初期化<RESET
         {
@@ -431,6 +472,7 @@ public class GameManager : MonoBehaviour
             isFazeEnd = false;
             stateCoroutine = null;
             instance = this;
+            gameProgress.userActorNumber = PhotonNetwork.LocalPlayer.ActorNumber - 1;
 
             //各マネージャーを生成
             //データ共有クラスを生成
@@ -456,20 +498,15 @@ public class GameManager : MonoBehaviour
             //UIManagerを検索
             gameProgress.uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
 
-            //状態を送信
-            initStatus = InitStatus.WAIT;
-            localplayer.SetInitStatus((int)initStatus);
-            //他のプレイヤーを待機
-            yield return new WaitUntil(() => CheckInitState(InitStatus.WAIT));
+            DebugLog("各値の初期化完了");
         }
         //3.初期化完了・他プレイヤーを待機<WAIT
         {
+            DebugLog("完了まで待機中");
+
             //同時にゲーム開始
-            //状態を送信
-            initStatus = InitStatus.START;
-            localplayer.SetInitStatus((int)initStatus);
             //他のプレイヤーを待機
-            yield return new WaitUntil(() => CheckInitState(InitStatus.START));
+            yield return new WaitUntil(() => CheckEnd());
         }
         DebugLog("初期化完了");
         gameState = GameStatus.START;
@@ -528,6 +565,9 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     IEnumerator StateSELECT()
     {
+        //進行待機
+        yield return new WaitUntil(() => CheckReady());
+
         //生成済みの障害物を再生成
         //gameProgress.mapManager
 
@@ -543,27 +583,33 @@ public class GameManager : MonoBehaviour
                 //障害物追加
                 gameProgress.dataSharingClass.PushID(i == 3 ? 0 : id);
             }
+
         }
         //ゲストなら抽選まで待機
         else
         {
+            DebugLog("抽選を待機");
             yield return new WaitUntil(() => gameProgress.dataSharingClass.ID.Count != 0 ? true : false);
             yield return new WaitUntil(() => gameProgress.dataSharingClass.ID[gameProgress.dataSharingClass.ID.Count - 1] == 0);
         }
 
-        //選択クラスを生成
-        gameProgress.user.GenerateMouse(0);
-        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.READY);
+        DebugLog("抽選終了");
+
+        //進行待機
+        yield return new WaitUntil(() => CheckInGame());
+
+       //選択クラスを生成
+       gameProgress.user.GenerateMouse(0);
 
         //選択クラスによって終了呼び出し
         while (!isFazeEnd)
         {
             //障害物候補を表示
-            List<OBSTACLE_IMAGE_NAMES> list = new List<OBSTACLE_IMAGE_NAMES>();
+            List<int> list = new List<int>();
 
-            foreach(var id in gameProgress.dataSharingClass.ID)
+            foreach (var id in gameProgress.dataSharingClass.ID)
             {
-                list.Add((OBSTACLE_IMAGE_NAMES)id);
+                list.Add(id);
             }
 
             gameProgress.uiManager.PushID(list);
@@ -583,13 +629,16 @@ public class GameManager : MonoBehaviour
                         if (gameProgress.dataSharingClass.ID[random] != 0) break;
                     }
 
-                    //gameProgress.user. = gameProgress.dataSharingClass.ID[random];
+                    //アイテムのIndexをセット
+                    gameProgress.user.SetIndex(random);
                 }
             }
 
             //マウスから障害物情報が送られ、userに渡れば終了
             if (CheckUserIsHave())
             {
+                //UserからIndexを受け取り、そのIndexに応じたアイテムをリストから削除
+                gameProgress.dataSharingClass.ResetID(gameProgress.user.GetIndex());
                 EndFaze();
             }
 
@@ -602,14 +651,18 @@ public class GameManager : MonoBehaviour
         //マウス削除
         gameProgress.user.DestroyMouse();
 
-        //状態送信
-        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
+        //障害物をリセット
 
+
+        DebugLog("選択終了待機");
         //全員の障害物選択まで待機
-        yield return new WaitUntil(() => CheckInGameState(InGameStatus.END));
+        yield return new WaitUntil(() => CheckEnd());
 
         DebugLog("障害物選択終了");
         gameState++;
+
+        //次回の選択フェーズ開始準備
+        if (PhotonNetwork.IsMasterClient) gameProgress.dataSharingClass.ResetIDList();
 
         //ステートコルーチンの終了処理
         ClearCoroutine();
@@ -624,18 +677,24 @@ public class GameManager : MonoBehaviour
     IEnumerator StatePLANT()
     {
         DebugLog("障害物設置開始");
-        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.READY);
+        //進行待機
+        yield return new WaitUntil(() => CheckReady());
+        
         gameProgress.mapManager.CreativeModeStart();
 
         //マウス生成
         gameProgress.user.GenerateMouse(1);
 
+
+        //進行待機
+        yield return new WaitUntil(() => CheckInGame());
         while (!isFazeEnd)
         {
             //設置中
             //設置されたかどうかをmapManagerから受取
             if (gameProgress.mapManager.IsInstallReference())
-            { 
+            {
+                DebugLog("設置完了");
                 EndFaze();
             }
 
@@ -654,11 +713,9 @@ public class GameManager : MonoBehaviour
         //マウス削除
         gameProgress.user.DestroyMouse();
 
-        //状態送信
-        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
-
+        DebugLog("設置終了待機");
         //全員の障害物選択まで待機
-        yield return new WaitUntil(() => CheckInGameState(InGameStatus.END));
+        yield return new WaitUntil(() => CheckEnd());
 
         DebugLog("障害物設置終了");
         gameState++;
@@ -676,10 +733,8 @@ public class GameManager : MonoBehaviour
     IEnumerator StateRACE()
     {
         DebugLog("レースフェーズ開始");
-        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.READY);
-
-        //全員が待機状態になるまで待機
-        yield return new WaitUntil(() => CheckInGameState(InGameStatus.READY));
+        //進行待機
+        yield return new WaitUntil(() => CheckReady());
 
         //キャラの出現
         gameProgress.user.GeneratePlayer();
@@ -687,7 +742,8 @@ public class GameManager : MonoBehaviour
         DebugLog("READY演出");
 
         DebugLog("レーススタート");
-        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.INGAME);
+        //進行待機
+        yield return new WaitUntil(() => CheckInGame());
         //キャラの操作のロックを解除
 
         //プレイ中の演出
@@ -703,11 +759,11 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        //自身の状態を送信
-        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
+        //進行待機
+        yield return new WaitUntil(() => CheckEnd());
 
-        //全員が待機状態になるまで待機
-        yield return new WaitUntil(() => CheckInGameState(InGameStatus.END));
+        //キャラを削除
+        gameProgress.user.DestroyPlayer();
 
         gameState++;
 
@@ -718,29 +774,30 @@ public class GameManager : MonoBehaviour
     IEnumerator StateRESULT()
     {
         DebugLog("リザルトフェーズ開始");
-        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.READY);
-
-        //全員が待機状態になるまで待機
-        yield return new WaitUntil(() => CheckInGameState(InGameStatus.READY));
+        //進行待機
+        yield return new WaitUntil(() => CheckReady());
 
         //順位の計算
         int rank = CheckRaceRank();
         PhotonNetwork.LocalPlayer.SetRankStatus(rank);
 
+        //進行待機
+        yield return new WaitUntil(() => CheckInGame());
+
+
         //スコアの計算
         var scorelist = ScoreCalculation();
+        gameProgress.dataSharingClass.PushScore(gameProgress.userActorNumber, scorelist[gameProgress.userActorNumber]);
 
         DebugLog("順位、スコアの反映演出");
-
-        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.INGAME);
-        yield return new WaitUntil(() => CheckInGameState(InGameStatus.INGAME));
         yield return new WaitForSeconds(2.0f);
 
         DebugLog("演出終了");
-        PhotonNetwork.LocalPlayer.SetInGameStatus((int)InGameStatus.END);
-        yield return new WaitUntil(() => CheckInGameState(InGameStatus.END));
+        //進行待機
+        yield return new WaitUntil(() => CheckEnd());
 
-        if (CheckGameEnd())
+
+        if (GameEnd())
         {
             DebugLog("ゲーム終了");
         }
