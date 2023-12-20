@@ -41,7 +41,8 @@ public class UIManager : MonoBehaviour
     {
         for(int i = 0; i < imageObjects.transform.childCount; i++)
         {
-            imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
+            //imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
+            imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =
             ResorceManager.instance.GetObstacleImage(id[i]);//‰æ‘œ‚ğ•ÏX.
             if (imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>() == null)
             {
