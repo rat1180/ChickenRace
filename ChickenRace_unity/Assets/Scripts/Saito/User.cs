@@ -7,6 +7,7 @@ public class User : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] GameObject mouse;
     int isMode;
+    int modeId;
     int itemId;
     [SerializeField] int index;
 
@@ -30,15 +31,19 @@ public class User : MonoBehaviour
         Instantiate(player, transform.position, transform.rotation);
     }
 
+    /// <summary>
+    /// マウスの生成.
+    /// </summary>
+    /// <param name="mode"></param>
     public void GenerateMouse(int mode)
     {
         if(mode == 0)
         {
-            GetItemId();
+            GetModeId();
         }
         else
         {
-            GetItemId(mode);
+            GetModeId(mode);
         }
 
         mouseObjcet = Instantiate(mouse, transform.position, transform.rotation);
@@ -69,22 +74,41 @@ public class User : MonoBehaviour
     /// <summary>
     /// GenerateMouseから引数の値を受け取らなかった時に呼ぶ.
     /// </summary>
-    void GetItemId()
+    void GetModeId()
     {
-        itemId = -1;
+        modeId = -1;
     }
 
     /// <summary>
     /// GenerateMouseから引数の値を受け取った時に呼ぶ.
     /// </summary>
     /// <param name="mode"></param>
-    private void GetItemId(int mode)
+    private void GetModeId(int mode)
     {
-        itemId = isMode;
+        modeId = isMode;
     }
 
-    public void GetIndex(int getindex)
+    public void SetItemId()
     {
-        index = getindex;
+        itemId = -1;
+    }
+
+    public void SetItemId(int itemid)
+    {
+        itemId = itemid;
+    }
+
+    /// <summary>
+    /// インデックスを受け取る関数.
+    /// </summary>
+    /// <param name="setindex"></param>
+    public void SetIndex(int setindex)
+    {
+        index = setindex;
+    }
+
+    public int GetIndex()
+    {
+        return index;
     }
 }
