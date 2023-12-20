@@ -177,8 +177,6 @@ namespace ResorceNames
     }
 }
 
-
-
 //オブジェクト名と生成用フォルダを指定することで
 //そのフォルダからプレファブを検索する
 public static class FolderObjectFinder
@@ -197,7 +195,7 @@ public static class FolderObjectFinder
     /// もし見つからなければ空のゲームオブジェクトを返す
     /// デフォルトの生成フォルダが指定されているので、デフォルトからの相対参照で名前を入れる
     /// </summary>
-    public static GameObject GetResorceGameObject(string objectname)
+    public static GameObject LoadResorceGameObject(string objectname)
     {
         var obj = (GameObject)Resources.Load(DefalutGenerateFolderName + objectname);
 
