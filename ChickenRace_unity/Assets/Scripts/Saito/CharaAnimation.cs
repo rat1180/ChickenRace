@@ -58,6 +58,9 @@ public class CharaAnimation : MonoBehaviour
             case Animations.DANCE:
 
                 break;
+            case Animations.WIN:
+
+                break;
         }
     }
 }

@@ -15,9 +15,20 @@ public class User : MonoBehaviour
     GameObject mouseObjcet;
     GameObject playerObjcet;
 
+    /// <summary>
+    /// èâä˙âªópä÷êî.
+    /// </summary>
+    void Init()
+    {
+        isMode = 0;
+        modeId = 0;
+        itemId = -1;
+        index = -1;
+    }
+
     void Start()
     {
-        
+        Init();
     }
 
 
@@ -97,6 +108,11 @@ public class User : MonoBehaviour
     public void SetItemId(int itemid)
     {
         itemId = itemid;
+    }
+
+    public int GetItemId()
+    {
+        return itemId;
     }
 
     /// <summary>
