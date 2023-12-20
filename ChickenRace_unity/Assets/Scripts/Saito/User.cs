@@ -39,7 +39,8 @@ public class User : MonoBehaviour
 
     public void GeneratePlayer()
     {
-        Instantiate(player, transform.position, transform.rotation);
+        var obj = Instantiate(player, transform.position, transform.rotation);
+        playerObjcet = obj;
     }
 
     /// <summary>

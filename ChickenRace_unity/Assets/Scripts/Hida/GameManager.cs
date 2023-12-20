@@ -132,8 +132,10 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     bool CheckUserIsHave()
     {
+        int index = gameProgress.user.GetIndex();
+        if (index == -1) return false;
         //正常に持っているか確認
-        if (gameProgress.user.GetIndex() != -1 || gameProgress.dataSharingClass.ID[gameProgress.user.GetIndex()] == 0)
+        if (gameProgress.dataSharingClass.ID[index] != 0)
         {
             return true;
         }
@@ -688,7 +690,7 @@ public class GameManager : MonoBehaviour
         gameProgress.mapManager.CreativeModeStart();
 
         //マウス生成
-        //gameProgress.user.GenerateMouse(gameProgress.user.GetItemID());
+        gameProgress.user.GenerateMouse(gameProgress.user.GetItemId());
 
 
         //進行待機
