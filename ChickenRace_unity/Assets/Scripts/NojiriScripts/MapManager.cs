@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using ResorceNames;
 
 /// <summary>
 /// áŠQ•¨‚Ìî•ñ•Û—pƒNƒ‰ƒX
@@ -96,6 +97,10 @@ public class MapManager : MonoBehaviour
     /// </summary>
     private GameObject GetObstaclePrefab(int id)
     {
+        var Obj = ResorceManager.instance.GetObstacleObject((OBSTACLE_OBJECT)id);
+        //var Obj = FolderObjectFinder.LoadObstacleObject((OBSTACLE_OBJECT)id);
+        Debug.Log(Obj);
+
         return obstacleObj;
     }
     #endregion
