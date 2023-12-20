@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using Photon.Pun;
 using PhotonMethods;
 using ResorceNames;
+using ConstList;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -410,6 +412,7 @@ public class GameManager : MonoBehaviour
                 coroutinename = "StateRESULT";
                 break;
             case GameStatus.END:
+                coroutinename = "StateEND";
                 break;
         }
         if(coroutinename == "null")
@@ -800,6 +803,7 @@ public class GameManager : MonoBehaviour
         if (GameEnd())
         {
             DebugLog("ゲーム終了");
+            gameState = GameStatus.END;
         }
         else
         {
@@ -810,6 +814,16 @@ public class GameManager : MonoBehaviour
         //ステートコルーチンの終了処理
         ClearCoroutine();
 
+    }
+
+    IEnumerator StateEND()
+    {
+        //終了演出
+
+        yield return new WaitForSeconds(2.0f);
+
+        //タイトルに移動
+        SceneManager.LoadScene(SceneNames.Lobby.ToString());
     }
 
     #endregion
