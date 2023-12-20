@@ -8,7 +8,6 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
 {
     public List<int> ID = new List<int>();
     public List<int> score = new List<int>();
-    //public List<int> rank = new List<int>();
     public List<float> rankTime = new List<float>();
     public float elapsedTime;//Œo‰ßŽžŠÔ.
 

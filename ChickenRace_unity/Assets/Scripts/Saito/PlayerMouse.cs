@@ -27,7 +27,7 @@ public class PlayerMouse : MonoBehaviour
     {
         error = -1;
         ImageInstance();
-        //Map = GameManager.instance.GetMapManager();
+        Map = GameManager.instance.GetMapManager();
     }
 
     void Start()
@@ -140,6 +140,11 @@ public class PlayerMouse : MonoBehaviour
     private void OnRightRotate()
     {
         saveAngle -= angle;
+    }
+
+    public void SetUser(User user)
+    {
+        User = user.gameObject;
     }
 
     

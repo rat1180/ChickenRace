@@ -47,6 +47,7 @@ public class User : MonoBehaviour
         }
 
         mouseObjcet = Instantiate(mouse, transform.position, transform.rotation);
+        mouseObjcet.GetComponent<PlayerMouse>().SetUser(this);
     }
 
     /// <summary>

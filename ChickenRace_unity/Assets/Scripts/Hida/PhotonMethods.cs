@@ -6,6 +6,13 @@ using Photon.Realtime;
 
 namespace PhotonMethods
 {
+    /*
+     GameKeyの概要
+    3つのKeyで進行の同期を行う
+    Keyの進行時(true時)には1つ先のKeyをリセットし
+    1つ前はそのままにすることで判定抜けを防ぐ
+
+     */
     /// <summary>
     /// Photonのカスタムプロパティ拡張メソッド用クラス
     /// 使用する場合は Playerクラス.
@@ -14,8 +21,10 @@ namespace PhotonMethods
     public static class PhotonCustumPropertie
     {
         private const string InitStatusKey = "Is";
-        private const string InGameStatusKey = "IGs";
         private const string RankStatusKey = "Rs";
+        private const string GameReadyStatusKey = "GRs";
+        private const string GameInGameStatusKey = "GIGs";
+        private const string GameEndStatusKey = "GEs";
 
         private static readonly ExitGames.Client.Photon.Hashtable propsToSet = new ExitGames.Client.Photon.Hashtable();
 
@@ -43,25 +52,38 @@ namespace PhotonMethods
             propsToSet.Clear();
         }
 
-        /// <summary>
-        /// 引数でPhotonのプレイヤーを渡すことで
-        /// 戻り値でそのプレイヤーの初期化情報が返る
-        /// </summary>
-        /// <param name="player"></param>
-        /// <returns></returns>
-        public static int GetInGameStatus(this Photon.Realtime.Player player)
+        public static bool GetGameInGameStatus(this Photon.Realtime.Player player)
         {
-            return (player.CustomProperties[InGameStatusKey] is int status) ? status : 0;
+            return (player.CustomProperties[GameInGameStatusKey] is bool status) ? status : false ;
         }
 
-        /// <summary>
-        /// 引数でPhotonのプレイヤーと初期化状態を渡すことで
-        /// 他プレイヤーに送信する
-        /// </summary>
-        /// <param name="player"></param>
-        public static void SetInGameStatus(this Photon.Realtime.Player player, int status)
+        public static void SetGameInGameStatus(this Photon.Realtime.Player player, bool status)
         {
-            propsToSet[InGameStatusKey] = status;
+            propsToSet[GameInGameStatusKey] = status;
+            player.SetCustomProperties(propsToSet);
+            propsToSet.Clear();
+        }
+
+        public static bool GetGameReadyStatus(this Photon.Realtime.Player player)
+        {
+            return (player.CustomProperties[GameReadyStatusKey] is bool status) ? status : false;
+        }
+
+        public static void SetGameReadyStatus(this Photon.Realtime.Player player, bool status)
+        {
+            propsToSet[GameReadyStatusKey] = status;
+            player.SetCustomProperties(propsToSet);
+            propsToSet.Clear();
+        }
+
+        public static bool GetGameEndStatus(this Photon.Realtime.Player player)
+        {
+            return (player.CustomProperties[GameEndStatusKey] is bool status) ? status : false;
+        }
+
+        public static void SetGameEndStatus(this Photon.Realtime.Player player, bool status)
+        {
+            propsToSet[GameEndStatusKey] = status;
             player.SetCustomProperties(propsToSet);
             propsToSet.Clear();
         }
