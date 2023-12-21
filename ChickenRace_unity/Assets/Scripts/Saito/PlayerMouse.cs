@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Photon.Pun;
+using PhotonMethods;
 
 public class PlayerMouse : MonoBehaviour
 {
@@ -13,9 +14,7 @@ public class PlayerMouse : MonoBehaviour
     int error;                               // エラー番号.
     [SerializeField] bool isInstalled;       // アイテムの設置が可能か.
     [SerializeField] GameObject mouseImage;  // 自身の画像.
-    [SerializeField] GameObject charaImage;  // 自身の画像.
     [SerializeField] GameObject mouseInstanceObj; // 生成した画像.
-    [SerializeField] GameObject charaInstanceObj; // 生成した画像.
     [SerializeField] GameObject map;
     [SerializeField] GameObject user;
     Vector2Int gridPos;
@@ -30,7 +29,6 @@ public class PlayerMouse : MonoBehaviour
     {
         error = -1;
         MouseImageInstance();
-        CharaImageInstance();
         map = GameManager.instance.GetMapManager();
     }
 
@@ -119,17 +117,8 @@ public class PlayerMouse : MonoBehaviour
     /// </summary>
     private void MouseImageInstance()
     {
-        mouseImage = Instantiate(mouseImage, transform.position, transform.rotation);
-        //mouseImage = PhotonNetwork.Instantiate("MouseImage", transform.position, transform.rotation);
-    }
-
-    /// <summary>
-    /// キャラクター画像生成.
-    /// </summary>
-    private void CharaImageInstance()
-    {
-        //charaImage = Instantiate(charaImage, transform.position, transform.rotation);
-        charaImage = PhotonNetwork.Instantiate("CharAnimObj", transform.position, transform.rotation);
+        // mouseImage = Instantiate(mouseImage, transform.position, transform.rotation);
+        mouseImage = "mouseImage".SafeInstantiate(transform.position, transform.rotation);
     }
 
     /// <summary>
