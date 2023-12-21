@@ -97,7 +97,7 @@ public class MapManager : MonoBehaviour
     /// </summary>
     private GameObject GetObstaclePrefab(int id)
     {
-        var Obj = ResorceManager.instance.GetObstacleObject((OBSTACLE_OBJECT)id);
+        var Obj = ResourceManager.instance.GetObstacleObject((OBSTACLE_OBJECT)id);
         //var Obj = FolderObjectFinder.LoadObstacleObject((OBSTACLE_OBJECT)id);
         Debug.Log(Obj);
 
