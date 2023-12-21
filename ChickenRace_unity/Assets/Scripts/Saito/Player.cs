@@ -83,6 +83,7 @@ public class Player : MonoBehaviour
     {
         var velocity = value.Get<Vector2>();
         moveVector = new Vector3(velocity.x, velocity.y, 0);
+        CharaAnimation.Instance.StartAnimation(CharaAnimation.Animations.MOVE);
     }
 
     /// <summary>
@@ -192,5 +193,13 @@ public class Player : MonoBehaviour
     private void PlayerTransform()
     {
         instanceObj.GetComponent<Character>().PositionUpdate(transform.position);
+    }
+
+    /// <summary>
+    /// é©êgÇçÌèú.
+    /// </summary>
+    public void PlayerDestroy()
+    {
+        Destroy(gameObject);
     }
 }

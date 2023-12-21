@@ -7,7 +7,7 @@ using ResorceNames;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] GameObject imageObjects;
-    public List<OBSTACLE_IMAGE_NAMES> id;
+    public List<int> id;
     [SerializeField, Range(0, 3)] int testSoldOutInex;
 
     // Update is called once per frame
@@ -26,9 +26,9 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// GameManagerからIDを入れる関数
     /// </summary>
-    public void PushID(List<OBSTACLE_IMAGE_NAMES> iD)
+    public void PushID(List<int> iD)
     {
-        id = new List<OBSTACLE_IMAGE_NAMES>();
+        id = new List<int>();
         id = iD;
         ChangeObstacleImage();
     }
@@ -41,15 +41,17 @@ public class UIManager : MonoBehaviour
     {
         for(int i = 0; i < imageObjects.transform.childCount; i++)
         {
-            imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
+            //imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
+            imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =
             ResorceManager.instance.GetObstacleImage(id[i]);//画像を変更.
+            //コンポーネントが存在しなければ追加してIDを代入し、逆に存在すればそのままIDを代入する
             if (imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>() == null)
             {
-                imageObjects.transform.GetChild(i).gameObject.AddComponent<ObstacleImage>().id = id[i];
+                imageObjects.transform.GetChild(i).gameObject.AddComponent<ObstacleImage>().id = i;
             }
             else
             {
-                imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>().id = id[i];
+                imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>().id = i;
             }
         }
     }

@@ -8,6 +8,7 @@ public class PlayerMouse : MonoBehaviour
     [SerializeField] Vector3 moveVector;     // InputActionから受け取った値を入れる.
     [SerializeField] float moveSpeed;        // 動く速さ.
     [SerializeField] int index;             // アイテム番号.
+    int error;                              // エラー番号.
     [SerializeField] bool isInstalled;         // アイテムの設置が可能か.
     [SerializeField] GameObject mouseImage;  // 自身の画像.
     [SerializeField] GameObject instanceObj; // 生成した画像.
@@ -23,8 +24,8 @@ public class PlayerMouse : MonoBehaviour
     /// </summary>
     private void Init()
     {
+        error = -1;
         ImageInstance();
-        SetMapObject();
     }
 
     void Start()
@@ -44,7 +45,12 @@ public class PlayerMouse : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collision)
     {
         // 当たった画像のIDを取得.
-        index = collision.GetComponent<SelectImage>().itemId;
+        
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        index = error;
     }
 
     /// <summary>
@@ -70,7 +76,7 @@ public class PlayerMouse : MonoBehaviour
     /// </summary>
     private void OnClick()
     {
-         Debug.Log("クリック");
+        Debug.Log("クリック");
 
         //if (User.GetComponent<User>().SetMode() == false)
         //{
@@ -93,6 +99,11 @@ public class PlayerMouse : MonoBehaviour
         {
             // Debug.Log("設置できません");
         }
+
+        //if(index != error)
+        //{
+        //    index = GetComponent<SelectImage>().itemId; // itemIdを関数にする
+        //}
     }
 
     /// <summary>
@@ -100,7 +111,7 @@ public class PlayerMouse : MonoBehaviour
     /// </summary>
     private void ImageInstance()
     {
-        instanceObj = Photon.Pun.PhotonNetwork.Instantiate("mouseImage", transform.position, transform.rotation);
+        instanceObj = Instantiate(mouseImage, transform.position, transform.rotation);
         //instanceObj = PhotonNetwork.Instantiate("MouseImage", transform.position, transform.rotation);
     }
 
@@ -126,10 +137,5 @@ public class PlayerMouse : MonoBehaviour
     private void OnRightRotate()
     {
         saveAngle -= angle;
-    }
-
-    private void SetMapObject()
-    {
-        Map = GameManager.instance.GetMapManager();
     }
 }
