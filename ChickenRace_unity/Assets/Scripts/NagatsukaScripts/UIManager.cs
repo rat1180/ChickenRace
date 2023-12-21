@@ -43,7 +43,7 @@ public class UIManager : MonoBehaviour
         {
             //imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
             imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =
-            ResorceManager.instance.GetObstacleImage(id[i]);//画像を変更.
+            ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
             //コンポーネントが存在しなければ追加してIDを代入し、逆に存在すればそのままIDを代入する
             if (imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>() == null)
             {
@@ -62,7 +62,7 @@ public class UIManager : MonoBehaviour
     public void SoldOut(int index)
     {
         imageObjects.transform.GetChild(index).GetComponent<Image>().sprite =
-            ResorceManager.instance.GetObstacleImage(OBSTACLE_IMAGE_NAMES.Kanbaipop);//完売画像に変更.
+            ResourceManager.instance.GetObstacleImage(OBSTACLE_IMAGE_NAMES.Kanbaipop);//完売画像に変更.
         imageObjects.transform.GetChild(index).gameObject.GetComponent<ObstacleImage>().id = 0;
     }
 }
