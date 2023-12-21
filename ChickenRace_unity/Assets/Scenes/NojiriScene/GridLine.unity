@@ -205,8 +205,8 @@ MonoBehaviour:
   isInstalled: 0
   mouseImage: {fileID: 4384123820751128111, guid: 380291cd5af83394c98584b29215eb3b, type: 3}
   instanceObj: {fileID: 0}
-  Map: {fileID: 1401999052}
-  User: {fileID: 166799414}
+  map: {fileID: 0}
+  user: {fileID: 0}
   angle: 45
   saveAngle: 0
 --- !u!1 &556914858
@@ -543,6 +543,50 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!1 &1123002421
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1123002423}
+  - component: {fileID: 1123002422}
+  m_Layer: 0
+  m_Name: ResourcesManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1123002422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1123002421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d011804f75e51c4a846901d46469c39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1123002423
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1123002421}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.6711307, y: -0.0067326054, z: -0.020413386}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1160911172
 GameObject:
   m_ObjectHideFlags: 0
@@ -683,12 +727,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523101eee2a954847959e8b1f6dcdacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 1
   objStatus:
     InstalledList: 
     AngleList: []
     UsedGridList: []
-  obstacleObj: {fileID: 0}
-  panelObject: {fileID: 0}
+    testList: []
 --- !u!4 &1401999054
 Transform:
   m_ObjectHideFlags: 0
