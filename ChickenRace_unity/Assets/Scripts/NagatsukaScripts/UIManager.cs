@@ -13,14 +13,22 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            ChangeObstacleImage();
-        }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            SoldOut(testSoldOutInex);
-        }
+        //if (Input.GetKeyDown(KeyCode.K))
+        //{
+        //    ChangeObstacleImage();
+        //}
+        //if (Input.GetKeyDown(KeyCode.L))
+        //{
+        //    SoldOut(testSoldOutInex);
+        //}
+    }
+
+    /// <summary>
+    /// 全員が障害物の選択を終了したらUIを非表示にする.
+    /// </summary>
+    public void FinishSelect()
+    {
+        imageObjects.SetActive(false);
     }
 
     /// <summary>
@@ -30,6 +38,7 @@ public class UIManager : MonoBehaviour
     {
         id = new List<int>();
         id = iD;
+        imageObjects.SetActive(true);
         ChangeObstacleImage();
     }
 
