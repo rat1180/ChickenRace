@@ -977,7 +977,7 @@ GameObject:
   - component: {fileID: 473651797}
   - component: {fileID: 473651796}
   m_Layer: 5
-  m_Name: SharDataText
+  m_Name: PlayerNameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
