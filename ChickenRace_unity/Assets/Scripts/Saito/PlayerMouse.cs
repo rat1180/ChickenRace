@@ -95,7 +95,7 @@ public class PlayerMouse : MonoBehaviour
         //}
 
         // アイテムが設置可能なら.
-        if (isInstalled == false)
+        if (isInstalled == true)
         {
             // アイテムの生成.
            map.GetComponent<MapManager>().GenerateMapObject(0,saveAngle, gridPos);
@@ -103,6 +103,8 @@ public class PlayerMouse : MonoBehaviour
         else
         {
             // Debug.Log("設置できません");
+            CantPlant();
+
         }
 
         if (itemId != error)
@@ -150,5 +152,12 @@ public class PlayerMouse : MonoBehaviour
         user = setuser.gameObject;
     }
 
+    /// <summary>
+    /// 設置出来なかった時に呼ぶ.
+    /// </summary>
+    private void CantPlant()
+    {
+
+    }
     
 }
