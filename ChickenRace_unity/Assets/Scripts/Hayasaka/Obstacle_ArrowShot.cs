@@ -40,8 +40,8 @@ public class Obstacle_ArrowShot : MonoBehaviour
         Debug.Log(speed);
         
     }
-    //void OnBecameInvisible()
-    //{
-    //    Destroy(this.gameObject);
-    //}
+    void OnBecameInvisible()
+    {
+        Destroy(this.gameObject);
+    }
 }

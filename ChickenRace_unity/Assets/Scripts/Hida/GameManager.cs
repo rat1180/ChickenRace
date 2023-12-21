@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour
     [SerializeField, Tooltip("現在のゲーム状態")] GameStatus gameState;
     [SerializeField, Tooltip("進行中のステートコルーチン")] Coroutine stateCoroutine;
     [SerializeField, Tooltip("他のクラスから渡される、現在のフェーズ終了を知らせる変数")] bool isFazeEnd; //Int型にして複数の状態に対応出来るようにするかも
+    [SerializeField, Tooltip("現在レース中かどうかを判定")] bool isNowRace;
     [SerializeField, Tooltip("ゲームの進行に必要なクラスのまとめ")] GameProgress gameProgress;
     [SerializeField, Tooltip("デバッグ用のログを表示するかどうか")] bool isDebug;
     [SerializeField,Tooltip("デバッグ用のテキスト表示（Setは任意）")] 
@@ -352,6 +353,16 @@ public class GameManager : MonoBehaviour
         return gameProgress.mapManager.gameObject;
     }
 
+    /// <summary>
+    /// 障害物が動くタイミングを確認する関数
+    /// trueの時のみ動くこと
+    /// </summary>
+    /// <returns></returns>
+    public bool CheckObstacleMove()
+    {
+        return isNowRace;
+    }
+
     #endregion
 
     #region デバッグ用
@@ -475,6 +486,7 @@ public class GameManager : MonoBehaviour
             gameState = GameStatus.READY;
             isFazeEnd = false;
             stateCoroutine = null;
+            isNowRace = false;
             instance = this;
             gameProgress.userActorNumber = PhotonNetwork.LocalPlayer.ActorNumber - 1;
 
@@ -501,6 +513,7 @@ public class GameManager : MonoBehaviour
 
             //UIManagerを検索
             gameProgress.uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+            gameProgress.uiManager.FinishSelect();
 
             DebugLog("各値の初期化完了");
         }
@@ -674,6 +687,9 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
+        //UI系を非表示
+        gameProgress.uiManager.FinishSelect();
+
         DebugLog("障害物選択終了");
         gameState++;
 
@@ -761,6 +777,9 @@ public class GameManager : MonoBehaviour
         //進行待機
         yield return new WaitUntil(() => CheckInGame());
         //キャラの操作のロックを解除
+
+        //障害物のロック解除
+        isNowRace = true;
 
         //プレイ中の演出
         while (!isFazeEnd)

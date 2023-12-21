@@ -156,25 +156,30 @@ namespace ResorceNames
         blackhole,
     }
 
+    /// <summary>
+    /// 障害物オブジェクトの名前一覧
+    /// ギミックなし：Normal
+    /// ダメージギミック:Damage
+    /// 動くギミック:Move_
+    /// </summary>
     public enum OBSTACLE_OBJECT
     {
-        Arrow,
-        Cannon,
-        Paunch,      
-    }
-    //床プレファブは別フォルダらしい
-    public enum SCAFFOLD_OBJECT { 
-        FourScaffold,
-        HoleScaffold,
-        HoleScaffold2,
-        L_Scaffold,
-        MoveScaffold,
-        RotateFloorP,
-        Scaffold,
-        SquareScaffold,
-        StairsScaffold,
-        ThreeScaffold,
-        TwoScaffold,
+        Damage_Arrow,
+        Damage_Paunch,
+        Move_Cannon,
+        Move_Normal_Scaffold_Move,
+        Move_Normal_Scaffold_Rotate,
+        Move_Scaffold_Hole,
+        Move_Scaffold_Surprise,
+        Move_ZeroGravity,
+        Normal_Scaffold,
+        Normal_Scaffold_Four,
+        Normal_Scaffold_Hole2,
+        Normal_Scaffold_L,
+        Normal_Scaffold_Square,
+        Normal_Scaffold_Stairs,
+        Normal_Scaffold_Three,
+        Normal_Scaffold_Two,
     }
 }
 

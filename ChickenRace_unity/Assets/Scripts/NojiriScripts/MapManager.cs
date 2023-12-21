@@ -185,14 +185,15 @@ public class MapManager : MonoBehaviour
     /// <param name="installPos">マウスのグリッド位置</param>
     /// <param name="id">設置したいオブジェクト番号</param>
     /// <returns></returns>
-    public bool JudgeInstall(Vector2Int installPos/*, int id*/)
+    public bool JudgeInstall(Vector2Int installPos, int id)
     {
         // idに対応したリストを取得
-        childList = objStatus.testList;
-        //var list = ResorceManager.instance.GetList((OBSTACLE_OBJECT)id);
+        //childList = objStatus.testList;
+        var Obj = ResourceManager.instance.GetObstacleObject((OBSTACLE_OBJECT)id);
+        childList = Obj.GetComponent<Obstacle>().GetCollisionList();
 
         // 設置位置が一つのとき
-        if(childList == null)
+        if (childList == null)
         {
             return JudgeInstallCenter(installPos);
         }
@@ -208,6 +209,12 @@ public class MapManager : MonoBehaviour
                 return false;
             }
         }
+    }
+
+    // 消す予定
+    public bool JudgeInstall(Vector2Int installPos)
+    {
+        return true;
     }
 
     /// <summary>
@@ -314,6 +321,17 @@ public class MapManager : MonoBehaviour
             }
         }
         objStatus.AngleList.Add(angle);
+    }
+
+    public void DeleteObstacle(Vector2Int deletPos)
+    {
+        if (!isRunning)
+        {
+            Debug.LogError("クリエイティブモードが開始されていません。");
+            return;
+        }
+
+        // 仮作成
     }
 
     /// <summary>
