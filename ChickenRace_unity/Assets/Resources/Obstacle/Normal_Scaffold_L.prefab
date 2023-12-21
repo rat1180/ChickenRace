@@ -236,7 +236,7 @@ GameObject:
   - component: {fileID: -5372452102261742740}
   - component: {fileID: 8315848851411849519}
   m_Layer: 0
-  m_Name: Scaffold_L
+  m_Name: Normal_Scaffold_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

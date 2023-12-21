@@ -53,7 +53,11 @@ public class Obstacle : MonoBehaviour
         this.gameObject.SetActive(false);
         // Destroy(this.gameObject);
     }
-    List<Vector2Int> Seter()
+    /// <summary>
+    /// ƒŠƒXƒgŽæ“¾
+    /// </summary>
+    /// <returns></returns>
+    public List<Vector2Int> GetCollisionList()
     {
         return collisionList;
     }

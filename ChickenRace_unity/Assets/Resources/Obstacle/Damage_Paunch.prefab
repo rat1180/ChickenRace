@@ -266,7 +266,7 @@ GameObject:
   - component: {fileID: 2065098811166154961}
   - component: {fileID: 6306360120521746551}
   m_Layer: 0
-  m_Name: Paunch
+  m_Name: Damage_Paunch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
