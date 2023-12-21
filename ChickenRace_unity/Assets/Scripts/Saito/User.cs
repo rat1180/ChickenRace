@@ -15,6 +15,8 @@ public class User : MonoBehaviour
     GameObject mouseObjcet;
     GameObject playerObjcet;
 
+    GameManager gameManager;
+
     /// <summary>
     /// èâä˙âªópä÷êî.
     /// </summary>
@@ -24,6 +26,7 @@ public class User : MonoBehaviour
         modeId = 0;
         itemId = -1;
         index = -1;
+        gameManager = GameManager.instance;
     }
 
     void Start()
@@ -34,7 +37,7 @@ public class User : MonoBehaviour
 
     void Update()
     {
-        
+        PlayerGoal();
     }
 
     public void GeneratePlayer()
@@ -129,5 +132,13 @@ public class User : MonoBehaviour
     public int GetIndex()
     {
         return index;
+    }
+
+    void PlayerGoal()
+    {
+        if (playerObjcet.GetComponent<Player>().GoalCheck())
+        {
+            gameManager.GoalPlayer();
+        }
     }
 }
