@@ -134,11 +134,14 @@ public class User : MonoBehaviour
         return index;
     }
 
-    void PlayerGoal()
+    public void PlayerGoal()
     {
-        if (playerObjcet.GetComponent<Player>().GoalCheck())
+        if (playerObjcet != null)
         {
-            gameManager.GoalPlayer();
+            if (playerObjcet.GetComponent<Player>().GoalCheck())
+            {
+                gameManager.GoalPlayer();
+            }
         }
     }
 }
