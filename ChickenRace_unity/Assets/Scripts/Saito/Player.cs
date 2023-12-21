@@ -10,7 +10,8 @@ using PhotonMethods;
 public class Player : MonoBehaviour
 { 
     Rigidbody2D rb;
-    
+    [SerializeField] CharaAnimation charaAnimation;
+
     [SerializeField] Vector3 moveVector;
     [SerializeField] bool isMove;           // 動いているかどうか.
     [SerializeField] float moveSpeed;       // プレイヤーの移動スピード.
@@ -21,7 +22,6 @@ public class Player : MonoBehaviour
     [SerializeField] Vector2 wallJumpPower; // 壁キックの力.
     [SerializeField] float wallSlidingSpeed;// 壁滑りのスピード.
     [SerializeField] HitDirList nowHitDir;  // プレイヤーがオブジェクトとどの向きで衝突したか.
-    [SerializeField] PlayerAction nowPlayerAction;  // プレイヤーが何の行動をしているか.
     [SerializeField] GameObject playerImage; // プレイヤーの画像.
     [SerializeField] GameObject instanceObj; // 生成したオブジェクト.
     [SerializeField] bool isGoal;
@@ -33,8 +33,8 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         nowHitDir = HitDirList.NONE;
-        nowPlayerAction = PlayerAction.NONE;
         ImageInstance();
+        charaAnimation.nowAnimations = CharaAnimation.Animations.IDLE;
     }
 
     void Start()
@@ -74,12 +74,16 @@ public class Player : MonoBehaviour
     {
         if (Mathf.Abs(rb.velocity.x) < maxMoveSpeed)
         {
-            nowPlayerAction = PlayerAction.MOVE;
             rb.velocity = new Vector3(rb.velocity.x + (moveVector.x * moveSpeed * Time.deltaTime), rb.velocity.y, 0);
         }
         else if (Mathf.Abs(rb.velocity.x) < minMoveSpeed)
         {
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
+
+            if (nowHitDir == HitDirList.HIT_DOWN)
+            {
+                charaAnimation.nowAnimations = CharaAnimation.Animations.IDLE;
+            }
         }
 
         rb.velocity = new Vector3(rb.velocity.x * moveDecay, rb.velocity.y, 0);
@@ -93,7 +97,11 @@ public class Player : MonoBehaviour
     {
         var velocity = value.Get<Vector2>();
         moveVector = new Vector3(velocity.x, velocity.y, 0);
-        //CharaAnimation.Instance.StartAnimation(CharaAnimation.Animations.MOVE);
+
+        if (nowHitDir == HitDirList.HIT_DOWN)
+        {
+            charaAnimation.nowAnimations = CharaAnimation.Animations.MOVE;
+        }
     }
 
     /// <summary>
@@ -104,20 +112,20 @@ public class Player : MonoBehaviour
     {
         if(nowHitDir != HitDirList.NONE)
         {
-            nowPlayerAction = PlayerAction.WALLJUMP;
+            charaAnimation.nowAnimations = CharaAnimation.Animations.JUMP;
             switch (nowHitDir)
             {
                 case HitDirList.HIT_RIGHT:
                     rb.AddForce(new Vector2(-wallJumpPower.x, wallJumpPower.y) * jumpPower, ForceMode2D.Impulse);
-                    nowPlayerAction = PlayerAction.WALLJUMP;
+                    charaAnimation.nowAnimations = CharaAnimation.Animations.JUMP;
                     break;
                 case HitDirList.HIT_LEFT:
                     rb.AddForce(new Vector2(wallJumpPower.x, wallJumpPower.y) * jumpPower, ForceMode2D.Impulse);
-                    nowPlayerAction = PlayerAction.WALLJUMP;
+                    charaAnimation.nowAnimations = CharaAnimation.Animations.JUMP;
                     break;
                 case HitDirList.HIT_DOWN:
                     rb.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
-                    nowPlayerAction = PlayerAction.JUMP;
+                    charaAnimation.nowAnimations = CharaAnimation.Animations.JUMP;
                     break;
             }
         }
@@ -133,6 +141,7 @@ public class Player : MonoBehaviour
             case HitDirList.HIT_RIGHT:
             case HitDirList.HIT_LEFT:
                 rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y - wallSlidingSpeed * Time.deltaTime, 0);
+                charaAnimation.nowAnimations = CharaAnimation.Animations.WALLSLIDING;
                 break;
         }
     }
@@ -181,20 +190,12 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// プレイヤーの行動を返す処理.
-    /// </summary>
-    /// <returns></returns>
-    public PlayerAction GetPlayerAction()
-    {
-        return nowPlayerAction;
-    }
-
-    /// <summary>
     /// 画像の生成.
     /// </summary>
     private void ImageInstance()
     {
         instanceObj = "CharAnimObj".SafeInstantiate(transform.position, transform.rotation);
+        charaAnimation = instanceObj.GetComponent<CharaAnimation>();
     }
 
     /// <summary>
