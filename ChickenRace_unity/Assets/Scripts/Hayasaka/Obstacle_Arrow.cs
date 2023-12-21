@@ -6,11 +6,9 @@ using UnityEngine.Events;
 public class Obstacle_Arrow : Obstacle
 {
     [SerializeField]
-    float shotCnt;
-
+    float shotCnt; //発射間隔
     [SerializeField]
     bool isShotFlg;
-
     [SerializeField]
     GameObject arrowShot;
     [SerializeField]
@@ -44,6 +42,9 @@ public class Obstacle_Arrow : Obstacle
         shotCnt = 3.0f;
         isShotFlg = true;
     }
+    /// <summary>
+    /// 自身の角度を取得し、矢を生成し、発射関数を呼び出す。
+    /// </summary>
     void ShotObj()
     {
         Debug.Log("発射");

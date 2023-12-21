@@ -20,7 +20,7 @@ public class Obstacle_ZeroGravity : MonoBehaviour
         orb2.gravityScale = -1;
         colFlg = true;
         StartCoroutine(NoneGravity(1.0f,orb2));
-        
+        orb2.constraints = RigidbodyConstraints2D.None;
     }
     //void OnTriggerExit2D(Collider2D other)
     //{
