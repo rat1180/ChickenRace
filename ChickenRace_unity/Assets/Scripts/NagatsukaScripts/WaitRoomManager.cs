@@ -176,7 +176,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             isStart = true;
             PhotonNetwork.CurrentRoom.IsOpen = false;
-            PhotonNetwork.LoadLevel("TestRoom");
+            PhotonNetwork.LoadLevel("GameScean");
         }
     }
 
