@@ -11,8 +11,9 @@ using ConstList;
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
     #region おまかせName配列
-    private static readonly string[] OMAKASE_NAMES = new string[] { "すねえく", "くらあけん", "さかな","いか","ねずみ","ごりら",
-        "ちんあなご","いぬ"};
+    private static readonly string[] OMAKASE_NAMES = new string[] { "マイク", "キャシー","ジョニー","キャン" ,"キャント" ,"チャン" ,
+        "みかん",
+        "ねずみ","ごりら","さかな","ちんあなご","いぬ"};
     #endregion
 
     [SerializeField, Tooltip("1ルームの参加人数")] int maxPlayer;

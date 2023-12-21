@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using ResorceNames;
 
 /// <summary>
 /// 障害物の情報保持用クラス
@@ -12,14 +13,19 @@ public struct ObjectStatus
     public List<int> InstalledList;        // 設置した障害物idリスト
     public List<float> AngleList;          // 障害物の設置方向リスト
     public List<Vector2Int> UsedGridList;  // 使用済みグリッドの位置リスト
+    public List<Vector2Int> testList; // テスト用
 }
 
 public class MapManager : MonoBehaviour
 {
-    [SerializeField] private ObjectStatus objStatus;
-    [SerializeField] private GameObject gameObj; // 移動したいオブジェクトの情報取得
-    //[SerializeField] private List<int> InstalledList;       // 設置した障害物リスト
-    //[SerializeField] private List<Vector2Int> UsedGridList; // 使用済みグリッドの位置リスト
+    public bool debugMode = false; // デバッグモードフラグ
+
+    [SerializeField] private ObjectStatus objStatus; // 障害物用の構造体情報
+    private GameObject obstacleObj; // 移動したいオブジェクトの情報取得
+    private GameObject gridObj;
+    private GameObject panelObj;
+    private List<Vector2Int> childList;
+    private Vector2 panelSize;
 
     private bool isRunning = false; // コルーチン実行判定フラグ
     private bool isInstall = false; // 設置フラグ
@@ -33,9 +39,16 @@ public class MapManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (debugMode)
         {
-            ReInstallObject();
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                CreativeModeStart();
+            }
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                CreativeModeEnd();
+            }
         }
     }
 
@@ -49,7 +62,24 @@ public class MapManager : MonoBehaviour
         objStatus.InstalledList = new List<int>();
         objStatus.AngleList = new List<float>();
         objStatus.UsedGridList = new List<Vector2Int>();
-        gameObj = new GameObject();
+        objStatus.testList = new List<Vector2Int>();     // テスト
+        obstacleObj = new GameObject();
+
+        // テスト用
+        if (debugMode)
+        {
+            objStatus.testList.Add(new Vector2Int(0, 1));
+            objStatus.testList.Add(new Vector2Int(-1, 0));
+        }
+
+        // グリッドとパネルの情報を取得
+        gridObj = Instantiate((GameObject)Resources.Load("GridObject"));
+        panelObj = GameObject.Find("CanvasUI/GridPanel");
+        panelSize = panelObj.transform.GetComponent<RectTransform>().sizeDelta;
+
+        // 初期は非表示
+        gridObj.SetActive(false);
+        panelObj.SetActive(false);
     }
 
     /// <summary>
@@ -83,7 +113,27 @@ public class MapManager : MonoBehaviour
     /// </summary>
     private GameObject GetObstaclePrefab(int id)
     {
-        return gameObj;
+        var obj = ResourceManager.instance.GetObstacleObject((OBSTACLE_OBJECT)id);
+
+        return obj;
+    }
+
+    /// <summary>
+    /// グリッド描画切替メソッド
+    /// クリエイティブモードの状態によって切り替え
+    /// </summary>
+    private void GridDraw()
+    {
+        if (!isRunning)
+        {
+            Debug.Log("グリッド表示ができない状態です。");
+            gridObj.SetActive(false);
+            panelObj.SetActive(false);
+            return;
+        }
+
+        gridObj.SetActive(true);
+        panelObj.SetActive(true);
     }
     #endregion
 
@@ -103,6 +153,7 @@ public class MapManager : MonoBehaviour
         isRunning = true;
         isInstall = false;
         StartCoroutine(CreativeMode());
+        GridDraw();
 
         Debug.Log("クリエイティブモード開始");
     }
@@ -121,27 +172,86 @@ public class MapManager : MonoBehaviour
 
         isRunning = false;
         StopCoroutine(CreativeMode());
+        GridDraw();
 
         Debug.Log("クリエイティブモード終了");
     }
 
     /// <summary>
     /// 設置判定メソッド
-    /// 引数に渡されたグリッド位置が、設置可能かどうかを戻り値で返す
+    /// 設置したいオブジェクトのグリッド位置が、設置可能かどうかを戻り値で返す
     /// ture：生成可能 / false：生成不可
     /// </summary>
-    public bool JudgeInstall(Vector2Int installPos)
+    /// <param name="installPos">マウスのグリッド位置</param>
+    /// <param name="id">設置したいオブジェクト番号</param>
+    /// <returns></returns>
+    public bool JudgeInstall(Vector2Int installPos/*, int id*/)
     {
-        // 設置判定
-        for (int i = 0; i < objStatus.UsedGridList.Count; i++)
+        // idに対応したリストを取得
+        childList = objStatus.testList;
+        //var list = ResorceManager.instance.GetList((OBSTACLE_OBJECT)id);
+
+        // 設置位置が一つのとき
+        if(childList == null)
         {
-            if (installPos == objStatus.UsedGridList[i])
+            return JudgeInstallCenter(installPos);
+        }
+        else // 一つでない時
+        {
+            // 全てのマスで設置可能かどうか
+            if (JudgeInstallCenter(installPos) && JudgeInstallChild(installPos, childList))
             {
                 return true;
             }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 設置する位置判定メソッド
+    /// 設置するオブジェクトが１マスの場合
+    /// </summary>
+    /// <param name="pos">マウスのグリッド位置</param>
+    /// <returns></returns>
+    private bool JudgeInstallCenter(Vector2Int pos)
+    {
+        for (int i = 0; i < objStatus.UsedGridList.Count; i++)
+        {
+            if( pos == objStatus.UsedGridList[i])
+            {
+                return false;
+            }
         }
 
-        return false;
+        return true;
+    }
+
+    /// <summary>
+    /// 設置する位置判定メソッド
+    /// 設置するオブジェクトが２マス以上ある場合
+    /// </summary>
+    /// <param name="pos">マウスのグリッド位置</param>
+    /// <param name="list">pos以外の位置リスト</param>
+    /// <returns></returns>
+    private bool JudgeInstallChild(Vector2Int pos, List<Vector2Int> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            var childInsPos = pos + list[i];
+
+            for (int j = 0; j < objStatus.UsedGridList.Count; j++)
+            {
+                if (childInsPos == objStatus.UsedGridList[j])
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -163,9 +273,12 @@ public class MapManager : MonoBehaviour
         // 障害物生成
         SpawnObstacle(id, angle, gridPos);
 
-        // 他のプレイヤーでSpawnObstacleメソッドの実行
-        var Obj = PhotonNetwork.Instantiate("GenerateObstacle", new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
-        Obj.GetComponent<GenerateObstacle>().SetObstacleID(id, angle, gridPos);
+        if (!debugMode)
+        {
+            // 他のプレイヤーでSpawnObstacleメソッドの実行
+            var Obj = PhotonNetwork.Instantiate("GenerateObstacle", new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
+            Obj.GetComponent<GenerateObstacle>().SetObstacleID(id, angle, gridPos);
+        }
 
         isInstall = true;
     }
@@ -185,24 +298,22 @@ public class MapManager : MonoBehaviour
         }
 
         // 障害物の取得
-        gameObj = GetObstaclePrefab(id);
+        obstacleObj = GetObstaclePrefab(id);
 
         // 障害物の生成
-        Instantiate(gameObj, new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
+        Instantiate(obstacleObj, new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
 
         // 設置したオブジェクトIDと位置をリストに追加
         objStatus.InstalledList.Add(id);
         objStatus.UsedGridList.Add(gridPos);
+        if(childList != null)
+        {
+            for(int i = 0; i < childList.Count; i++)
+            {
+                objStatus.UsedGridList.Add(gridPos + childList[i]);
+            }
+        }
         objStatus.AngleList.Add(angle);
-    }
-
-    /// <summary>
-    /// フラグ参照メソッド
-    /// </summary>
-    /// <returns>設置フラグ　true:設置済み　false:未設置</returns>
-    public bool IsInstallReference()
-    {
-        return isInstall;
     }
 
     /// <summary>
@@ -219,9 +330,25 @@ public class MapManager : MonoBehaviour
 
         for (int i = 0; i < objStatus.InstalledList.Count; i++)
         {
-            gameObj = GetObstaclePrefab(objStatus.InstalledList[i]);
-            Instantiate(gameObj, new Vector3(objStatus.UsedGridList[i].x, objStatus.UsedGridList[i].y), Quaternion.Euler(0, 0, objStatus.AngleList[i]));
+            obstacleObj = GetObstaclePrefab(objStatus.InstalledList[i]);
+            Instantiate(obstacleObj, new Vector3(objStatus.UsedGridList[i].x, objStatus.UsedGridList[i].y), Quaternion.Euler(0, 0, objStatus.AngleList[i]));
         }
     }
+
+    /// <summary>
+    /// フラグ参照メソッド
+    /// </summary>
+    /// <returns>設置フラグ　true:設置済み　false:未設置</returns>
+    public bool IsInstallReference()
+    {
+        return isInstall;
+    }
+
+    // テスト
+    //public void GetGridSize(Vector2 gridSize)
+    //{
+    //    // サイズ変わらん
+    //    panelSize = gridSize;
+    //}
     #endregion
 }

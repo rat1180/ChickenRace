@@ -7,29 +7,38 @@ using ResorceNames;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] GameObject imageObjects;
-    public List<OBSTACLE_IMAGE_NAMES> id;
+    public List<int> id;
     [SerializeField, Range(0, 3)] int testSoldOutInex;
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            ChangeObstacleImage();
-        }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            SoldOut(testSoldOutInex);
-        }
+        //if (Input.GetKeyDown(KeyCode.K))
+        //{
+        //    ChangeObstacleImage();
+        //}
+        //if (Input.GetKeyDown(KeyCode.L))
+        //{
+        //    SoldOut(testSoldOutInex);
+        //}
+    }
+
+    /// <summary>
+    /// 全員が障害物の選択を終了したらUIを非表示にする.
+    /// </summary>
+    public void FinishSelect()
+    {
+        imageObjects.SetActive(false);
     }
 
     /// <summary>
     /// GameManagerからIDを入れる関数
     /// </summary>
-    public void PushID(List<OBSTACLE_IMAGE_NAMES> iD)
+    public void PushID(List<int> iD)
     {
-        id = new List<OBSTACLE_IMAGE_NAMES>();
+        id = new List<int>();
         id = iD;
+        imageObjects.SetActive(true);
         ChangeObstacleImage();
     }
 
@@ -41,15 +50,17 @@ public class UIManager : MonoBehaviour
     {
         for(int i = 0; i < imageObjects.transform.childCount; i++)
         {
-            imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
-            ResorceManager.instance.GetObstacleImage(id[i]);//画像を変更.
+            //imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
+            imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =
+            ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
+            //コンポーネントが存在しなければ追加してIDを代入し、逆に存在すればそのままIDを代入する
             if (imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>() == null)
             {
-                imageObjects.transform.GetChild(i).gameObject.AddComponent<ObstacleImage>().id = id[i];
+                imageObjects.transform.GetChild(i).gameObject.AddComponent<ObstacleImage>().id = i;
             }
             else
             {
-                imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>().id = id[i];
+                imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>().id = i;
             }
         }
     }
@@ -60,7 +71,7 @@ public class UIManager : MonoBehaviour
     public void SoldOut(int index)
     {
         imageObjects.transform.GetChild(index).GetComponent<Image>().sprite =
-            ResorceManager.instance.GetObstacleImage(OBSTACLE_IMAGE_NAMES.Kanbaipop);//完売画像に変更.
+            ResourceManager.instance.GetObstacleImage(OBSTACLE_IMAGE_NAMES.Kanbaipop);//完売画像に変更.
         imageObjects.transform.GetChild(index).gameObject.GetComponent<ObstacleImage>().id = 0;
     }
 }

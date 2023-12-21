@@ -2,11 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using Photon.Realtime;
 
 public class Character : MonoBehaviourPun, IPunObservable
 {
-    Vector3 targetPos;
+    public Vector3 targetPos;
     GameObject target;
     
     void Start()

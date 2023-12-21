@@ -30,7 +30,7 @@ public class CharaAnimation : MonoBehaviour
 
     void Update()
     {
-        //StartAnimation(nowAnimations);  // テスト用.
+        StartAnimation(nowAnimations);  // テスト用.
     }
 
     /// <summary>
@@ -56,6 +56,9 @@ public class CharaAnimation : MonoBehaviour
                 animator.SetTrigger("WallSlidingTrigger");
                 break;
             case Animations.DANCE:
+
+                break;
+            case Animations.WIN:
 
                 break;
         }

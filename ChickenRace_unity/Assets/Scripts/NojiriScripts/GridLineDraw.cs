@@ -7,19 +7,22 @@ using UnityEngine;
 public class GridLineDraw : MonoBehaviour
 {
     // Inspector用
-    public float gridSize = 1f;
-    public Color color = Color.white;
+    public float gridSize = 1f;       // グリッド(四角)のサイズ
+    public Color color = Color.white; // 描画線の色
     public Vector2Int size = new Vector2Int(8, 8); // 縦線と横線の数
+
     [Header("グリッド位置調整用")]
     public Vector2 posRetouch = new Vector2(0, 0);
 
     // 値が変更されたとき用に、元のInspectorの値を保持しておく
-    float originGridSize = 0;
-    Color originColor = Color.white;
-    Vector2Int originSize = new Vector2Int(0, 0);
-    Vector2 originPosRetouch = new Vector2(0, 0);
+    private float originGridSize = 0;
+    private Color originColor = Color.white;
+    private Vector2Int originSize = new Vector2Int(0, 0);
+    private Vector2 originPosRetouch = new Vector2(0, 0);
+    private Vector2 backGroundSize;
 
-    Mesh mesh;
+    public MapManager mapManager;
+    private Mesh mesh;
 
     void Start()
     {
@@ -40,6 +43,12 @@ public class GridLineDraw : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// meshの値計算メソッド
+    /// 値が更新されるたびに呼び出す
+    /// </summary>
+    /// <param name="mesh"></param>
+    /// <returns></returns>
     private Mesh ReGrid(Mesh mesh)
     {
         // グリッド描画で使用するマテリアルの設定
@@ -75,6 +84,11 @@ public class GridLineDraw : MonoBehaviour
         int[] lines = new int[horizontalResolution + verticalResolution];
         Color[] colors = new Color[horizontalResolution + verticalResolution];
 
+        // サイズ変更用
+        backGroundSize.x = Vector2.Distance(horizontalStartPosition, horizontalEndPosition);
+        backGroundSize.y = Vector2.Distance(verticalStartPosition, verticalEndPosition);
+        Debug.Log(backGroundSize);
+
         // 横線の頂点を設定
         for (int i = 0; i < horizontalResolution; i += 4)
         {
@@ -108,6 +122,10 @@ public class GridLineDraw : MonoBehaviour
         mesh.uv = uvs;
         mesh.colors = colors;
         mesh.SetIndices(lines, MeshTopology.Lines, 0);
+
+        // テスト
+        // パネルの大きさ設定
+        //mapManager.GetGridSize(backGroundSize);
 
         // 更新前の値を保存
         originGridSize = gridSize;

@@ -2,18 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Photon.Pun;
+using PhotonMethods;
 
 public class PlayerMouse : MonoBehaviour
 {
     [SerializeField] Vector3 moveVector;     // InputActionから受け取った値を入れる.
     [SerializeField] float moveSpeed;        // 動く速さ.
-    [SerializeField] int index;             // アイテム番号.
-    int error;                              // エラー番号.
-    [SerializeField] bool isInstalled;         // アイテムの設置が可能か.
+    [SerializeField] int itemId;
+    [SerializeField] int index;              // アイテム番号.
+    int error;                               // エラー番号.
+    [SerializeField] bool isInstalled;       // アイテムの設置が可能か.
     [SerializeField] GameObject mouseImage;  // 自身の画像.
-    [SerializeField] GameObject instanceObj; // 生成した画像.
-    [SerializeField] GameObject Map;
-    [SerializeField] GameObject User;
+    [SerializeField] GameObject mouseInstanceObj; // 生成した画像.
+    [SerializeField] GameObject map;
+    [SerializeField] GameObject user;
     Vector2Int gridPos;
 
     [SerializeField] float angle;
@@ -25,7 +28,8 @@ public class PlayerMouse : MonoBehaviour
     private void Init()
     {
         error = -1;
-        ImageInstance();
+        MouseImageInstance();
+        map = GameManager.instance.GetMapManager();
     }
 
     void Start()
@@ -39,18 +43,19 @@ public class PlayerMouse : MonoBehaviour
         MouseMove();
         MouseTransform();
         gridPos = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
-        isInstalled = Map.GetComponent<MapManager>().JudgeInstall(gridPos);
+        isInstalled = map.GetComponent<MapManager>().JudgeInstall(gridPos);
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
+        if (collision.tag != "SelectImage") return;
         // 当たった画像のIDを取得.
-        
+        itemId = collision.gameObject.GetComponent<ObstacleImage>().ReturnID();
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        index = error;
+        itemId = error;
     }
 
     /// <summary>
@@ -90,29 +95,32 @@ public class PlayerMouse : MonoBehaviour
         //}
 
         // アイテムが設置可能なら.
-        if (isInstalled == false)
+        if (isInstalled == true)
         {
             // アイテムの生成.
-           Map.GetComponent<MapManager>().GenerateMapObject(0,saveAngle, gridPos);
+           map.GetComponent<MapManager>().GenerateMapObject(0,saveAngle, gridPos);
         }
         else
         {
             // Debug.Log("設置できません");
+            CantPlant();
+
         }
 
-        //if(index != error)
-        //{
-        //    index = GetComponent<SelectImage>().itemId; // itemIdを関数にする
-        //}
+        if (itemId != error)
+        {
+            index = itemId; // itemIdを関数にする.
+            user.GetComponent<User>().SetIndex(index);
+        }
     }
 
     /// <summary>
-    /// 画像の生成.
+    /// マウス画像の生成.
     /// </summary>
-    private void ImageInstance()
+    private void MouseImageInstance()
     {
-        instanceObj = Instantiate(mouseImage, transform.position, transform.rotation);
-        //instanceObj = PhotonNetwork.Instantiate("MouseImage", transform.position, transform.rotation);
+        // mouseImage = Instantiate(mouseImage, transform.position, transform.rotation);
+        mouseImage = "mouseImage".SafeInstantiate(transform.position, transform.rotation);
     }
 
     /// <summary>
@@ -120,7 +128,7 @@ public class PlayerMouse : MonoBehaviour
     /// </summary>
     private void MouseTransform()
     {
-        instanceObj.GetComponent<Character>().PositionUpdate(transform.position);
+        mouseImage.GetComponent<Character>().PositionUpdate(transform.position);
     }
 
     /// <summary>
@@ -138,4 +146,18 @@ public class PlayerMouse : MonoBehaviour
     {
         saveAngle -= angle;
     }
+
+    public void SetUser(User setuser)
+    {
+        user = setuser.gameObject;
+    }
+
+    /// <summary>
+    /// 設置出来なかった時に呼ぶ.
+    /// </summary>
+    private void CantPlant()
+    {
+
+    }
+    
 }

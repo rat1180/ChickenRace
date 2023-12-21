@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using ConstList;
 using Photon.Pun;
+using PhotonMethods;
 
 public class Player : MonoBehaviour
 { 
@@ -23,6 +24,7 @@ public class Player : MonoBehaviour
     [SerializeField] PlayerAction nowPlayerAction;  // プレイヤーが何の行動をしているか.
     [SerializeField] GameObject playerImage; // プレイヤーの画像.
     [SerializeField] GameObject instanceObj; // 生成したオブジェクト.
+    [SerializeField] bool isGoal;
 
     /// <summary>
     /// 初期化用関数.
@@ -57,6 +59,14 @@ public class Player : MonoBehaviour
         nowHitDir = HitDirList.NONE;
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Goal")
+        {
+            isGoal = true;
+        }
+    }
+
     /// <summary>
     /// プレイヤーの移動処理.
     /// </summary>
@@ -83,7 +93,7 @@ public class Player : MonoBehaviour
     {
         var velocity = value.Get<Vector2>();
         moveVector = new Vector3(velocity.x, velocity.y, 0);
-        CharaAnimation.Instance.StartAnimation(CharaAnimation.Animations.MOVE);
+        //CharaAnimation.Instance.StartAnimation(CharaAnimation.Animations.MOVE);
     }
 
     /// <summary>
@@ -184,7 +194,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void ImageInstance()
     {
-        instanceObj = PhotonNetwork.Instantiate("PlayerImage", transform.position, transform.rotation);
+        instanceObj = "CharAnimObj".SafeInstantiate(transform.position, transform.rotation);
     }
 
     /// <summary>
@@ -196,10 +206,11 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// 自身を削除.
+    /// ゴールしたかを送る関数.
     /// </summary>
-    public void PlayerDestroy()
+    /// <returns></returns>
+    public bool GoalCheck()
     {
-        Destroy(gameObject);
+        return isGoal;
     }
 }

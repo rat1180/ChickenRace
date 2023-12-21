@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 3241723423567720787}
   - component: {fileID: 7164237597502854130}
   - component: {fileID: 124308918603362219}
+  - component: {fileID: 889204261596439869}
+  - component: {fileID: -1142010870533596205}
   m_Layer: 0
   m_Name: mouse_kari
   m_TagString: Untagged
@@ -100,6 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveVector: {x: 0, y: 0, z: 0}
   moveSpeed: 5
+  itemId: 0
   index: 0
   isInstalled: 0
   mouseImage: {fileID: 4384123820751128111, guid: 380291cd5af83394c98584b29215eb3b, type: 3}
@@ -138,3 +141,50 @@ MonoBehaviour:
   m_DefaultActionMap: Mouse
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!61 &889204261596439869
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6455344753330370069}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
+--- !u!50 &-1142010870533596205
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6455344753330370069}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 7

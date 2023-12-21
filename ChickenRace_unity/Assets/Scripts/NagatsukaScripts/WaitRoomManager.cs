@@ -17,8 +17,6 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField, Tooltip("情報を表示するメッセージ")] Text messageText;
     [SerializeField, Tooltip("開始ボタン")] Button sceanMoveButton;
 
-    private DataSharingClass dataSharingClass;//データ共有クラス.
-
     [SerializeField, Tooltip("ChatGroupをそのまま入れる")] GameObject chatGroup;
     [SerializeField, Tooltip("RoomInformationをそのまま入れる")] GameObject roomInformation;
 
@@ -46,7 +44,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         RoomNameText,//ルーム名を表示するテキスト.
         NowPlayerCount,//現在ルームにいる人数を表示.
-        SharDataText,
+        PlayerNameText,//ルームにいる人の名前を表示.
     }
 
     private bool isInRoom;       //ルーム内で接続できているか
@@ -63,6 +61,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
+        PhotonNetwork.AutomaticallySyncScene = true;//ホストとシーンを同期する.
         isInRoom = false;
         isStart = false;
         createPlayerFlg = false;
@@ -76,10 +75,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             RoomStatusUpDate();
             ShowRoomInformation();
-            if (Input.GetKeyDown(KeyCode.Space) && sceanMoveButton.IsInteractable())
-            {
-                MoveGameScean();
-            }
+            
         }
     }
     #endregion
@@ -134,33 +130,23 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     #region データ共有クラス関連
 
     /// <summary>
-    /// データ共有クラスが生成された際、この関数を呼んで値を入れる.
-    /// </summary>
-    [PunRPC]
-    public void PushDataSharingClass(GameObject gameObject)
-    {
-        dataSharingClass = gameObject.GetComponent<DataSharingClass>();
-    }
-    /// <summary>
     /// DataSharingClassの値をテキストに表示する関数.
     /// デバッグ用.
     /// </summary>
     private void ShowRoomInformation()
     {
-        if (dataSharingClass == null) return;//生成出来ていなかったら関数を終了.
+        Debug.Log("情報表示");
         //ルームの名前を表示する.
         roomInformation.transform.GetChild((int)RoomInformations.RoomNameText).GetComponent<Text>().text = 
             "RoomName:" + ConectServer.RoomProperties.RoomName.ToString();
         //ルームにいるプレイヤーの数を表示する.
         roomInformation.transform.GetChild((int)RoomInformations.NowPlayerCount).GetComponent<Text>().text =
             "プレイヤーの数:" + PhotonNetwork.PlayerList.Length;
-        roomInformation.transform.GetChild((int)RoomInformations.SharDataText).GetComponent<Text>().text = "";
-        int i = 0;
+        roomInformation.transform.GetChild((int)RoomInformations.PlayerNameText).GetComponent<Text>().text = "";//ループ前に空にする.
         foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
         {
-            roomInformation.transform.GetChild((int)RoomInformations.SharDataText).GetComponent<Text>().text +=
-                                player.NickName + " Score:" + dataSharingClass.score[i].ToString() + "\n";
-            i++;
+            roomInformation.transform.GetChild((int)RoomInformations.PlayerNameText).GetComponent<Text>().text +=
+                                player.NickName + "\n";
         }
     }
     #endregion
@@ -175,7 +161,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             isStart = true;
             PhotonNetwork.CurrentRoom.IsOpen = false;
-           // PhotonNetwork.LoadLevel(/*"ProttypeSeacn");*/SceanNames.GAME.ToString());
+            PhotonNetwork.LoadLevel("GameScean");
         }
     }
 
@@ -306,9 +292,10 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     /// </summary>
     public void PushReadyButton()
     {
-        var obj = PhotonNetwork.Instantiate("NagatsukaObjects/DataSharingClass", Vector3.zero, Quaternion.identity);//データ共有クラスを生成する.
-        PushDataSharingClass(obj);
-        photonView.RPC(nameof(PushDataSharingClass), RpcTarget.All,obj);
+        if (sceanMoveButton.IsInteractable())
+        {
+            MoveGameScean();
+        }
     }
     #endregion
 
