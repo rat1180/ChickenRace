@@ -199,15 +199,13 @@ public class MapManager : MonoBehaviour
         else // 一つでない時
         {
             // 全てのマスで設置可能かどうか
-            if (!JudgeInstallCenter(installPos) && !JudgeInstallChild(installPos, childList))
+            if (JudgeInstallCenter(installPos) && JudgeInstallChild(installPos, childList))
             {
-                Debug.Log("設置可能");
-                return false;
+                return true;
             }
             else
             {
-                Debug.Log("設置不可");
-                return true;
+                return false;
             }
         }
     }
@@ -224,11 +222,11 @@ public class MapManager : MonoBehaviour
         {
             if( pos == objStatus.UsedGridList[i])
             {
-                return true;
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     /// <summary>
@@ -243,18 +241,17 @@ public class MapManager : MonoBehaviour
         for (int i = 0; i < list.Count; i++)
         {
             var childInsPos = pos + list[i];
-            Debug.Log("子設置位置" + childInsPos);
 
             for (int j = 0; j < objStatus.UsedGridList.Count; j++)
             {
                 if (childInsPos == objStatus.UsedGridList[j])
                 {
-                    return true;
+                    return false;
                 }
             }
         }
 
-        return false;
+        return true;
     }
 
     /// <summary>
