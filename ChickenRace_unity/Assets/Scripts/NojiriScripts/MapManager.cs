@@ -190,7 +190,7 @@ public class MapManager : MonoBehaviour
         // idに対応したリストを取得
         childList = objStatus.testList;
         //var Obj = ResourceManager.instance.GetObstacleObject((OBSTACLE_OBJECT)id);
-        //childList = Obj.GetComponent<Obstacle>().Seter();
+        //childList = Obj.GetComponent<Obstacle>().GetCollisionList();
 
         // 設置位置が一つのとき
         if (childList == null)
@@ -321,6 +321,17 @@ public class MapManager : MonoBehaviour
             }
         }
         objStatus.AngleList.Add(angle);
+    }
+
+    public void DeleteObstacle(Vector2Int deletPos)
+    {
+        if (!isRunning)
+        {
+            Debug.LogError("クリエイティブモードが開始されていません。");
+            return;
+        }
+
+        // 仮作成
     }
 
     /// <summary>
