@@ -5,7 +5,7 @@ using Photon.Pun;
 
 public class Character : MonoBehaviourPun, IPunObservable
 {
-    Vector3 targetPos;
+    public Vector3 targetPos;
     GameObject target;
     
     void Start()
