@@ -155,12 +155,7 @@ namespace ResorceNames
         cutter,
         blackhole,
     }
-<<<<<<< HEAD
 
-    public enum OBSTACLE_OBJECT
-    {
-
-=======
     public enum OBSTACLE_OBJECT
     {
         Arrow,
@@ -180,7 +175,6 @@ namespace ResorceNames
         StairsScaffold,
         ThreeScaffold,
         TwoScaffold,
->>>>>>> develop/Nagatsuka
     }
 }
 
