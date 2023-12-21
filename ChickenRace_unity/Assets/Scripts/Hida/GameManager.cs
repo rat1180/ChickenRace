@@ -581,11 +581,11 @@ public class GameManager : MonoBehaviour
         if (PhotonNetwork.IsMasterClient)
         {
             //ƒeƒXƒg
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
                 int id = Random.Range(1, 4);
                 //áŠQ•¨’Ç‰Á
-                gameProgress.dataSharingClass.PushID(i == 3 ? 0 : id);
+                gameProgress.dataSharingClass.PushID(i == 4 ? 0 : id);
             }
 
         }
