@@ -57,7 +57,7 @@ public class Obstacle : MonoBehaviour
     /// ƒŠƒXƒgæ“¾
     /// </summary>
     /// <returns></returns>
-    List<Vector2Int> Seter()
+    public List<Vector2Int> GetCollisionList()
     {
         return collisionList;
     }
