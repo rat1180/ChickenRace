@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 public class Obstacle_Move : Obstacle
 {
+    [SerializeField]
     Vector3 pos;
     public GameObject RF;
     /// <summary>

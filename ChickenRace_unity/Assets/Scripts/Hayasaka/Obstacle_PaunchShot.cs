@@ -4,32 +4,26 @@ using UnityEngine;
 
 public class Obstacle_PaunchShot : MonoBehaviour
 {
-    const float waitTime = 2.0f;
-    const float goSpeed  = 3.0f;
-    const float backSpeed = -1.0f;
-    Rigidbody2D rbb;
+    const float waitTime = 2.0f;  //巻き戻しまでの時間
+    const float backSpeed = 2.0f;//巻き戻しスピード
+
     float speed;
     bool stopFlg;
-    [SerializeField]
-    Vector3 endPos;
-    [SerializeField]
-    Vector3 backPos;
+   
+    Rigidbody2D rbb;
+
+    GameObject Pt;
+    GameObject Bt;
     // Start is called before the first frame update
     void Start()
     {
-        rbb = this.transform.GetComponent<Rigidbody2D>();
-        stopFlg = false;
-        endPos = this.transform.position;
-        endPos.y += 1;
-
-        backPos = this.transform.position;
-        backPos.y -= 0.5f;
+        Init();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (this.transform.position.y < endPos.y)
+        if (this.transform.position.x != Pt.transform.position.x && this.transform.position.y != Pt.transform.position.y)
         {
             if (!stopFlg)
             {
@@ -46,24 +40,41 @@ public class Obstacle_PaunchShot : MonoBehaviour
     //直進させる
     protected virtual void Paunching()
     {
-        speed = goSpeed;
-        rbb.velocity = this.transform.up * speed;   
+        this.transform.position = Vector3.MoveTowards(transform.position, Pt.transform.position, speed * Time.deltaTime);
     }
-    public void PaunchShot(float rot)
+    /// <summary>
+    /// 角度とか取得
+    /// </summary>
+    /// <param name="rot"></param>
+    public void PaunchShot(float rot,GameObject pt,GameObject bt)
     {
         this.transform.rotation = Quaternion.Euler(0, 0, rot);
+        Pt = pt;
+        Bt = bt;
     }
+    /// <summary>
+    /// 巻き戻しの遅延
+    /// </summary>
+    /// <param name="wt"></param>
+    /// <returns></returns>
     IEnumerator DelayBack(float wt)
     {
         speed = backSpeed;
         yield return new WaitForSeconds(wt);
-        rbb.velocity = this.transform.up * speed;
+        this.transform.position = Vector3.MoveTowards(transform.position, Bt.transform.position, speed * Time.deltaTime);
 
-        if (this.transform.position.y < backPos.y)
+        if (this.transform.position.x == Bt.transform.position.x || this.transform.position.y == Bt.transform.position.y)
         {
+            Debug.Log("拳");
             rbb.velocity = Vector3.zero;
             Destroy(this.gameObject);
         }
+    }
+    void Init()
+    {
+        rbb = this.transform.GetComponent<Rigidbody2D>();
+        stopFlg = false;
+        speed = 3.0f;
     }
     //void OnBecameInvisible()
     //{

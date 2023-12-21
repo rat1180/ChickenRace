@@ -9,10 +9,15 @@ public class Obstacle_Paunch : Obstacle
     bool isPaunchFlg;
     [SerializeField]
     bool isPaunchWaitFlg;
+
     [SerializeField]
     GameObject paunchShot;
     [SerializeField]
     GameObject paunchChild;
+    [SerializeField]
+    GameObject paunchTarget;
+    [SerializeField]
+    GameObject backTarget;
     /// <summary>
     /// 初期化
     /// </summary>
@@ -33,13 +38,16 @@ public class Obstacle_Paunch : Obstacle
     {
         isPaunchFlg = true;
     }
+    /// <summary>
+    /// 角度取得から拳生成
+    /// </summary>
     void ShotObj()
     {
         Debug.Log("発射");
 
         myRotation = this.transform.localEulerAngles.z;
         var ps = Instantiate(paunchShot,paunchChild.transform.position, Quaternion.identity);
-        ps.GetComponent<Obstacle_PaunchShot>().PaunchShot(myRotation);
+        ps.GetComponent<Obstacle_PaunchShot>().PaunchShot(myRotation,paunchTarget,backTarget);
         isPaunchWaitFlg = true;
         isPaunchFlg = false;
         Invoke("WaitFlg", 6.0f);
@@ -50,6 +58,7 @@ public class Obstacle_Paunch : Obstacle
     }
     void OnTriggerEnter2D(Collider2D other)
     {
+        //パンチが戻るまで判定しない
         if (!isPaunchWaitFlg)
         {
             Debug.Log("パンチ");

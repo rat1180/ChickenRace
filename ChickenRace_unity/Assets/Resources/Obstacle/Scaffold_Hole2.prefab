@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1615171504474291747}
   - component: {fileID: 8184595632687269617}
   m_Layer: 0
-  m_Name: HoleScaffold2
+  m_Name: Scaffold_Hole2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -19,7 +19,10 @@ public class GridLineDraw : MonoBehaviour
     Vector2Int originSize = new Vector2Int(0, 0);
     Vector2 originPosRetouch = new Vector2(0, 0);
 
+    private Vector2 backGroundSize;
+
     Mesh mesh;
+    public MapManager mapManager;
 
     void Start()
     {
@@ -75,6 +78,11 @@ public class GridLineDraw : MonoBehaviour
         int[] lines = new int[horizontalResolution + verticalResolution];
         Color[] colors = new Color[horizontalResolution + verticalResolution];
 
+        // サイズ変更用
+        backGroundSize.x = Vector2.Distance(horizontalStartPosition, horizontalEndPosition);
+        backGroundSize.y = Vector2.Distance(verticalStartPosition, verticalEndPosition);
+        Debug.Log(backGroundSize);
+
         // 横線の頂点を設定
         for (int i = 0; i < horizontalResolution; i += 4)
         {
@@ -108,6 +116,10 @@ public class GridLineDraw : MonoBehaviour
         mesh.uv = uvs;
         mesh.colors = colors;
         mesh.SetIndices(lines, MeshTopology.Lines, 0);
+
+        // テスト
+        // パネルの大きさ設定
+        //mapManager.GetGridSize(backGroundSize);
 
         // 更新前の値を保存
         originGridSize = gridSize;
