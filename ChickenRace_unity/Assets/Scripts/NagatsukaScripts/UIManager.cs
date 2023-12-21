@@ -44,6 +44,7 @@ public class UIManager : MonoBehaviour
             //imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
             imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =
             ResorceManager.instance.GetObstacleImage(id[i]);//画像を変更.
+            //コンポーネントが存在しなければ追加してIDを代入し、逆に存在すればそのままIDを代入する
             if (imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>() == null)
             {
                 imageObjects.transform.GetChild(i).gameObject.AddComponent<ObstacleImage>().id = i;

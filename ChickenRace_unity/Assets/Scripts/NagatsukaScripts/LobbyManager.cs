@@ -11,7 +11,7 @@ using ConstList;
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
     #region おまかせName配列
-    private static readonly string[] OMAKASE_NAMES = new string[] { "すねえく", "くらあけん", "さかな","いか","ねずみ","ごりら",
+    private static readonly string[] OMAKASE_NAMES = new string[] { "マイク", "キャシー", "さかな","ジョニー","ねずみ","ごりら",
         "ちんあなご","いぬ"};
     #endregion
 
