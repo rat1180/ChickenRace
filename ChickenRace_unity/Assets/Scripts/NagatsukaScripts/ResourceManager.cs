@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using ResorceNames;
 
 public class ResourceManager : MonoBehaviour
@@ -16,7 +17,7 @@ public class ResourceManager : MonoBehaviour
     //画像読み込み用パス
     const string OBSTACLE_IMAGES = "Obstacles/";
 
-    #region Unityイベント(Awake)
+    #region Unityイベント(Awake・Update)
     private void Awake()
     {
         if(instance == null)
@@ -30,6 +31,11 @@ public class ResourceManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Update()
+    {
+        ErrorFunction();
     }
     #endregion
 
@@ -140,6 +146,22 @@ public class ResourceManager : MonoBehaviour
     }
     #endregion
 
+
+    /// <summary>
+    /// なんらかのエラーが発生した際にescキーで強制終了できるようにする関数.
+    /// </summary>
+    private void ErrorFunction()
+    {
+        Keyboard keyboard = Keyboard.current;
+        if (keyboard.escapeKey.wasPressedThisFrame)
+        {
+#if UNITY_EDITOR //UnityEditorで起動しているとき.
+            UnityEditor.EditorApplication.isPlaying = false;//ゲームプレイ終了
+#else //ビルド環境.
+    Application.Quit();//ゲームプレイ終了
+#endif
+        }
+    }
 }
 
 /// <summary>

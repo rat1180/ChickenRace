@@ -3,14 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using ResorceNames;
+using Photon.Pun;
+using Photon.Realtime;
+
 
 public class UIManager : MonoBehaviour
 {
+    enum ResultCharacterChild {
+        NAME,
+        SCORE,
+        UPSCORE,
+        RANK
+    }
+
+
     private GameObject imageObjects;
     private GameObject resultPanel;
-    private GameObject resultCharacters;//リザルト画面のキャラクター(Name,Sciore,Rank表示)
+    private GameObject resultCharacters;//リザルト画面のキャラクター(Name,Score,Rank表示)
     private List<int> id;
-    //[SerializeField, Range(0, 3)] int testSoldOutInex;
+    
+
 
     public string[] names = new string[4];
 
@@ -86,11 +98,33 @@ public class UIManager : MonoBehaviour
         imageObjects.transform.GetChild(index).gameObject.GetComponent<ObstacleImage>().id = 0;
     }
 
+    /// <summary>
+    /// レース終了時リザルト画面を表示するためにGameManagerから呼び出す関数.
+    /// </summary>
+    public void Result()
+    {
+        //Playerの数分ループして情報を入れる.
+        int i = 0;
+        foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
+        {
+            resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text = player.NickName;
+        }
+
+
+    }
+
     void PushNameTest()
     {
-        for(int i = 0; i < 3; i++)
+        //for(int i = 0; i < 3; i++)
+        //{
+        //    resultCharacters.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text = names[i];
+        //}
+
+        //Playerの数分ループして情報を入れる.
+        int i = 0;
+        foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
         {
-            resultCharacters.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text = names[i];
+            resultCharacters.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text = player.NickName;
         }
     }
 }
