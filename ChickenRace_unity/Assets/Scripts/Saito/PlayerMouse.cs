@@ -47,6 +47,7 @@ public class PlayerMouse : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
+        if (collision.tag != "SelectImage") return;
         // “–‚½‚Á‚½‰æ‘œ‚ÌID‚ðŽæ“¾.
         itemId = collision.gameObject.GetComponent<ObstacleImage>().ReturnID();
     }

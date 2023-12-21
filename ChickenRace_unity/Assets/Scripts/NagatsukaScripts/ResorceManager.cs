@@ -150,7 +150,7 @@ namespace ResorceNames
 { 
     public enum OBSTACLE_IMAGE_NAMES
     {
-        Kanbaipop,
+        Kanbaipop,//Š®”„‰æ‘œ.
         taihou,
         cutter,
         blackhole,

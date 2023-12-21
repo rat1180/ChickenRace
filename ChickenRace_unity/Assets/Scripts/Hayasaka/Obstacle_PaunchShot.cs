@@ -5,20 +5,15 @@ using UnityEngine;
 public class Obstacle_PaunchShot : MonoBehaviour
 {
     const float waitTime = 2.0f;  //巻き戻しまでの時間
-    const float goSpeed  = 3.0f;  //発射スピード
-    const float backSpeed = -1.0f;//巻き戻しスピード
+    const float backSpeed = 2.0f;//巻き戻しスピード
 
     float speed;
     bool stopFlg;
-    [SerializeField]
-    Vector3 StartPos;
-    [SerializeField]
-    Vector3 endPos; //拳の終着点
-    [SerializeField]
-    Vector3 backPos;//巻き戻しの終着点
-
-    Vector3 thisPos;
+   
     Rigidbody2D rbb;
+
+    GameObject Pt;
+    GameObject Bt;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,19 +22,8 @@ public class Obstacle_PaunchShot : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {       
-        thisPos = this.transform.position;
-        Debug.Log(thisPos);
-        if (this.transform.position.x <= StartPos.x)
-        {
-            thisPos.x = -(thisPos.x);
-        }
-        if (this.transform.position.y <= StartPos.y)
-        {
-            thisPos.y = -(thisPos.y);
-        }
-
-        if (thisPos.x < endPos.x && thisPos.y < endPos.y)
+    {
+        if (this.transform.position.x != Pt.transform.position.x && this.transform.position.y != Pt.transform.position.y)
         {
             if (!stopFlg)
             {
@@ -56,16 +40,17 @@ public class Obstacle_PaunchShot : MonoBehaviour
     //直進させる
     protected virtual void Paunching()
     {
-        speed = goSpeed;
-        rbb.velocity = this.transform.up * speed;   
+        this.transform.position = Vector3.MoveTowards(transform.position, Pt.transform.position, speed * Time.deltaTime);
     }
     /// <summary>
-    /// 角度取得
+    /// 角度とか取得
     /// </summary>
     /// <param name="rot"></param>
-    public void PaunchShot(float rot)
+    public void PaunchShot(float rot,GameObject pt,GameObject bt)
     {
         this.transform.rotation = Quaternion.Euler(0, 0, rot);
+        Pt = pt;
+        Bt = bt;
     }
     /// <summary>
     /// 巻き戻しの遅延
@@ -76,9 +61,9 @@ public class Obstacle_PaunchShot : MonoBehaviour
     {
         speed = backSpeed;
         yield return new WaitForSeconds(wt);
-        rbb.velocity = this.transform.up * speed;
+        this.transform.position = Vector3.MoveTowards(transform.position, Bt.transform.position, speed * Time.deltaTime);
 
-        if (thisPos.x < backPos.x || thisPos.y < backPos.y)
+        if (this.transform.position.x == Bt.transform.position.x || this.transform.position.y == Bt.transform.position.y)
         {
             Debug.Log("拳");
             rbb.velocity = Vector3.zero;
@@ -89,17 +74,7 @@ public class Obstacle_PaunchShot : MonoBehaviour
     {
         rbb = this.transform.GetComponent<Rigidbody2D>();
         stopFlg = false;
-        StartPos = this.transform.position;
-
-        // マイナス方向に進む場合めっちゃ進んじゃう、おかしくなる
-        endPos = this.transform.position;
-        endPos.x += 1.0f;
-        endPos.y += 1.0f;
-
-        backPos = this.transform.position;
-
-        backPos.x -= 1.0f;
-        backPos.y -= 1.0f;
+        speed = 3.0f;
     }
     //void OnBecameInvisible()
     //{

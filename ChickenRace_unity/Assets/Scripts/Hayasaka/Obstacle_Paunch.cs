@@ -14,7 +14,10 @@ public class Obstacle_Paunch : Obstacle
     GameObject paunchShot;
     [SerializeField]
     GameObject paunchChild;
-
+    [SerializeField]
+    GameObject paunchTarget;
+    [SerializeField]
+    GameObject backTarget;
     /// <summary>
     /// èâä˙âª
     /// </summary>
@@ -44,7 +47,7 @@ public class Obstacle_Paunch : Obstacle
 
         myRotation = this.transform.localEulerAngles.z;
         var ps = Instantiate(paunchShot,paunchChild.transform.position, Quaternion.identity);
-        ps.GetComponent<Obstacle_PaunchShot>().PaunchShot(myRotation);
+        ps.GetComponent<Obstacle_PaunchShot>().PaunchShot(myRotation,paunchTarget,backTarget);
         isPaunchWaitFlg = true;
         isPaunchFlg = false;
         Invoke("WaitFlg", 6.0f);
