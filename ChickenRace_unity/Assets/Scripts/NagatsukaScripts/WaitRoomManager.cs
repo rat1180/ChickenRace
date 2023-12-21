@@ -79,7 +79,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
             ShowRoomInformation();
             if (Input.GetKeyDown(KeyCode.Space) && sceanMoveButton.IsInteractable())
             {
-                MoveGameScean();
+                //MoveGameScean();
             }
         }
     }
