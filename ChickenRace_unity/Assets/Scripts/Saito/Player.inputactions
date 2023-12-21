@@ -485,17 +485,6 @@
                 },
                 {
                     "name": "",
-                    "id": "f7688cb0-ef36-4ddd-8398-78c99d2f77e1",
-                    "path": "<Touchscreen>/Press",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Click",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "3f013acd-9ac6-4d88-8212-006653ea425a",
                     "path": "<Keyboard>/q",
                     "interactions": "",
