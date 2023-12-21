@@ -434,7 +434,6 @@ public class GameManager : MonoBehaviour
     {
         //©•ª©g‚ğæ“¾
         var localplayer = PhotonNetwork.LocalPlayer;
-        InitStatus initStatus = InitStatus.CONECT;
 
         //1.Ú‘±‚ğŠm”F<CONECT
         {
