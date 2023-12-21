@@ -18,10 +18,13 @@ public class Obstacle_Move : Obstacle
     }
     protected override void update()
     {
-        //MoveBeside();
-        //MoveVertical();
-        //MoveDiagonal();
-        MoveRotate();
+        if (GameManager.instance.CheckObstacleMove())
+        {
+            //MoveBeside();
+            //MoveVertical();
+            //MoveDiagonal();
+            MoveRotate();
+        }
     }
     void MoveBeside()
     {

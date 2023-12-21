@@ -11,7 +11,6 @@ public class Obstacle_Door : Obstacle
     [SerializeField]
     bool isColFlg;
 
-    BoxCollider2D bc2d;
     BoxCollider2D cbc2d;
     BoxCollider2D cbc2d2;
 
@@ -26,8 +25,6 @@ public class Obstacle_Door : Obstacle
         colCnt = 3.0f;
         isColFlg = true;
 
-        bc2d = this.GetComponent<BoxCollider2D>();
-
         ChildObj = gameObject.transform.GetChild(0).gameObject;
         ChildObj2 = gameObject.transform.GetChild(1).gameObject;
 
@@ -36,16 +33,19 @@ public class Obstacle_Door : Obstacle
     }
     protected override void update()
     {
-        if (isColFlg)
+        if (GameManager.instance.CheckObstacleMove())
         {
-            if (colCnt > 0.0f)
+            if (isColFlg)
             {
-                colCnt -= Time.deltaTime;
-            }
-            if (colCnt < 0.0f)
-            {
-                ChangeActive();
-                colCnt = 3.0f;
+                if (colCnt > 0.0f)
+                {
+                    colCnt -= Time.deltaTime;
+                }
+                if (colCnt < 0.0f)
+                {
+                    ChangeActive();
+                    colCnt = 3.0f;
+                }
             }
         }
     }
@@ -54,16 +54,11 @@ public class Obstacle_Door : Obstacle
         colCnt = 3.0f;
         isColFlg = true;
     }
+    /// <summary>
+    /// オブジェクトの表示非表示を繰り返す
+    /// </summary>
     void ChangeActive()
     {
-        //if (bc2d.enabled)
-        //{
-        //    bc2d.enabled = false;
-        //}
-        //else
-        //{
-        //    bc2d.enabled = true;
-        //}
         if (cbc2d.enabled && cbc2d2.enabled)
         {
             cbc2d.enabled = false;

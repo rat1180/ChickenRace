@@ -10,7 +10,7 @@ public class Obstacle_PaunchShot : MonoBehaviour
     float speed;
     bool stopFlg;
    
-    Rigidbody2D rbb;
+    Rigidbody2D rb;
 
     GameObject Pt;
     GameObject Bt;
@@ -23,18 +23,21 @@ public class Obstacle_PaunchShot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (this.transform.position.x != Pt.transform.position.x && this.transform.position.y != Pt.transform.position.y)
+        if (GameManager.instance.CheckObstacleMove())
         {
-            if (!stopFlg)
+            if (this.transform.position.x != Pt.transform.position.x && this.transform.position.y != Pt.transform.position.y)
             {
-                Paunching();
+                if (!stopFlg)
+                {
+                    Paunching();
+                }
             }
-        }
-        else
-        {
-            stopFlg = true;
-            rbb.velocity = Vector3.zero;
-            StartCoroutine(DelayBack(waitTime));
+            else
+            {
+                stopFlg = true;
+                rb.velocity = Vector3.zero;
+                StartCoroutine(DelayBack(waitTime));
+            }
         }
     }
     //íºêiÇ≥ÇπÇÈ
@@ -59,20 +62,21 @@ public class Obstacle_PaunchShot : MonoBehaviour
     /// <returns></returns>
     IEnumerator DelayBack(float wt)
     {
+        //ä™Ç´ñﬂÇ∑
         speed = backSpeed;
         yield return new WaitForSeconds(wt);
         this.transform.position = Vector3.MoveTowards(transform.position, Bt.transform.position, speed * Time.deltaTime);
-
+        //ê∂ê¨à íuÇ‹Ç≈óàÇΩÇÁè¡ñ≈
         if (this.transform.position.x == Bt.transform.position.x || this.transform.position.y == Bt.transform.position.y)
         {
             Debug.Log("åù");
-            rbb.velocity = Vector3.zero;
+            rb.velocity = Vector3.zero;
             Destroy(this.gameObject);
         }
     }
     void Init()
     {
-        rbb = this.transform.GetComponent<Rigidbody2D>();
+        rb = this.transform.GetComponent<Rigidbody2D>();
         stopFlg = false;
         speed = 3.0f;
     }

@@ -16,7 +16,10 @@ public class Obstacle_ArrowShot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Moving();
+        if (GameManager.instance.CheckObstacleMove())
+        {
+            Moving();
+        }
     }
     //íºêiÇ≥ÇπÇÈ
     protected virtual void Moving()

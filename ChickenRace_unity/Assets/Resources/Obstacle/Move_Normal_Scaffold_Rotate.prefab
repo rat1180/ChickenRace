@@ -383,13 +383,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14beec42d3ad9ae4c91de27b321efafa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionList: []
+  collisionList:
+  - {x: 0, y: 0}
   obstacleID: 0
   obstacleKindID: 0
   myRotation: 0
   ue:
     m_PersistentCalls:
       m_Calls: []
+  pos: {x: 0, y: 0, z: 0}
   RF: {fileID: 6107353265043928220}
 --- !u!1 &6107353265043928220
 GameObject:
@@ -870,13 +872,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a405cf397e557b644b13b4405d0356ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionList: []
-  obstacleID: 0
-  obstacleKindID: 0
-  myRotation: 0
-  ue:
-    m_PersistentCalls:
-      m_Calls: []
   trakingTarget: {fileID: 8845733688277899846}
 --- !u!4 &4242275809190456870 stripped
 Transform:
@@ -978,13 +973,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a405cf397e557b644b13b4405d0356ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionList: []
-  obstacleID: 0
-  obstacleKindID: 0
-  myRotation: 0
-  ue:
-    m_PersistentCalls:
-      m_Calls: []
   trakingTarget: {fileID: 8117333824199037051}
 --- !u!4 &2844652884248824810 stripped
 Transform:
@@ -1091,13 +1079,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a405cf397e557b644b13b4405d0356ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionList: []
-  obstacleID: 0
-  obstacleKindID: 0
-  myRotation: 0
-  ue:
-    m_PersistentCalls:
-      m_Calls: []
   trakingTarget: {fileID: 3159295341305723970}
 --- !u!1001 &6958668611196556111
 PrefabInstance:
@@ -1194,13 +1175,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a405cf397e557b644b13b4405d0356ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionList: []
-  obstacleID: 0
-  obstacleKindID: 0
-  myRotation: 0
-  ue:
-    m_PersistentCalls:
-      m_Calls: []
   trakingTarget: {fileID: 2423221884225307209}
 --- !u!4 &6517474887185960766 stripped
 Transform:

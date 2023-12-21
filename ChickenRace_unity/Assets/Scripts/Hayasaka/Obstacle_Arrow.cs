@@ -24,16 +24,19 @@ public class Obstacle_Arrow : Obstacle
     }
     protected override void update()
     {
-        if (isShotFlg)
+        if (GameManager.instance.CheckObstacleMove())
         {
-            if (shotCnt > 0.0f)
+            if (isShotFlg)
             {
-                shotCnt -= Time.deltaTime;
-            }
-            if (shotCnt < 0.0f)
-            {
-                ShotObj();
-                shotCnt = 3.0f;
+                if (shotCnt > 0.0f)
+                {
+                    shotCnt -= Time.deltaTime;
+                }
+                if (shotCnt < 0.0f)
+                {
+                    ShotObj();
+                    shotCnt = 3.0f;
+                }
             }
         }
     }

@@ -183,7 +183,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8308bd13d30c2ab45b07e2a0d5559530, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionList: []
+  collisionList:
+  - {x: 0, y: 0}
   obstacleID: 0
   obstacleKindID: 0
   myRotation: 0
@@ -191,6 +192,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   look: {x: 0, y: 0, z: 0, w: 0}
+  pow: 0
 --- !u!61 &-6518992791778250412
 BoxCollider2D:
   m_ObjectHideFlags: 0

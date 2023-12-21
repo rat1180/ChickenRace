@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// mikan
+/// </summary>
 public class Obstacle_ParabolaArrowShot : Obstacle_ArrowShot
 {
     [SerializeField]
@@ -29,7 +31,10 @@ public class Obstacle_ParabolaArrowShot : Obstacle_ArrowShot
     // Update is called once per frame
     void Update()
     {
-        ThrowingArrow();
+        if (GameManager.instance.CheckObstacleMove())
+        {
+            ThrowingArrow();
+        }
     }
     /// <summary>
     /// É{Å[ÉãÇéÀèoÇ∑ÇÈ
