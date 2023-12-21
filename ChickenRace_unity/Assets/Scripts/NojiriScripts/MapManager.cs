@@ -188,9 +188,9 @@ public class MapManager : MonoBehaviour
     public bool JudgeInstall(Vector2Int installPos, int id)
     {
         // idに対応したリストを取得
-        childList = objStatus.testList;
-        //var Obj = ResourceManager.instance.GetObstacleObject((OBSTACLE_OBJECT)id);
-        //childList = Obj.GetComponent<Obstacle>().GetCollisionList();
+        //childList = objStatus.testList;
+        var Obj = ResourceManager.instance.GetObstacleObject((OBSTACLE_OBJECT)id);
+        childList = Obj.GetComponent<Obstacle>().GetCollisionList();
 
         // 設置位置が一つのとき
         if (childList == null)
