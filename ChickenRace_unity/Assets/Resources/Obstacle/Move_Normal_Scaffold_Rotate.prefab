@@ -293,7 +293,7 @@ GameObject:
   - component: {fileID: 8091187174716264549}
   - component: {fileID: 4768785598424247012}
   m_Layer: 0
-  m_Name: Scaffold_Rotate
+  m_Name: Move_Normal_Scaffold_Rotate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
