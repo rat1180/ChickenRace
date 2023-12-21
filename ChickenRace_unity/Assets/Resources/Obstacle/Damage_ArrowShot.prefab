@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7444481126672650141}
   - component: {fileID: 6956346809804059600}
   m_Layer: 0
-  m_Name: ArrowShot
+  m_Name: Damage_ArrowShot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
