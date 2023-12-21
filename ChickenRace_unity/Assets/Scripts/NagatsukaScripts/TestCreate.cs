@@ -18,7 +18,7 @@ public class TestCreate : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.C))
         {
-            Instantiate(ResorceManager.instance.GetObstacleObject(objectName), transform.position, Quaternion.identity);
+            Instantiate(ResourceManager.instance.GetObstacleObject(objectName), transform.position, Quaternion.identity);
         }
     }
 }

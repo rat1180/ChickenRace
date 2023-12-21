@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
     [SerializeField] PlayerAction nowPlayerAction;  // プレイヤーが何の行動をしているか.
     [SerializeField] GameObject playerImage; // プレイヤーの画像.
     [SerializeField] GameObject instanceObj; // 生成したオブジェクト.
+    [SerializeField] bool isGoal;
 
     /// <summary>
     /// 初期化用関数.
@@ -55,6 +56,14 @@ public class Player : MonoBehaviour
     private void OnCollisionExit2D(Collision2D collision)
     {
         nowHitDir = HitDirList.NONE;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Goal")
+        {
+            isGoal = true;
+        }
     }
 
     /// <summary>
@@ -193,5 +202,14 @@ public class Player : MonoBehaviour
     private void PlayerTransform()
     {
         //instanceObj.GetComponent<Character>().PositionUpdate(transform.position);
+    }
+
+    /// <summary>
+    /// ゴールしたかを送る関数.
+    /// </summary>
+    /// <returns></returns>
+    public bool GoalCheck()
+    {
+        return isGoal;
     }
 }

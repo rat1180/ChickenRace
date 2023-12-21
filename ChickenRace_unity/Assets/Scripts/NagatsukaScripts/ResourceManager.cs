@@ -4,10 +4,10 @@ using System;
 using UnityEngine;
 using ResorceNames;
 
-public class ResorceManager : MonoBehaviour
+public class ResourceManager : MonoBehaviour
 {
     //このマネージャーのインスタンス
-    public static ResorceManager instance;
+    public static ResourceManager instance;
 
     //ロードしたオブジェクトのリスト(実体を持たない)
     public Dictionary<OBSTACLE_IMAGE_NAMES, Sprite> obstacle_images;
@@ -150,11 +150,12 @@ namespace ResorceNames
 { 
     public enum OBSTACLE_IMAGE_NAMES
     {
-        Kanbaipop,
+        Kanbaipop,//完売画像.
         taihou,
         cutter,
         blackhole,
     }
+
     public enum OBSTACLE_OBJECT
     {
         Arrow,
