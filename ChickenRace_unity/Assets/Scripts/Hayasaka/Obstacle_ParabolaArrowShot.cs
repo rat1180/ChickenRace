@@ -47,8 +47,7 @@ public class Obstacle_ParabolaArrowShot : Obstacle_ArrowShot
             // 射出速度を算出
             Vector3 velocity = CalculateVelocity(this.transform.position, eend, angle);
 
-            // 射出
-            
+            // 射出           
             rrb.AddForce(velocity * rb.mass, ForceMode2D.Impulse);              
     }
 
