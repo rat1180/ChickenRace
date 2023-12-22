@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CharaAnimation : MonoBehaviour
 {
-    public static CharaAnimation Instance;
+    public static CharaAnimation instance;
 
     /// <summary>
     /// キャラクターのアニメーション用
@@ -21,7 +21,7 @@ public class CharaAnimation : MonoBehaviour
     }
 
     [SerializeField] Animator animator;
-    [SerializeField] Animations nowAnimations;
+    public Animations nowAnimations;
 
     void Start()
     {
