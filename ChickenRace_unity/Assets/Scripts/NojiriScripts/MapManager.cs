@@ -13,24 +13,27 @@ public class ObjectStatus
     public List<int> InstalledList;        // 設置した障害物idリスト
     public List<float> AngleList;          // 障害物の設置方向リスト
     public Dictionary<int, Vector2Int> UsedGridList;  // オブジェクトキーと、使用済みグリッドの位置リスト
+    //public Dictionary<Vector2Int, int> UsedGridList;  // オブジェクトキーと、使用済みグリッドの位置リスト
     public List<Vector2Int> testList; // テスト用
 }
 
-[System.Serializable]
-public class UsedGridStatus<TKey, Vector2Int>
-{
-    [SerializeField] private TKey key;
-    [SerializeField] private Vector2Int value;
+//[System.Serializable]
+//public class UsedGridStatus<TKey, Vector2Int>
+//{
+//    [SerializeField] private TKey key;
+//    [SerializeField] private Vector2Int value;
 
-    public Dictionary<TKey, Vector2Int> UsedGridList;  // オブジェクトキーと、使用済みグリッドの位置リスト
-}
+//    [SerializeField] private Dictionary<TKey, Vector2Int> UsedGridList;  // オブジェクトキーと、使用済みグリッドの位置リスト
+//}
 
 public class MapManager : MonoBehaviour
 {
     public bool debugMode = false; // デバッグモードフラグ
 
     [SerializeField] private ObjectStatus objStatus; // 障害物用の構造体情報
-    [SerializeField] private UsedGridStatus<int, Vector2Int> usedGridStatus;
+    //[SerializeField] private UsedGridStatus<int, Vector2Int> usedGridStatus;
+    //[SerializeField] private Dictionary<int, Vector2Int> dictionary;
+
     private GameObject obstacleObj; // 移動したいオブジェクトの情報取得
     private GameObject gridObj;
     private GameObject panelObj;
@@ -52,10 +55,10 @@ public class MapManager : MonoBehaviour
     {
         if (debugMode)
         {
-            if (Input.GetKeyDown(KeyCode.P))
-            {
-                DeleteObstacle(new Vector2Int(0, 0));
-            }
+            //if (Input.GetKeyDown(KeyCode.P))
+            //{
+            //    DeleteObstacle(new Vector2Int(0, 0));
+            //}
             if (Input.GetKeyDown(KeyCode.X))
             {
                 CreativeModeStart();
@@ -348,6 +351,12 @@ public class MapManager : MonoBehaviour
         keyNum++;
     }
 
+    /// <summary>
+    /// 障害物爆破用メソッド
+    /// 指定されたマスに障害物があるとき、その障害物を削除
+    /// 複数マスを持っている障害物の場合、指定されたマス以外の同じキーを持った障害物を削除
+    /// </summary>
+    /// <param name="deletPos">Vector2Int型のマウス位置（TKey）</param>
     public void DeleteObstacle(Vector2Int deletPos)
     {
         if (!isRunning)
@@ -356,13 +365,8 @@ public class MapManager : MonoBehaviour
             return;
         }
 
-        //for(int i = 0; i < objStatus.UsedGridList.Count; i++)
-        //{
-        //    if(deletPos == objStatus.UsedGridList[i])
-        //    {
-        //        Debug.Log(objStatus.UsedGridList[3]);
-        //    }
-        //}
+        // 指定されたマス(deltaPos)情報が存在するかどうか探索
+        // 既に存在する時、同じTValueの要素を全て削除
     }
 
     /// <summary>
