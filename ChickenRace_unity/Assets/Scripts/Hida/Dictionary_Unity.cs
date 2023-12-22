@@ -4,17 +4,37 @@ using UnityEngine;
 
 namespace Dictionary
 {
+    /// <summary>
+    /// Dictoinary_Unity用のペアクラス
+    /// これ単体では使われない
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
     [System.Serializable]
     public class SerializableKeyPair<TKey, TValue>
     {
         public TKey key;
         public TValue value;
     }
+
+    /// <summary>
+    /// Dictionaryをインスペクターで表示出来るようにしたクラス
+    /// 基本はDictionaryと同じ動きをするが、動作は関数を基本とする
+    /// 注意点として、宣言時に初期化が行われるため、事前にインスペクターでセットはできない
+    /// また、Value基準の探索もあるが、基本は最初に見つかったものを返す
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
     [System.Serializable]
     public class Dictionary_Unity<TKey, TValue>
     {
         public List<SerializableKeyPair<TKey, TValue>> keyPairs = new List<SerializableKeyPair<TKey, TValue>>();
         
+        /// <summary>
+        /// Keyを基準にValueを返す
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public TValue GetValue(TKey key)
         {
             var result = SerchKey(key);
@@ -46,6 +66,12 @@ namespace Dictionary
             return default(List<TKey>);
         }
 
+        /// <summary>
+        /// Dictionaryに値を追加する
+        /// Keyは重複出来ないようになっているので注意
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         public void Add(TKey key,TValue value)
         {
             if (ContainKey(key))
@@ -60,6 +86,11 @@ namespace Dictionary
             keyPairs.Add(pair);
         }
 
+        /// <summary>
+        /// Keyを基準に削除を行う
+        /// Keyの判別は自分でKeyを用意するか、GetKey・GetKeyListを用いる
+        /// </summary>
+        /// <param name="key"></param>
         public void Remove(TKey key)
         {
             var result = SerchKey(key);

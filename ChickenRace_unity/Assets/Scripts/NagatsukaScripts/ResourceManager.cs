@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using ResorceNames;
 
 public class ResourceManager : MonoBehaviour
@@ -16,7 +17,7 @@ public class ResourceManager : MonoBehaviour
     //画像読み込み用パス
     const string OBSTACLE_IMAGES = "Obstacles/";
 
-    #region Unityイベント(Awake)
+    #region Unityイベント(Awake・Update)
     private void Awake()
     {
         if(instance == null)
@@ -30,6 +31,11 @@ public class ResourceManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Update()
+    {
+        ErrorFunction();
     }
     #endregion
 
@@ -140,6 +146,22 @@ public class ResourceManager : MonoBehaviour
     }
     #endregion
 
+
+    /// <summary>
+    /// なんらかのエラーが発生した際にescキーで強制終了できるようにする関数.
+    /// </summary>
+    private void ErrorFunction()
+    {
+        Keyboard keyboard = Keyboard.current;
+        if (keyboard.escapeKey.wasPressedThisFrame)
+        {
+#if UNITY_EDITOR //UnityEditorで起動しているとき.
+            UnityEditor.EditorApplication.isPlaying = false;//ゲームプレイ終了
+#else //ビルド環境.
+    Application.Quit();//ゲームプレイ終了
+#endif
+        }
+    }
 }
 
 /// <summary>
@@ -156,25 +178,30 @@ namespace ResorceNames
         blackhole,
     }
 
+    /// <summary>
+    /// 障害物オブジェクトの名前一覧
+    /// ギミックなし：Normal
+    /// ダメージギミック:Damage
+    /// 動くギミック:Move_
+    /// </summary>
     public enum OBSTACLE_OBJECT
     {
-        Arrow,
-        Cannon,
-        Paunch,      
-    }
-    //床プレファブは別フォルダらしい
-    public enum SCAFFOLD_OBJECT { 
-        FourScaffold,
-        HoleScaffold,
-        HoleScaffold2,
-        L_Scaffold,
-        MoveScaffold,
-        RotateFloorP,
-        Scaffold,
-        SquareScaffold,
-        StairsScaffold,
-        ThreeScaffold,
-        TwoScaffold,
+        Damage_Arrow,
+        Damage_Paunch,
+        Move_Cannon,
+        Move_Normal_Scaffold_Move,
+        Move_Normal_Scaffold_Rotate,
+        Move_Scaffold_Hole,
+        Move_Scaffold_Surprise,
+        Move_ZeroGravity,
+        Normal_Scaffold,
+        Normal_Scaffold_Four,
+        Normal_Scaffold_Hole2,
+        Normal_Scaffold_L,
+        Normal_Scaffold_Square,
+        Normal_Scaffold_Stairs,
+        Normal_Scaffold_Three,
+        Normal_Scaffold_Two,
     }
 }
 
