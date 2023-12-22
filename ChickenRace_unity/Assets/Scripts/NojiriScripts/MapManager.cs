@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using ResorceNames;
+using Dictionary;
 
 /// <summary>
 /// 障害物の情報保持用クラス
@@ -17,22 +18,12 @@ public class ObjectStatus
     public List<Vector2Int> testList; // テスト用
 }
 
-//[System.Serializable]
-//public class UsedGridStatus<TKey, Vector2Int>
-//{
-//    [SerializeField] private TKey key;
-//    [SerializeField] private Vector2Int value;
-
-//    [SerializeField] private Dictionary<TKey, Vector2Int> UsedGridList;  // オブジェクトキーと、使用済みグリッドの位置リスト
-//}
-
 public class MapManager : MonoBehaviour
 {
     public bool debugMode = false; // デバッグモードフラグ
 
     [SerializeField] private ObjectStatus objStatus; // 障害物用の構造体情報
-    //[SerializeField] private UsedGridStatus<int, Vector2Int> usedGridStatus;
-    //[SerializeField] private Dictionary<int, Vector2Int> dictionary;
+    [SerializeField] private Dictionary_Unity<Vector2Int, int> dic;
 
     private GameObject obstacleObj; // 移動したいオブジェクトの情報取得
     private GameObject gridObj;
@@ -53,20 +44,13 @@ public class MapManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (debugMode)
+        if (Input.GetKeyDown(KeyCode.X))
         {
-            //if (Input.GetKeyDown(KeyCode.P))
-            //{
-            //    DeleteObstacle(new Vector2Int(0, 0));
-            //}
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                CreativeModeStart();
-            }
-            if (Input.GetKeyDown(KeyCode.Z))
-            {
-                CreativeModeEnd();
-            }
+            CreativeModeStart();
+        }
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            CreativeModeEnd();
         }
     }
 
@@ -89,9 +73,13 @@ public class MapManager : MonoBehaviour
             objStatus.testList.Add(new Vector2Int(0, 1));
             objStatus.testList.Add(new Vector2Int(-1, 0));
 
-            objStatus.UsedGridList.Add(0, new Vector2Int(0, 0));
-            objStatus.UsedGridList.Add(1, new Vector2Int(0, 1));
-            objStatus.UsedGridList.Add(1, new Vector2Int(0, 2));
+            //objStatus.UsedGridList.Add(0, new Vector2Int(0, 0));
+            //objStatus.UsedGridList.Add(1, new Vector2Int(0, 1));
+            //objStatus.UsedGridList.Add(1, new Vector2Int(0, 2));
+
+            dic.Add(new Vector2Int(0, 0), 0);
+            dic.Add(new Vector2Int(1, 0), 0);
+            dic.Add(new Vector2Int(2, 0), 1);
         }
 
         // グリッドとパネルの情報を取得
@@ -210,9 +198,9 @@ public class MapManager : MonoBehaviour
     public bool JudgeInstall(Vector2Int installPos, int id)
     {
         // idに対応したリストを取得
-        //childList = objStatus.testList;
-        var Obj = ResourceManager.instance.GetObstacleObject((OBSTACLE_OBJECT)id);
-        childList = Obj.GetComponent<Obstacle>().GetCollisionList();
+        childList = objStatus.testList;
+        //var Obj = ResourceManager.instance.GetObstacleObject((OBSTACLE_OBJECT)id);
+        //childList = Obj.GetComponent<Obstacle>().GetCollisionList();
 
         // 設置位置が一つのとき
         if (childList == null)
