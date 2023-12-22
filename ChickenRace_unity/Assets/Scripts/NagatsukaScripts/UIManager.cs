@@ -3,20 +3,43 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using ResorceNames;
+using Photon.Pun;
+using Photon.Realtime;
+
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] GameObject imageObjects;
-    public List<int> id;
-    [SerializeField, Range(0, 3)] int testSoldOutInex;
+    enum ResultCharacterChild {
+        NAME,
+        SCORE,
+        UPSCORE,
+        RANK
+    }
+
+
+    private GameObject imageObjects;
+    private GameObject resultPanel;
+    private GameObject resultCharacters;//リザルト画面のキャラクター(Name,Score,Rank表示)
+    private List<int> id;
+    
+
+
+    public string[] names = new string[4];
+
+    private void Start()
+    {
+        imageObjects = gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
+        resultPanel = gameObject.transform.GetChild(0).gameObject.transform.GetChild(2).gameObject;
+        resultCharacters = resultPanel.transform.GetChild(0).gameObject;
+    }
 
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.K))
-        //{
-        //    ChangeObstacleImage();
-        //}
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            PushNameTest();
+        }
         //if (Input.GetKeyDown(KeyCode.L))
         //{
         //    SoldOut(testSoldOutInex);
@@ -73,5 +96,35 @@ public class UIManager : MonoBehaviour
         imageObjects.transform.GetChild(index).GetComponent<Image>().sprite =
             ResourceManager.instance.GetObstacleImage(OBSTACLE_IMAGE_NAMES.Kanbaipop);//完売画像に変更.
         imageObjects.transform.GetChild(index).gameObject.GetComponent<ObstacleImage>().id = 0;
+    }
+
+    /// <summary>
+    /// レース終了時リザルト画面を表示するためにGameManagerから呼び出す関数.
+    /// </summary>
+    public void Result()
+    {
+        //Playerの数分ループして情報を入れる.
+        int i = 0;
+        foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
+        {
+            resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text = player.NickName;
+        }
+
+
+    }
+
+    void PushNameTest()
+    {
+        //for(int i = 0; i < 3; i++)
+        //{
+        //    resultCharacters.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text = names[i];
+        //}
+
+        //Playerの数分ループして情報を入れる.
+        int i = 0;
+        foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
+        {
+            resultCharacters.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text = player.NickName;
+        }
     }
 }
