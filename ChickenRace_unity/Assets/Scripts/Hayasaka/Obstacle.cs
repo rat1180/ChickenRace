@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 public class Obstacle : MonoBehaviour
 {
+    [SerializeField]
     protected Vector2Int obstacleCenterPos; // 中心グリッド位置
     [SerializeField]
     protected List<Vector2Int> collisionList; // 相対グリッド

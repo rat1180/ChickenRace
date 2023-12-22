@@ -293,7 +293,7 @@ GameObject:
   - component: {fileID: 8091187174716264549}
   - component: {fileID: 4768785598424247012}
   m_Layer: 0
-  m_Name: Move_Normal_Scaffold_Rotate
+  m_Name: Move_Scaffold_Rotate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -392,7 +392,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   pos: {x: 0, y: 0, z: 0}
-  RF: {fileID: 6107353265043928220}
+  rf: {fileID: 6107353265043928220}
 --- !u!1 &6107353265043928220
 GameObject:
   m_ObjectHideFlags: 0
@@ -872,7 +872,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a405cf397e557b644b13b4405d0356ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trakingTarget: {fileID: 8845733688277899846}
+  trackingTarget: {fileID: 8845733688277899846}
 --- !u!4 &4242275809190456870 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4242550120382962801, guid: 40ec050c8bd9ec84785a74722d7f1db8, type: 3}
@@ -973,7 +973,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a405cf397e557b644b13b4405d0356ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trakingTarget: {fileID: 8117333824199037051}
+  trackingTarget: {fileID: 8117333824199037051}
 --- !u!4 &2844652884248824810 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4242550120382962801, guid: 40ec050c8bd9ec84785a74722d7f1db8, type: 3}
@@ -1079,7 +1079,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a405cf397e557b644b13b4405d0356ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trakingTarget: {fileID: 3159295341305723970}
+  trackingTarget: {fileID: 3159295341305723970}
 --- !u!1001 &6958668611196556111
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1175,7 +1175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a405cf397e557b644b13b4405d0356ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trakingTarget: {fileID: 2423221884225307209}
+  trackingTarget: {fileID: 2423221884225307209}
 --- !u!4 &6517474887185960766 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4242550120382962801, guid: 40ec050c8bd9ec84785a74722d7f1db8, type: 3}

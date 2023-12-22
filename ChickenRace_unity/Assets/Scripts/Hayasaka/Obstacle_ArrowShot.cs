@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Obstacle_ArrowShot : MonoBehaviour
 {
+    [SerializeField]
     protected Rigidbody2D rb;
+    [SerializeField]
     protected float speed;
     // Start is called before the first frame update
     void Start()

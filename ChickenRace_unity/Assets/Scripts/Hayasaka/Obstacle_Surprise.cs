@@ -6,16 +6,17 @@ using UnityEngine.Events;
 public class Obstacle_Surprise : MonoBehaviour
 {
     [SerializeField]
-    bool moveFlg;
-    
+    bool isMoveFlg;
+    [SerializeField]
     float speed;
+    [SerializeField]
     int counter;
     /// <summary>
     /// èâä˙âª
     /// </summary>
     void Start()
     {
-        moveFlg = false;
+        isMoveFlg = false;
         speed = 0.05f;
         counter = 0;
     }
@@ -23,19 +24,19 @@ public class Obstacle_Surprise : MonoBehaviour
     {
         if (GameManager.instance.CheckObstacleMove())
         {
-            if (moveFlg && counter < 100)
+            if (isMoveFlg && counter < 100)
             {
                 this.transform.Translate(new Vector3(0, speed, 0));
                 counter++;
                 if (counter == 100)
                 {
-                    moveFlg = false;
+                    isMoveFlg = false;
                 }
             }
         }
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
-        moveFlg = true;
+        isMoveFlg = true;
     }
 }

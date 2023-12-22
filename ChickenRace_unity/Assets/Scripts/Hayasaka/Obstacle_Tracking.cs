@@ -5,7 +5,8 @@ using UnityEngine.Events;
 
 public class Obstacle_Tracking : MonoBehaviour
 {
-    public GameObject trakingTarget;
+    [SerializeField]
+    GameObject trackingTarget;
    
     void Update()
     {
@@ -19,7 +20,7 @@ public class Obstacle_Tracking : MonoBehaviour
     /// </summary>
     void Tracking()
     {
-        this.transform.position = trakingTarget.transform.position;
+        this.transform.position = trackingTarget.transform.position;
     }
     
 }

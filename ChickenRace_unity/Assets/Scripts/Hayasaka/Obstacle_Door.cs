@@ -7,15 +7,16 @@ public class Obstacle_Door : Obstacle
 {
     [SerializeField]
     float colCnt;
-
     [SerializeField]
     bool isColFlg;
-
+    [SerializeField]
     BoxCollider2D cbc2d;
+    [SerializeField]
     BoxCollider2D cbc2d2;
-
-    GameObject ChildObj;
-    GameObject ChildObj2;
+    [SerializeField]
+    GameObject childObj;
+    [SerializeField]
+    GameObject childObj2;
     /// <summary>
     /// èâä˙âª
     /// </summary>
@@ -25,11 +26,11 @@ public class Obstacle_Door : Obstacle
         colCnt = 3.0f;
         isColFlg = true;
 
-        ChildObj = gameObject.transform.GetChild(0).gameObject;
-        ChildObj2 = gameObject.transform.GetChild(1).gameObject;
+        childObj = gameObject.transform.GetChild(0).gameObject;
+        childObj2 = gameObject.transform.GetChild(1).gameObject;
 
-        cbc2d = ChildObj.GetComponent<BoxCollider2D>();
-        cbc2d2 = ChildObj2.GetComponent<BoxCollider2D>();
+        cbc2d = childObj.GetComponent<BoxCollider2D>();
+        cbc2d2 = childObj2.GetComponent<BoxCollider2D>();
     }
     protected override void update()
     {
