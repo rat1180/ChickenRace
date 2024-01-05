@@ -158,9 +158,9 @@ namespace ResorceNames
 
     public enum OBSTACLE_OBJECT
     {
-        Arrow,
-        Cannon,
-        Paunch,      
+        Damage_Arrow,
+        Move_Cannon,
+        Damage_Paunch,      
     }
     //床プレファブは別フォルダらしい
     public enum SCAFFOLD_OBJECT { 
