@@ -1232,7 +1232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5c1f3cabbf57354fb8ae6421ea2d8c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPlayer: 4
+  maxPlayer: 3
   ButtonRoot: {fileID: 1863561254}
   inputNickName: {fileID: 1193275983}
   roomNameDropdown: {fileID: 1226915291}

@@ -25,13 +25,13 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.K))//デバッグ用
-        {
-            //1人目が0番目になるように-1(RPC内でActorNumberを引数にすると全員自分を呼んでしまうため代入).
-            int number = PhotonNetwork.LocalPlayer.ActorNumber - 1;
-            //photonView.RPC(nameof(PushGoalTime), RpcTarget.All,number,timer);
-            photonView.RPC(nameof(PushGoalTime), RpcTarget.All, number, 1);
-        }
+        //if (Input.GetKeyDown(KeyCode.K))//デバッグ用
+        //{
+        //    //1人目が0番目になるように-1(RPC内でActorNumberを引数にすると全員自分を呼んでしまうため代入).
+        //    int number = PhotonNetwork.LocalPlayer.ActorNumber - 1;
+        //    //photonView.RPC(nameof(PushGoalTime), RpcTarget.All,number,timer);
+        //    photonView.RPC(nameof(PushGoalTime), RpcTarget.All, number, 1);
+        //}
     }
 
     /// <summary>
