@@ -731,7 +731,9 @@ MonoBehaviour:
   objStatus:
     InstalledList: 
     AngleList: []
-    testList: []
+    childList: []
+  usedGridDic:
+    keyPairs: []
 --- !u!4 &1401999054
 Transform:
   m_ObjectHideFlags: 0
