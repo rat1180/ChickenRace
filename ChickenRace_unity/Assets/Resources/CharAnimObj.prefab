@@ -402,6 +402,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3083ae201e703e45a5664ee5cb7df7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetPos: {x: 0, y: 0, z: 0}
+  threshold: 0
 --- !u!114 &5128178540054868245
 MonoBehaviour:
   m_ObjectHideFlags: 0

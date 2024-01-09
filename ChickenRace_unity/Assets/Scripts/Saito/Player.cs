@@ -24,7 +24,8 @@ public class Player : MonoBehaviour
     [SerializeField] HitDirList nowHitDir;  // プレイヤーがオブジェクトとどの向きで衝突したか.
     [SerializeField] GameObject playerImage; // プレイヤーの画像.
     [SerializeField] GameObject instanceObj; // 生成したオブジェクト.
-    [SerializeField] bool isGoal;
+    [SerializeField] bool isStart;           // ゲームがスタートしたかの判定.
+    [SerializeField] bool isGoal;            // プレイヤーがゴールしたかの判定.
 
     /// <summary>
     /// 初期化用関数.
@@ -44,9 +45,12 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        PlayerMove();
-        WallSliding();
-        PlayerTransform();
+        if(isStart && !isGoal)
+        {
+            PlayerMove();
+            WallSliding();
+            PlayerTransform();
+        }
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -65,6 +69,10 @@ public class Player : MonoBehaviour
         {
             isGoal = true;
         }
+        else if(collision.gameObject.tag == "ダメージを与える系のタグ?")
+        {
+            // プレイヤー死亡処理.
+        }
     }
 
     /// <summary>
@@ -76,8 +84,9 @@ public class Player : MonoBehaviour
         {
             rb.velocity = new Vector3(rb.velocity.x + (moveVector.x * moveSpeed * Time.deltaTime), rb.velocity.y, 0);
         }
-        else if (Mathf.Abs(rb.velocity.x) < minMoveSpeed)
+        if (Mathf.Abs(rb.velocity.x) < minMoveSpeed)
         {
+            //Debug.Log(Mathf.Abs(rb.velocity.x));
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
 
             if (nowHitDir == HitDirList.HIT_DOWN)
@@ -87,7 +96,6 @@ public class Player : MonoBehaviour
         }
 
         rb.velocity = new Vector3(rb.velocity.x * moveDecay, rb.velocity.y, 0);
-
     }
 
     /// <summary>
@@ -110,6 +118,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void OnJump()
     {
+        // 既に空中にいるときはジャンプアニメーションを再生させない.
         if(nowHitDir != HitDirList.NONE)
         {
             charaAnimation.nowAnimations = CharaAnimation.Animations.JUMP;
@@ -117,15 +126,12 @@ public class Player : MonoBehaviour
             {
                 case HitDirList.HIT_RIGHT:
                     rb.AddForce(new Vector2(-wallJumpPower.x, wallJumpPower.y) * jumpPower, ForceMode2D.Impulse);
-                    charaAnimation.nowAnimations = CharaAnimation.Animations.JUMP;
                     break;
                 case HitDirList.HIT_LEFT:
                     rb.AddForce(new Vector2(wallJumpPower.x, wallJumpPower.y) * jumpPower, ForceMode2D.Impulse);
-                    charaAnimation.nowAnimations = CharaAnimation.Animations.JUMP;
                     break;
                 case HitDirList.HIT_DOWN:
                     rb.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
-                    charaAnimation.nowAnimations = CharaAnimation.Animations.JUMP;
                     break;
             }
         }
@@ -141,7 +147,9 @@ public class Player : MonoBehaviour
             case HitDirList.HIT_RIGHT:
             case HitDirList.HIT_LEFT:
                 rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y - wallSlidingSpeed * Time.deltaTime, 0);
+
                 charaAnimation.nowAnimations = CharaAnimation.Animations.WALLSLIDING;
+
                 break;
         }
     }
@@ -204,6 +212,15 @@ public class Player : MonoBehaviour
     private void PlayerTransform()
     {
         instanceObj.GetComponent<Character>().PositionUpdate(transform.position);
+    }
+
+    /// <summary>
+    /// ゲームが開始したかを判定.
+    /// </summary>
+    /// <returns></returns>
+    public void IsStart(bool isstart)
+    {
+        isStart = isstart;
     }
 
     /// <summary>

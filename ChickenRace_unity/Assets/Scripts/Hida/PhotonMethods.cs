@@ -27,6 +27,7 @@ namespace PhotonMethods
             if (!PhotonNetwork.IsConnected)
             {
                 PhotonNetwork.OfflineMode = true;
+                PhotonNetwork.JoinOrCreateRoom("1", new RoomOptions(), TypedLobby.Default);
             }
             return PhotonNetwork.Instantiate(prefabName, position, quaternion);
         }

@@ -32,6 +32,7 @@ public class User : MonoBehaviour
     void Start()
     {
         Init();
+        GeneratePlayer();
     }
 
 
@@ -72,7 +73,6 @@ public class User : MonoBehaviour
     public void DestroyMouse()
     {
         Destroy(mouseObjcet);
-        //Destroy(gameObject);
     }
 
     /// <summary>
