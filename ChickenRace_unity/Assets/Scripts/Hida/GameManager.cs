@@ -876,6 +876,7 @@ public class GameManager : MonoBehaviour
     IEnumerator StateRESULT()
     {
         DebugLog("リザルトフェーズ開始");
+        var beforescore = gameProgress.dataSharingClass.score;
         //進行待機
         yield return new WaitUntil(() => CheckReady());
 
@@ -892,6 +893,7 @@ public class GameManager : MonoBehaviour
         gameProgress.dataSharingClass.PushScore(gameProgress.userActorNumber, scorelist[gameProgress.userActorNumber]);
 
         DebugLog("順位、スコアの反映演出");
+        //gameProgress.uiManager.Result(beforescore, scorelist);
         yield return new WaitForSeconds(2.0f);
 
         DebugLog("演出終了");
@@ -918,7 +920,7 @@ public class GameManager : MonoBehaviour
     IEnumerator StateEND()
     {
         //終了演出
-
+        
         yield return new WaitForSeconds(2.0f);
 
         //ネットワークから切断
