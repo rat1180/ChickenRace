@@ -9,20 +9,25 @@ using UnityEngine.SceneManagement;
 
 public class TitlePushButton : MonoBehaviour
 {
+    bool isSceanMove;
     // Start is called before the first frame update
     void Start()
     {
-        
+        isSceanMove = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetMouseButtonDown(0) && !isSceanMove)
+        {
+            isSceanMove = true;
+            PushButton();
+        }
     }
 
     public void PushButton()
     {
-        SceneManager.LoadScene("Loby");
+        SceneManager.LoadScene("Assets/Scenes/NagatsukaScenes/Lobby.unity");
     }
 }
