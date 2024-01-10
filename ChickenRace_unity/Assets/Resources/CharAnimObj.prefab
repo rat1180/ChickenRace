@@ -403,6 +403,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetPos: {x: 0, y: 0, z: 0}
+  target: {fileID: 0}
+  threshold: 0.1
 --- !u!114 &5128178540054868245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,7 +423,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 1541196062167549763}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
