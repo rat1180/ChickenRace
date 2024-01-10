@@ -134,6 +134,14 @@ public class User : MonoBehaviour
         return index;
     }
 
+    public void PlayerStart(bool isstart)
+    {
+        if (playerObjcet != null)
+        {
+            playerObjcet.GetComponent<Player>().IsStart(isstart);
+        }
+    }
+
     public void PlayerGoal()
     {
         if (playerObjcet != null)
