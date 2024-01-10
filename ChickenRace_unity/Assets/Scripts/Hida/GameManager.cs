@@ -364,7 +364,6 @@ public class GameManager : MonoBehaviour
         if (id == -1 || id == 0) return false;
 
         gameProgress.dataSharingClass.ResetID(index);
-        //gameProgress.user = id;
         return true;
     }
 
