@@ -76,8 +76,8 @@ public class UIManager : MonoBehaviourPunCallbacks
     {
         for (int i = 0; i < imageObjects.transform.childCount; i++)
         {
-            //imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
-            imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =
+            imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
+            //imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =
             ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
             //コンポーネントが存在しなければ追加してIDを代入し、逆に存在すればそのままIDを代入する
             if (imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>() == null)
