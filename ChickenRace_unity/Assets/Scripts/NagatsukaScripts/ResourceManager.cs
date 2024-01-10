@@ -176,6 +176,11 @@ namespace ResorceNames
         taihou,
         cutter,
         blackhole,
+        Damage_Arrow,
+        Move_ZeroGravity, 
+        Move_Normal_Scaffold_Rotate,
+        Normal_Scaffold_Stairs,
+        Normal_Scaffold_L,
     }
 
     /// <summary>

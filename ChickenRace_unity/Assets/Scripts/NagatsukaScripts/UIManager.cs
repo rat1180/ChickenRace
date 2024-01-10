@@ -143,7 +143,6 @@ public class UIManager : MonoBehaviourPunCallbacks
             }
         }
     }
-    public int cntt;
     IEnumerator ChangeScoreText(List<int> beforeScore, List<int> addScore)
     {
         List<int> score =  beforeScore;
