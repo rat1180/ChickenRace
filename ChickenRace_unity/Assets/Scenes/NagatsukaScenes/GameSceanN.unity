@@ -1483,8 +1483,10 @@ MonoBehaviour:
   names:
   - Face
   - ass
-  - afgb
-  - 
+  - ass
+  beScore: 000000000000000000000000
+  addscoreTest: 0f0000000a00000005000000
+  cntt: 0
 --- !u!4 &684223962
 Transform:
   m_ObjectHideFlags: 0
@@ -1830,6 +1832,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameState: 0
   isFazeEnd: 0
+  isNowRace: 0
   gameProgress:
     mapManager: {fileID: 0}
     uiManager: {fileID: 0}
@@ -5206,8 +5209,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5574666299891553287}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.00000015258789, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5339,8 +5342,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5574666300185342934}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.00000015258789, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5440,9 +5443,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5574666300647595297}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.00000015258789, z: 0}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.099999994}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 5574666299044832219}
