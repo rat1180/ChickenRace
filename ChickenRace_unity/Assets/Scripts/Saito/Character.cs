@@ -76,7 +76,6 @@ public class Character : MonoBehaviourPun, IPunObservable
     /// </summary>
     public void IsTurn()
     {
-
         // 相対ベクター取得.
         relativeVector = transform.position - savePos;
 
@@ -85,6 +84,7 @@ public class Character : MonoBehaviourPun, IPunObservable
             relativeVector = Vector3.zero;
         }
 
+        // 左に進んでいるとき.
         if (relativeVector.x < 0)
         {
             if(transform.localScale.x > 0)
@@ -92,6 +92,7 @@ public class Character : MonoBehaviourPun, IPunObservable
                 transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
             }
         }
+        // 右に進んでいるとき.
         else if(relativeVector.x > 0)
         {
             if (transform.localScale.x < 0)
