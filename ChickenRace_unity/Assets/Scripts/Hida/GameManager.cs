@@ -843,8 +843,10 @@ public class GameManager : MonoBehaviour
         DebugLog("レーススタート");
         //進行待機
         yield return new WaitUntil(() => CheckInGame());
+        //スタート演出
+
         //キャラの操作のロックを解除
-        //gameProgress.user.pla
+        gameProgress.user.PlayerStart(true);
 
         //障害物のロック解除
         isNowRace = true;
