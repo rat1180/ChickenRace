@@ -229,4 +229,9 @@ public class Player : MonoBehaviour
     {
         return isGoal;
     }
+
+    public void StartPosition(Vector3 startpos)
+    {
+        transform.position = startpos;
+    }
 }
