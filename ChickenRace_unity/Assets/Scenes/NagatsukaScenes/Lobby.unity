@@ -2323,7 +2323,9 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: "\u306F\u3042\u3068\u306E\u3078\u3084\u2661"
       m_Image: {fileID: 0}
-    - m_Text: "\u9577\u585A\u5C02\u7528\u90E8\u5C4B"
+    - m_Text: VIPRoom
+      m_Image: {fileID: 0}
+    - m_Text: "\u5FB9\u5B50\u306E\u90E8\u5C4B"
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:

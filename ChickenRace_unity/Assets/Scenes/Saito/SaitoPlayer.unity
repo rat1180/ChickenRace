@@ -206,9 +206,9 @@ MonoBehaviour:
   index: 0
   isInstalled: 0
   mouseImage: {fileID: 4384123820751128111, guid: 380291cd5af83394c98584b29215eb3b, type: 3}
-  instanceObj: {fileID: 0}
-  Map: {fileID: 1401999052}
-  User: {fileID: 1047598941}
+  mouseInstanceObj: {fileID: 0}
+  map: {fileID: 0}
+  user: {fileID: 0}
   angle: 45
   saveAngle: 0
 --- !u!50 &166799418
@@ -885,11 +885,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523101eee2a954847959e8b1f6dcdacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 0
   objStatus:
     InstalledList: 
     AngleList: []
     UsedGridList: []
-  gameObj: {fileID: 485734429309273589, guid: 54b75d131aa7d364297b62814b5c6fe0, type: 3}
+    testList: []
 --- !u!4 &1401999054
 Transform:
   m_ObjectHideFlags: 0
@@ -1487,6 +1488,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6990167391782563449, guid: 97f29c69ac67e9741ba987c162c49308, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6990167391782563450, guid: 97f29c69ac67e9741ba987c162c49308, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -1535,5 +1540,9 @@ PrefabInstance:
       propertyPath: playerImage
       value: 
       objectReference: {fileID: 1773392995}
+    - target: {fileID: 6990167391782563451, guid: 97f29c69ac67e9741ba987c162c49308, type: 3}
+      propertyPath: minMoveSpeed
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97f29c69ac67e9741ba987c162c49308, type: 3}

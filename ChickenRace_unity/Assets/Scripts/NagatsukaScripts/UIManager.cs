@@ -9,6 +9,7 @@ using Photon.Realtime;
 
 public class UIManager : MonoBehaviourPunCallbacks
 {
+    #region 列挙型
     enum ResultCharacterChild
     {
         NAME,
@@ -23,6 +24,11 @@ public class UIManager : MonoBehaviourPunCallbacks
         RaceCount,
         ResultPanel,
     }
+    #endregion
+
+    #region 定数値
+    const int IMAGE_OBSTACLE_NUM = 4;//選択する障害物の画像の数.
+    #endregion
 
     private Vector2[] imagePosition =
     {
@@ -59,11 +65,14 @@ public class UIManager : MonoBehaviourPunCallbacks
     {
         if (Input.GetKeyDown(KeyCode.K))
         {
-            //List<int> test = testID;
             PushID(testID);
             //StartCoroutine(Result(beScore, addscoreTest));
         }
-
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            FinishSelect();
+            //StartCoroutine(Result(beScore, addscoreTest));
+        }
     }
 
     /// <summary>
@@ -72,7 +81,7 @@ public class UIManager : MonoBehaviourPunCallbacks
     public void FinishSelect()
     {
         //imageObjects.SetActive(false);
-        for (int i = 0; i < imageObjects.transform.childCount; i++)//子要素全削除.
+        for (int i = 0; i < IMAGE_OBSTACLE_NUM; i++)//子要素全削除(childCountにすると数が減ってindexoutエラーを起こすため直接指定).
         {
             Destroy(imageObjects.transform.GetChild(i).gameObject);
         }
@@ -97,9 +106,9 @@ public class UIManager : MonoBehaviourPunCallbacks
     public void ChangeObstacleImage()
     {
         //for (int i = 0; i < imageObjects.transform.childCount; i++)
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < IMAGE_OBSTACLE_NUM; i++)
         {
-            if (imageObjects.transform.childCount != 4)//4つの画像オブジェクトが生成されているかチェック.
+            if (imageObjects.transform.childCount != IMAGE_OBSTACLE_NUM)//4つの画像オブジェクトが生成されているかチェック.
             {
                 GameObject gameObject = Instantiate(imageObstacle, new Vector3(), Quaternion.identity, imageObjects.transform);
                 gameObject.transform.position = imagePosition[i];
@@ -109,10 +118,9 @@ public class UIManager : MonoBehaviourPunCallbacks
                 ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
                 gameObject.AddComponent<ObstacleImage>().id = i;
             }
-            else
+            else//4つ生成していたらID情報のみを変更する.
             {
-                imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =//
-                //imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
+                imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite = 
                 ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
 
                 //コンポーネントが存在すればそのままIDを代入する
@@ -260,11 +268,6 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     void PushNameTest()
     {
-        //for(int i = 0; i < 3; i++)
-        //{
-        //    resultCharacters.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text = names[i];
-        //}
-
         //Playerの数分ループして情報を入れる.
         int i = 0;
         foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.

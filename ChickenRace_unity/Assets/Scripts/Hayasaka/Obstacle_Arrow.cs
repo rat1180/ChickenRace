@@ -47,7 +47,7 @@ public class Obstacle_Arrow : Obstacle
     /// </summary>
     void ShotObj()
     {
-        Debug.Log("”­ŽË");
+        //Debug.Log("”­ŽË");
 
         myRotation = this.transform.localEulerAngles.z;
         var ars = "Obstacle/Damage_ArrowShot".SafeInstantiate(arrowChild.transform.position, Quaternion.identity);

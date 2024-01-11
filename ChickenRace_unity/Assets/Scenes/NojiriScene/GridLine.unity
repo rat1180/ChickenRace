@@ -204,7 +204,7 @@ MonoBehaviour:
   index: 0
   isInstalled: 0
   mouseImage: {fileID: 4384123820751128111, guid: 380291cd5af83394c98584b29215eb3b, type: 3}
-  instanceObj: {fileID: 0}
+  mouseInstanceObj: {fileID: 0}
   map: {fileID: 0}
   user: {fileID: 0}
   angle: 45
@@ -731,8 +731,9 @@ MonoBehaviour:
   objStatus:
     InstalledList: 
     AngleList: []
-    UsedGridList: []
-    testList: []
+    childList: []
+  usedGridDic:
+    keyPairs: []
 --- !u!4 &1401999054
 Transform:
   m_ObjectHideFlags: 0

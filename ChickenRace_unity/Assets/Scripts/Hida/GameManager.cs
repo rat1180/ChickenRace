@@ -8,11 +8,25 @@ using ResorceNames;
 using ConstList;
 using UnityEngine.SceneManagement;
 
+/*
+ ゲームシーン移動後に配置するため、接続済みを前提とする。
+ メインループでは現在の状態にあった適切なコルーチンを呼び、
+ コルーチン内で処理を行う。
+ 
+ 各状態では一定段階毎に全員の状態を確認し、
+ 確かに全員が進める状態で段階を進める
+ */
+
 public class GameManager : MonoBehaviour
 {
+    #region 定数・列挙体・定義したクラス等
+
+    /// <summary>
+    /// ゲームの進行段階を判断するための列挙体
+    /// </summary>
     enum GameStatus
     {
-        SLEEP,
+        SLEEP,  //生成直後
         READY,  //開始準備中
         START,  //ゲーム開始前
         SELECT, //障害物選択中
@@ -24,6 +38,7 @@ public class GameManager : MonoBehaviour
 
     //初期化の段階を示す
     //その段階が終わると次の状態に進む
+    //(現在未使用、削除予定)
     enum InitStatus
     {
         CONECT,  //接続中
@@ -32,6 +47,10 @@ public class GameManager : MonoBehaviour
         START,   //ゲーム開始可能
     }
 
+    /// <summary>
+    /// 処理の段階を示す指標
+    /// それぞれをキーとして送受信する
+    /// </summary>
     enum InGameStatus
     {
         NONE,
@@ -40,10 +59,30 @@ public class GameManager : MonoBehaviour
         END,
     }
 
+    /// <summary>
+    /// 進行用クラスの名前列挙
+    /// </summary>
+    enum ProgressName
+    {
+        DataSharingClass,
+        UIManager,
+        User,
+        MapManager,
+        StartPoint
+    }
+
+    //ゲーム進行に必要な定数
     const float DEAD = -1f;
     const int BONUS_SCORE = 1;
     const int BASE_SCORE = 3;
     const int GAME_END_SCORE = 10;
+
+    //進行に必要なクラスの、生成先・探索先のパス
+    static readonly Dictionary<ProgressName, string> progressPass = new Dictionary<ProgressName, string>() { { ProgressName.DataSharingClass, "NagatsukaObjects/DataSharingClass" },
+                                                                                                             { ProgressName.UIManager,"UIManager"},
+                                                                                                             { ProgressName.User,"User" },
+                                                                                                             { ProgressName.MapManager,"MapManager" },
+                                                                                                             { ProgressName.StartPoint,"StartPoint" }};
 
     /// <summary>
     /// ゲームの進行に必要なマネージャー等をまとめたクラス
@@ -56,7 +95,12 @@ public class GameManager : MonoBehaviour
         public DataSharingClass dataSharingClass;
         public User user;
         public int userActorNumber;
+        public Vector2 startPoint;
     }
+
+    #endregion
+
+    #region 変数
 
     [SerializeField, Tooltip("現在のゲーム状態")] GameStatus gameState;
     [SerializeField, Tooltip("進行中のステートコルーチン")] Coroutine stateCoroutine;
@@ -68,6 +112,8 @@ public class GameManager : MonoBehaviour
 
 
     public static GameManager instance;
+
+    #endregion
 
     #region Unityイベント
 
@@ -88,6 +134,7 @@ public class GameManager : MonoBehaviour
     {
         GameLoop();
 
+        //デバッグ用
         if(Input.GetKeyDown(KeyCode.RightArrow)){
             DebugNextState();
         }
@@ -201,6 +248,11 @@ public class GameManager : MonoBehaviour
         return BASE_SCORE + addScore;
     }
 
+    /// <summary>
+    /// スコアの加算を行う
+    /// 行った結果を返り値で返す
+    /// </summary>
+    /// <returns></returns>
     List<int> ScoreCalculation()
     {
         List<int> scores = new List<int>();
@@ -208,10 +260,18 @@ public class GameManager : MonoBehaviour
         {
             scores.Add(SumScore(player.GetRankStatus()));
         }
+        while(scores.Count < ConectServer.RoomProperties.MaxPlayer)
+        {
+            scores.Add((int)DEAD);
+        }
 
         return scores;
     }
 
+    /// <summary>
+    /// スコアが一定値を超え、ゲームが終了するか返す
+    /// </summary>
+    /// <returns></returns>
     bool GameEnd()
     {
         foreach(var score in gameProgress.dataSharingClass.score)
@@ -311,7 +371,6 @@ public class GameManager : MonoBehaviour
         if (id == -1 || id == 0) return false;
 
         gameProgress.dataSharingClass.ResetID(index);
-        //gameProgress.user = id;
         return true;
     }
 
@@ -367,6 +426,11 @@ public class GameManager : MonoBehaviour
 
     #region デバッグ用
 
+    /*
+     Debug系の処理をフラグで切り替えられるようにしたもの
+     これらの処理を切りたい場合、インスペクターからisDebugを切る
+     */
+
     void DebugLog(string message)
     {
         if (isDebug) Debug.Log(message);
@@ -379,6 +443,7 @@ public class GameManager : MonoBehaviour
 
     void DebugNextState()
     {
+        if (!isDebug) return;
         gameState++;
         ClearCoroutine();
     }
@@ -400,6 +465,7 @@ public class GameManager : MonoBehaviour
         //フェーズ中
         if (stateCoroutine != null) return;
 
+        //現在の状態に合うコルーチンを探索
         string coroutinename = "null";
         switch (gameState)
         {
@@ -433,6 +499,7 @@ public class GameManager : MonoBehaviour
             DebugLogWarning("コルーチンが正常に振り分けられていません");
             return;
         }
+
         DebugLog(coroutinename);
         stateCoroutine = StartCoroutine(coroutinename);
     }
@@ -441,6 +508,12 @@ public class GameManager : MonoBehaviour
 
     #region コルーチン
 
+    /// <summary>
+    /// このクラスが生成されたときに呼ぶコルーチン
+    /// 接続を前提にしており、終了するまで
+    /// 他の処理を開始してはいけない
+    /// </summary>
+    /// <returns></returns>
     IEnumerator GameInit()
     {
         //自分自身を取得
@@ -488,14 +561,15 @@ public class GameManager : MonoBehaviour
             stateCoroutine = null;
             isNowRace = false;
             instance = this;
-            gameProgress.userActorNumber = PhotonNetwork.LocalPlayer.ActorNumber - 1;
+            gameProgress.userActorNumber = PhotonNetwork.LocalPlayer.ActorNumber - 1;  //主な用途がリストなので番号調整
+
 
             //各マネージャーを生成
             //データ共有クラスを生成
             if (PhotonNetwork.LocalPlayer.IsMasterClient) //ホスト
             {
                 //データ共有クラスを生成
-                var obj = PhotonNetwork.Instantiate("NagatsukaObjects/DataSharingClass", Vector3.zero, Quaternion.identity);//データ共有クラスを生成する.
+                var obj = progressPass[ProgressName.DataSharingClass].SafeInstantiate(Vector3.zero, Quaternion.identity);//データ共有クラスを生成する.
             }
             else                                          //ゲスト
             {
@@ -504,16 +578,18 @@ public class GameManager : MonoBehaviour
             }
 
             //Userクラス生成
-            var user_class = Instantiate((GameObject)Resources.Load("User"), Vector3.zero, Quaternion.identity);
+            var user_class = Instantiate((GameObject)Resources.Load(progressPass[ProgressName.User]), Vector3.zero, Quaternion.identity);
             gameProgress.user = user_class.GetComponent<User>();
 
             //MapManagerを生成
-            var map_class = Instantiate((GameObject)Resources.Load("MapManager"), Vector3.zero, Quaternion.identity);
+            var map_class = Instantiate((GameObject)Resources.Load(progressPass[ProgressName.MapManager]), Vector3.zero, Quaternion.identity);
             gameProgress.mapManager = map_class.GetComponent<MapManager>();
 
             //UIManagerを検索
-            gameProgress.uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
-            gameProgress.uiManager.FinishSelect();
+            gameProgress.uiManager = GameObject.Find(progressPass[ProgressName.UIManager]).GetComponent<UIManager>();
+
+            //スタート地点を取得
+            gameProgress.startPoint = GameObject.Find(progressPass[ProgressName.StartPoint]).transform.position;
 
             DebugLog("各値の初期化完了");
         }
@@ -586,7 +662,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitUntil(() => CheckReady());
 
         //生成済みの障害物を再生成
-        //gameProgress.mapManager
+        gameProgress.mapManager.ReInstallObject();
 
         DebugLog("障害物選択開始");
 
@@ -594,9 +670,15 @@ public class GameManager : MonoBehaviour
         if (PhotonNetwork.IsMasterClient)
         {
             //テスト
-            for (int i = 0; i < 5; i++)
+
             {
-                int id = Random.Range(1, 4);
+                int id = Random.Range((int)OBSTACLE_OBJECT.Normal_Scaffold, (int)OBSTACLE_OBJECT.Normal_Scaffold);
+                gameProgress.dataSharingClass.PushID(id);
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                int id = Random.Range(1, (int)OBSTACLE_OBJECT.Normal_Scaffold);
                 //障害物追加
                 gameProgress.dataSharingClass.PushID(i == 4 ? 0 : id);
             }
@@ -770,13 +852,18 @@ public class GameManager : MonoBehaviour
 
         //キャラの出現
         gameProgress.user.GeneratePlayer();
+        //gameProgress.user
 
         DebugLog("READY演出");
 
         DebugLog("レーススタート");
         //進行待機
         yield return new WaitUntil(() => CheckInGame());
+        //スタート演出
+
         //キャラの操作のロックを解除
+        gameProgress.user.PlayerStart(true);
+        //gameProgress.user
 
         //障害物のロック解除
         isNowRace = true;
@@ -786,7 +873,7 @@ public class GameManager : MonoBehaviour
         {
             //レース中の表示、演出
 
-            DebugLog("レース中");
+            //DebugLog("レース中");
 
             if (Input.GetKeyDown(KeyCode.G)) GoalPlayer();
             if(Input.GetKeyDown(KeyCode.U)) DeadPlayer();
@@ -809,6 +896,7 @@ public class GameManager : MonoBehaviour
     IEnumerator StateRESULT()
     {
         DebugLog("リザルトフェーズ開始");
+        var beforescore = gameProgress.dataSharingClass.score;
         //進行待機
         yield return new WaitUntil(() => CheckReady());
 
@@ -825,6 +913,7 @@ public class GameManager : MonoBehaviour
         gameProgress.dataSharingClass.PushScore(gameProgress.userActorNumber, scorelist[gameProgress.userActorNumber]);
 
         DebugLog("順位、スコアの反映演出");
+        yield return StartCoroutine(gameProgress.uiManager.Result(beforescore, scorelist));
         yield return new WaitForSeconds(2.0f);
 
         DebugLog("演出終了");
@@ -839,6 +928,9 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            //オブジェクトの削除
+
+
             DebugLog("選択フェーズに返る");
             gameState = GameStatus.SELECT;
         }
@@ -851,7 +943,7 @@ public class GameManager : MonoBehaviour
     IEnumerator StateEND()
     {
         //終了演出
-
+        
         yield return new WaitForSeconds(2.0f);
 
         //ネットワークから切断

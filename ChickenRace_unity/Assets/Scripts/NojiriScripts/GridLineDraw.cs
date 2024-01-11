@@ -87,7 +87,6 @@ public class GridLineDraw : MonoBehaviour
         // サイズ変更用
         backGroundSize.x = Vector2.Distance(horizontalStartPosition, horizontalEndPosition);
         backGroundSize.y = Vector2.Distance(verticalStartPosition, verticalEndPosition);
-        Debug.Log(backGroundSize);
 
         // 横線の頂点を設定
         for (int i = 0; i < horizontalResolution; i += 4)

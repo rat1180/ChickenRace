@@ -30,6 +30,7 @@ public class PlayerMouse : MonoBehaviour
         error = -1;
         MouseImageInstance();
         map = GameManager.instance.GetMapManager();
+        itemId = user.GetComponent<User>().GetItemId();
     }
 
     void Start()
@@ -43,7 +44,11 @@ public class PlayerMouse : MonoBehaviour
         MouseMove();
         MouseTransform();
         gridPos = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
-        isInstalled = map.GetComponent<MapManager>().JudgeInstall(gridPos);
+        
+        if(itemId != error)
+        {
+            isInstalled = map.GetComponent<MapManager>().JudgeInstall(gridPos, itemId);
+        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -81,24 +86,13 @@ public class PlayerMouse : MonoBehaviour
     /// </summary>
     private void OnClick()
     {
-        Debug.Log("クリック");
-
-        //if (User.GetComponent<User>().SetMode() == false)
-        //{
-        //    // 選択フェーズ.
-        //GameManager.Instance.MouseSelected(index);
-           
-        //}
-        //else
-        //{
-        //    // 設置フェーズ.
-        //}
+        // Debug.Log("クリック");
 
         // アイテムが設置可能なら.
         if (isInstalled == true)
         {
             // アイテムの生成.
-           map.GetComponent<MapManager>().GenerateMapObject(0,saveAngle, gridPos);
+           map.GetComponent<MapManager>().GenerateMapObject(itemId,saveAngle, gridPos);
         }
         else
         {

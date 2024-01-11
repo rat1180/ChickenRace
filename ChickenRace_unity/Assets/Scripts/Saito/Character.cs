@@ -6,16 +6,20 @@ using Photon.Pun;
 public class Character : MonoBehaviourPun, IPunObservable
 {
     public Vector3 targetPos;
-    GameObject target;
-    
+    [SerializeField] GameObject target;
+    Vector3 savePos;
+    Vector3 relativeVector;
+    [SerializeField] float threshold; // アニメーション用閾値.
+
     void Start()
     {
-        
+        savePos = transform.position;
     }
 
     void FixedUpdate()
     {
         TargetMove();
+        IsTurn();
     }
 
     /// <summary>
@@ -23,7 +27,14 @@ public class Character : MonoBehaviourPun, IPunObservable
     /// </summary>
     private void TargetMove()
     {
-        transform.position = Vector3.Lerp(transform.position, targetPos, 10.0f * Time.fixedDeltaTime);
+        if (photonView.IsMine)
+        {
+            transform.position = targetPos;
+        }
+        else
+        {
+            transform.position = Vector3.Lerp(transform.position, targetPos, 10.0f * Time.fixedDeltaTime);
+        }
     }
 
     /// <summary>
@@ -58,5 +69,39 @@ public class Character : MonoBehaviourPun, IPunObservable
         {
             Destroy(gameObject);
         }
+    }
+
+    /// <summary>
+    /// 画像の向き反転：左<->右
+    /// </summary>
+    public void IsTurn()
+    {
+        // 相対ベクター取得.
+        relativeVector = transform.position - savePos;
+
+        if(Mathf.Abs(relativeVector.x) < threshold)
+        {
+            relativeVector = Vector3.zero;
+        }
+
+        // 左に進んでいるとき.
+        if (relativeVector.x < 0)
+        {
+            if(transform.localScale.x > 0)
+            {
+                transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+            }
+        }
+        // 右に進んでいるとき.
+        else if(relativeVector.x > 0)
+        {
+            if (transform.localScale.x < 0)
+            {
+                transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+            }
+        }
+
+        savePos = transform.position;
+
     }
 }

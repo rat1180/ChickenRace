@@ -29,6 +29,11 @@ public class User : MonoBehaviour
         gameManager = GameManager.instance;
     }
 
+    private void Awake()
+    {
+        // GeneratePlayer();
+    }
+
     void Start()
     {
         Init();
@@ -44,6 +49,7 @@ public class User : MonoBehaviour
     {
         var obj = Instantiate(player, transform.position, transform.rotation);
         playerObjcet = obj;
+        playerObjcet.GetComponent<Player>().ImageInstance();
     }
 
     /// <summary>
@@ -72,7 +78,6 @@ public class User : MonoBehaviour
     public void DestroyMouse()
     {
         Destroy(mouseObjcet);
-        //Destroy(gameObject);
     }
 
     /// <summary>
@@ -134,6 +139,14 @@ public class User : MonoBehaviour
         return index;
     }
 
+    public void PlayerStart(bool isstart)
+    {
+        if (playerObjcet != null)
+        {
+            playerObjcet.GetComponent<Player>().IsStart(isstart);
+        }
+    }
+
     public void PlayerGoal()
     {
         if (playerObjcet != null)
@@ -143,5 +156,10 @@ public class User : MonoBehaviour
                 gameManager.GoalPlayer();
             }
         }
+    }
+
+    public void StartPlayerPosition(Vector3 startpos)
+    {
+        playerObjcet.GetComponent<Player>().StartPosition(startpos);
     }
 }
