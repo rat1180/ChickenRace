@@ -11,9 +11,7 @@ using Dictionary;
 [System.Serializable]
 public class ObjectStatus
 {
-    public List<int> InstalledList;        // 設置した障害物idリスト
-    public List<float> AngleList;          // 障害物の設置方向リスト
-    public Dictionary<int, Vector2Int> UsedGridList;  // オブジェクトキーと、使用済みグリッドの位置リスト
+    public List<float> AngleList;                     // 障害物の設置方向リスト
     public List<Vector2Int> childList; // テスト用
 }
 
@@ -22,6 +20,7 @@ public class MapManager : MonoBehaviour
     public bool debugMode = false; // デバッグモードフラグ
 
     [SerializeField] private ObjectStatus objStatus; // 障害物用の構造体情報
+    [SerializeField] private Dictionary_Unity<int, int> InstalledDic;       // <Key：置かれた順番, Value：id情報>
     [SerializeField] private Dictionary_Unity<Vector2Int, int> usedGridDic; // <Key：設置済位置情報, Value：置かれた順番>
 
     private GameObject obstacleObj; // 移動したいオブジェクトの情報取得
@@ -56,6 +55,10 @@ public class MapManager : MonoBehaviour
         {
             CreativeModeEnd();
         }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            ReInstallObject();
+        }
     }
 
     #region 内部処理
@@ -65,9 +68,8 @@ public class MapManager : MonoBehaviour
     private void MapInit()
     {
         // 初期化
-        objStatus.InstalledList = new List<int>();
         objStatus.AngleList = new List<float>();
-        objStatus.UsedGridList = new Dictionary<int, Vector2Int>();
+        InstalledDic = new Dictionary_Unity<int, int>();
         usedGridDic = new Dictionary_Unity<Vector2Int, int>();
         objStatus.childList = new List<Vector2Int>();     // テスト
         obstacleObj = new GameObject();
@@ -149,6 +151,48 @@ public class MapManager : MonoBehaviour
         gridObj.SetActive(true);
         panelObj.SetActive(true);
     }
+
+    /// <summary>
+    /// クリエイトモード中のみ、障害物の静止画を表示
+    /// </summary>
+    private void GenerateImage()
+    {
+        // 画像生成
+        for (int i = 0; i < installNum; i++)
+        {
+            // Value(id)に対応した画像取得(仮画像)
+            //var image = ResourceManager.instance.GetObstacleImage((OBSTACLE_IMAGE_NAMES)i);
+            GameObject imageObj = (GameObject)Resources.Load("shiitake");
+
+            Debug.Log(imageObj);
+
+            // iと等しいValueがあるとき
+            if (usedGridDic.ContainValue(i))
+            {
+                // 生成位置をリストで取得
+                var key = usedGridDic.GetKey(i);
+
+                // 親オブジェクトの生成
+                var obj = Instantiate(imageObj, new Vector3(key.x, key.y), Quaternion.identity);
+                obj.transform.parent = transform;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 子オブジェクトの画像非表示メソッド
+    /// </summary>
+    private void DestroyImage()
+    {
+        Transform child = transform.gameObject.GetComponentInChildren<Transform>();
+
+        if (child.childCount == 0) return;
+
+        foreach (Transform obj in child)
+        {
+            Destroy(obj.gameObject);
+        }
+    }
     #endregion
 
     #region 外部用メソッド
@@ -168,6 +212,7 @@ public class MapManager : MonoBehaviour
         isInstall = false;
         StartCoroutine(CreativeMode());
         GridDraw();
+        GenerateImage();
 
         Debug.Log("クリエイティブモード開始");
     }
@@ -187,6 +232,7 @@ public class MapManager : MonoBehaviour
         isRunning = false;
         StopCoroutine(CreativeMode());
         GridDraw();
+        DestroyImage();
 
         Debug.Log("クリエイティブモード終了");
     }
@@ -248,10 +294,7 @@ public class MapManager : MonoBehaviour
     private bool JudgeInstallCenter(Vector2Int pos)
     {
         // 設置済リスト内に、posと同じ位置情報があるとき
-        if (usedGridDic.ContainKey(pos))
-        {
-            return false;
-        }
+        if (usedGridDic.ContainKey(pos)) return false;
 
         return true;
     }
@@ -271,12 +314,8 @@ public class MapManager : MonoBehaviour
             var childInsPos = pos + list[i];
 
             // 設置済リスト内に、posと同じ位置情報があるとき
-            if (usedGridDic.ContainKey(childInsPos))
-            {
-                return false;
-            }
+            if (usedGridDic.ContainKey(childInsPos)) return false;
         }
-
         return true;
     }
 
@@ -330,7 +369,7 @@ public class MapManager : MonoBehaviour
         Instantiate(obstacleObj, new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
 
         // 設置したオブジェクトIDを追加
-        objStatus.InstalledList.Add(id);
+        InstalledDic.Add(installNum, id);
 
         // 設置した位置情報と設置順番を追加
         usedGridDic.Add(gridPos, installNum);
@@ -375,14 +414,17 @@ public class MapManager : MonoBehaviour
             // 削除したい位置情報から、Valueを取得
             var deleteNum = usedGridDic.GetValue(deletePos);
 
-            for (int i = 0; i < childList.Count + 1; i++)
+            // 取得したValueから、Keyリストを取得
+            var keyList = usedGridDic.GetKeyList(deleteNum);
+
+            // 同じValueを持った要素を削除
+            foreach (var list in keyList)
             {
-                // 取得したValueから、Keyリストを取得
-                //usedGridDic.Remove(deletePos);
-                var list = usedGridDic.GetKeyList(deleteNum);
-                // デバッグしてない
-                // この後に削除処理をかく
+                usedGridDic.Remove(list);
             }
+
+            // 設置した順番に対応した、idリストの要素を削除
+            InstalledDic.Remove(deleteNum);
         }
     }
 
@@ -398,10 +440,22 @@ public class MapManager : MonoBehaviour
             return;
         }
 
-        for (int i = 0; i < objStatus.InstalledList.Count; i++)
+
+        // 再生成
+        for (int i = 0; i < installNum; i++)
         {
-            obstacleObj = GetObstaclePrefab(objStatus.InstalledList[i]);
-            Instantiate(obstacleObj, new Vector3(objStatus.UsedGridList[i].x, objStatus.UsedGridList[i].y), Quaternion.Euler(0, 0, objStatus.AngleList[i]));
+            // Keyに対応したValue(id)のオブジェクト取得
+            obstacleObj = GetObstaclePrefab(InstalledDic.GetValue(i));
+
+            // iと等しいValueがあるとき
+            if (usedGridDic.ContainValue(i))
+            {
+                // 生成位置をリストで取得
+                var key = usedGridDic.GetKey(i);
+
+                // 親オブジェクトの生成
+                Instantiate(obstacleObj, new Vector3(key.x, key.y), Quaternion.Euler(0, 0, objStatus.AngleList[i]));
+            }
         }
     }
 

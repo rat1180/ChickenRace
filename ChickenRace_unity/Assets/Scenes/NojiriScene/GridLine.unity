@@ -786,9 +786,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debugMode: 1
   objStatus:
-    InstalledList: 
     AngleList: []
     childList: []
+  InstalledDic:
+    keyPairs: []
   usedGridDic:
     keyPairs: []
   childTest: 1
