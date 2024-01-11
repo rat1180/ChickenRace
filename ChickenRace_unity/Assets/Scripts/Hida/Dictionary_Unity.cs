@@ -115,7 +115,7 @@ namespace Dictionary
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        SerializableKeyPair<TKey, TValue> SerchKey(TKey key)
+        public SerializableKeyPair<TKey, TValue> SerchKey(TKey key)
         {
             foreach (var pair in keyPairs)
             {
@@ -130,7 +130,7 @@ namespace Dictionary
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        List<TKey> SerchValue(TValue value)
+        public List<TKey> SerchValue(TValue value)
         {
             List<TKey> keys = new List<TKey>();
             foreach (var pair in keyPairs)
@@ -139,6 +139,15 @@ namespace Dictionary
             }
 
             return keys;
+        }
+
+        /// <summary>
+        /// DictionaryÇÃóvëfêîÇï‘Ç∑
+        /// </summary>
+        /// <returns></returns>
+        public int Count()
+        {
+            return keyPairs.Count;
         }
     }
 }

@@ -11,9 +11,7 @@ using Dictionary;
 [System.Serializable]
 public class ObjectStatus
 {
-    public List<int> InstalledList;        // 設置した障害物idリスト
-    public List<float> AngleList;          // 障害物の設置方向リスト
-    public Dictionary<int, Vector2Int> UsedGridList;  // オブジェクトキーと、使用済みグリッドの位置リスト
+    public List<float> AngleList;                     // 障害物の設置方向リスト
     public List<Vector2Int> childList; // テスト用
 }
 
@@ -22,7 +20,8 @@ public class MapManager : MonoBehaviour
     public bool debugMode = false; // デバッグモードフラグ
 
     [SerializeField] private ObjectStatus objStatus; // 障害物用の構造体情報
-    [SerializeField] private Dictionary_Unity<Vector2Int, int> usedGridDic; // <Key：設置済位置情報, Value：id情報>
+    [SerializeField] private Dictionary_Unity<int, int> InstalledDic;       // <Key：置かれた順番, Value：id情報>
+    [SerializeField] private Dictionary_Unity<Vector2Int, int> usedGridDic; // <Key：設置済位置情報, Value：置かれた順番>
 
     private GameObject obstacleObj; // 移動したいオブジェクトの情報取得
     private GameObject gridObj;
@@ -32,7 +31,11 @@ public class MapManager : MonoBehaviour
 
     private bool isRunning = false; // コルーチン実行判定フラグ
     private bool isInstall = false; // 設置フラグ
-    private int keyNum;
+
+    private int installNum; // 置かれた順番
+
+    // テスト用
+    [SerializeField] private bool childTest = false;
 
     // Start is called before the first frame update
     void Start()
@@ -52,6 +55,10 @@ public class MapManager : MonoBehaviour
         {
             CreativeModeEnd();
         }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            ReInstallObject();
+        }
     }
 
     #region 内部処理
@@ -61,12 +68,12 @@ public class MapManager : MonoBehaviour
     private void MapInit()
     {
         // 初期化
-        objStatus.InstalledList = new List<int>();
         objStatus.AngleList = new List<float>();
-        objStatus.UsedGridList = new Dictionary<int, Vector2Int>();
+        InstalledDic = new Dictionary_Unity<int, int>();
         usedGridDic = new Dictionary_Unity<Vector2Int, int>();
         objStatus.childList = new List<Vector2Int>();     // テスト
         obstacleObj = new GameObject();
+        installNum = 0;
 
         // テスト用
         if (debugMode)
@@ -76,9 +83,9 @@ public class MapManager : MonoBehaviour
             objStatus.childList.Add(new Vector2Int(-1, 0));
 
             // テスト用
-            usedGridDic.Add(new Vector2Int(0, 0), 0);
-            usedGridDic.Add(new Vector2Int(1, 0), 0);
-            usedGridDic.Add(new Vector2Int(2, 0), 1);
+            //usedGridDic.Add(new Vector2Int(0, 0), 0);
+            //usedGridDic.Add(new Vector2Int(0, 0), 0);
+            //usedGridDic.Add(new Vector2Int(2, 0), 1);
         }
 
         // グリッドとパネルの情報を取得
@@ -144,6 +151,48 @@ public class MapManager : MonoBehaviour
         gridObj.SetActive(true);
         panelObj.SetActive(true);
     }
+
+    /// <summary>
+    /// クリエイトモード中のみ、障害物の静止画を表示
+    /// </summary>
+    private void GenerateImage()
+    {
+        // 画像生成
+        for (int i = 0; i < installNum; i++)
+        {
+            // Value(id)に対応した画像取得(仮画像)
+            //var image = ResourceManager.instance.GetObstacleImage((OBSTACLE_IMAGE_NAMES)i);
+            GameObject imageObj = (GameObject)Resources.Load("shiitake");
+
+            Debug.Log(imageObj);
+
+            // iと等しいValueがあるとき
+            if (usedGridDic.ContainValue(i))
+            {
+                // 生成位置をリストで取得
+                var key = usedGridDic.GetKey(i);
+
+                // 親オブジェクトの生成
+                var obj = Instantiate(imageObj, new Vector3(key.x, key.y), Quaternion.identity);
+                obj.transform.parent = transform;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 子オブジェクトの画像非表示メソッド
+    /// </summary>
+    private void DestroyImage()
+    {
+        Transform child = transform.gameObject.GetComponentInChildren<Transform>();
+
+        if (child.childCount == 0) return;
+
+        foreach (Transform obj in child)
+        {
+            Destroy(obj.gameObject);
+        }
+    }
     #endregion
 
     #region 外部用メソッド
@@ -163,6 +212,7 @@ public class MapManager : MonoBehaviour
         isInstall = false;
         StartCoroutine(CreativeMode());
         GridDraw();
+        GenerateImage();
 
         Debug.Log("クリエイティブモード開始");
     }
@@ -182,6 +232,7 @@ public class MapManager : MonoBehaviour
         isRunning = false;
         StopCoroutine(CreativeMode());
         GridDraw();
+        DestroyImage();
 
         Debug.Log("クリエイティブモード終了");
     }
@@ -196,12 +247,17 @@ public class MapManager : MonoBehaviour
     /// <returns></returns>
     public bool JudgeInstall(Vector2Int installPos, int id)
     {
-        // idに対応したリストを取得(仮)
-        //childList = objStatus.childList;
-
-        // CollisionListを取得
-        var Obj = ResourceManager.instance.GetObstacleObject((OBSTACLE_OBJECT)id);
-        childList = Obj.GetComponent<Obstacle>().GetCollisionList();
+        if (childTest)
+        {
+            // idに対応したリストを取得(仮)
+            childList = objStatus.childList;
+        }
+        else
+        {
+            // CollisionListを取得
+            var Obj = ResourceManager.instance.GetObstacleObject((OBSTACLE_OBJECT)id);
+            childList = Obj.GetComponent<Obstacle>().GetCollisionList();
+        }
 
         // 設置位置が一つのとき
         if (childList == null)
@@ -237,19 +293,8 @@ public class MapManager : MonoBehaviour
     /// <returns></returns>
     private bool JudgeInstallCenter(Vector2Int pos)
     {
-        //for (int i = 0; i < objStatus.UsedGridList.Count; i++)
-        //{
-        //    if (pos == objStatus.UsedGridList[i])
-        //    {
-        //        return false;
-        //    }
-        //}
-
         // 設置済リスト内に、posと同じ位置情報があるとき
-        if (usedGridDic.ContainKey(pos))
-        {
-            return false;
-        }
+        if (usedGridDic.ContainKey(pos)) return false;
 
         return true;
     }
@@ -268,21 +313,9 @@ public class MapManager : MonoBehaviour
         {
             var childInsPos = pos + list[i];
 
-            //for (int j = 0; j < objStatus.UsedGridList.Count; j++)
-            //{
-            //    if (childInsPos == objStatus.UsedGridList[j])
-            //    {
-            //        return false;
-            //    }
-            //}
-
             // 設置済リスト内に、posと同じ位置情報があるとき
-            if (usedGridDic.ContainKey(childInsPos))
-            {
-                return false;
-            }
+            if (usedGridDic.ContainKey(childInsPos)) return false;
         }
-
         return true;
     }
 
@@ -335,22 +368,24 @@ public class MapManager : MonoBehaviour
         // 障害物の生成
         Instantiate(obstacleObj, new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
 
-        // 設置した位置をリストとオブジェクトIDを追加
-        objStatus.InstalledList.Add(id);
+        // 設置したオブジェクトIDを追加
+        InstalledDic.Add(installNum, id);
 
-        if (!usedGridDic.ContainKey(gridPos))
+        // 設置した位置情報と設置順番を追加
+        usedGridDic.Add(gridPos, installNum);
+
+        if (childList != null) // 子オブジェクトがあるとき
         {
-            usedGridDic.Add(gridPos, id);
-
-            if (childList != null) // 子オブジェクトがあるとき
+            for (int i = 0; i < childList.Count; i++)
             {
-                for (int i = 0; i < childList.Count; i++)
-                {
-                    usedGridDic.Add(gridPos + childList[i], id);
-                }
+                // 親オブジェクトの座標を子オブジェクトの個数分追加
+                usedGridDic.Add(gridPos + childList[i], installNum);
+                //usedGridDic.Add(gridPos, id);
             }
         }
         objStatus.AngleList.Add(angle);
+
+        installNum++;
     }
 
     /// <summary>
@@ -359,7 +394,7 @@ public class MapManager : MonoBehaviour
     /// 複数マスを持っている障害物の場合、指定されたマス以外の同じキーを持った障害物を削除
     /// </summary>
     /// <param name="deletPos">Vector2Int型のマウス位置（TKey）</param>
-    public void DeleteObstacle(Vector2Int deletPos)
+    public void DeleteObstacle(Vector2Int deletePos)
     {
         if (!isRunning)
         {
@@ -367,8 +402,30 @@ public class MapManager : MonoBehaviour
             return;
         }
 
-        // 指定されたマス(deltaPos)情報が存在するかどうか探索
+        // 指定されたマス(deletePos)情報が存在するかどうか探索
         // 既に存在する時、同じTValueの要素を全て削除
+
+        if(childList == null)
+        {
+            usedGridDic.Remove(deletePos);
+        }
+        else
+        {
+            // 削除したい位置情報から、Valueを取得
+            var deleteNum = usedGridDic.GetValue(deletePos);
+
+            // 取得したValueから、Keyリストを取得
+            var keyList = usedGridDic.GetKeyList(deleteNum);
+
+            // 同じValueを持った要素を削除
+            foreach (var list in keyList)
+            {
+                usedGridDic.Remove(list);
+            }
+
+            // 設置した順番に対応した、idリストの要素を削除
+            InstalledDic.Remove(deleteNum);
+        }
     }
 
     /// <summary>
@@ -383,10 +440,22 @@ public class MapManager : MonoBehaviour
             return;
         }
 
-        for (int i = 0; i < objStatus.InstalledList.Count; i++)
+
+        // 再生成
+        for (int i = 0; i < installNum; i++)
         {
-            obstacleObj = GetObstaclePrefab(objStatus.InstalledList[i]);
-            Instantiate(obstacleObj, new Vector3(objStatus.UsedGridList[i].x, objStatus.UsedGridList[i].y), Quaternion.Euler(0, 0, objStatus.AngleList[i]));
+            // Keyに対応したValue(id)のオブジェクト取得
+            obstacleObj = GetObstaclePrefab(InstalledDic.GetValue(i));
+
+            // iと等しいValueがあるとき
+            if (usedGridDic.ContainValue(i))
+            {
+                // 生成位置をリストで取得
+                var key = usedGridDic.GetKey(i);
+
+                // 親オブジェクトの生成
+                Instantiate(obstacleObj, new Vector3(key.x, key.y), Quaternion.Euler(0, 0, objStatus.AngleList[i]));
+            }
         }
     }
 

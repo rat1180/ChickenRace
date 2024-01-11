@@ -70,7 +70,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
-            FinishSelect();
+            //FinishSelect();
             //StartCoroutine(Result(beScore, addscoreTest));
         }
     }
@@ -148,7 +148,7 @@ public class UIManager : MonoBehaviourPunCallbacks
     public IEnumerator Result(List<int> beforeScore, List<int> addScore)
     {
         ActiveResultPanel(true);
-        ActiveCharacters(names.Length);
+        ActiveCharacters(beforeScore.Count);
         //Playerの数分ループして情報を入れる.
         int i = 0;
         for (i = 0; i < beforeScore.Count; i++)
@@ -174,8 +174,14 @@ public class UIManager : MonoBehaviourPunCallbacks
         {
             for (i = 0; i < score.Count; i++)
             {
-                if (adscore[i] != 0)//加算する分のスコアが0でなければテキスト変更する.
+                if (adscore[i] >= 0)//加算する分のスコアが0でなければテキスト変更する.
                 {
+                    if (adscore[i] == 0)//加算するスコアが0になったらカウントを増やす.
+                    {
+                        cnt++;
+                        adscore[i]--;//二重計算防止
+                        continue;
+                    }
                     adscore[i]--;//加算した分-1する.
                     score[i]++;  //引いた分+1する.
 
@@ -184,14 +190,11 @@ public class UIManager : MonoBehaviourPunCallbacks
                             = "SCORE:" + score[i].ToString();
                     resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.UPSCORE).GetComponent<Text>().text
                     = "+" + adscore[i].ToString();
-                    if (adscore[i] == 0)//加算するスコアが0になったらカウントを増やす.
-                    {
-                        cnt++;
-                    }
+                    
                 }
             }
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.5f);
             if (cnt == score.Count)//最大人数分全てのスコア加算が終了したらループを抜けて順位を表示する.
             {
                 ChangeRank(score);

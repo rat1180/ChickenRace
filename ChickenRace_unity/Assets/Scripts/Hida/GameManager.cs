@@ -260,9 +260,9 @@ public class GameManager : MonoBehaviour
         {
             scores.Add(SumScore(player.GetRankStatus()));
         }
-        while(scores.Count < ConectServer.RoomProperties.MaxPlayer)
+        while(scores.Count <= ConectServer.RoomProperties.MaxPlayer)
         {
-            scores.Add((int)DEAD);
+            scores.Add(0);
         }
 
         return scores;
@@ -863,7 +863,7 @@ public class GameManager : MonoBehaviour
 
         //キャラの操作のロックを解除
         gameProgress.user.PlayerStart(true);
-        //gameProgress.user
+        gameProgress.user.StartPlayerPosition(gameProgress.startPoint);
 
         //障害物のロック解除
         isNowRace = true;
