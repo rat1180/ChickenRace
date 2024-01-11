@@ -10,7 +10,11 @@ public class Obstacle_Flower : Obstacle
     [SerializeField]
     bool isFlowerRightPaunchFlg;
     [SerializeField]
+    bool isFlowerPaunchFlg;
+    [SerializeField]
     bool isFlowerPaunchWaitFlg;
+    [SerializeField]
+    float speed;
 
     [SerializeField]
     GameObject paunch;
@@ -21,28 +25,42 @@ public class Obstacle_Flower : Obstacle
 
     [SerializeField]
     Vector2 thisPos;
+    [SerializeField]
+    Vector2 PaunchPos;
+    [SerializeField]
+    Rigidbody2D rb;
     /// <summary>
     /// èâä˙âª
     /// </summary>
     protected override void Init()
     {
         obstacleCenterPos = new Vector2Int(0, 0);
+
+        PaunchPos = paunch.transform.position;
+
+        rb = paunch.transform.GetComponent<Rigidbody2D>();
+
         isFlowerLeftPaunchFlg = false;
         isFlowerRightPaunchFlg = false;
         isFlowerPaunchWaitFlg = false;
+        isFlowerPaunchFlg = false;
+
+        speed = 5.0f;
     }
     protected override void update()
     {
         thisPos = this.gameObject.transform.position;
-        if (GameManager.instance.CheckObstacleMove())
+        //if (GameManager.instance.CheckObstacleMove())
         {
             if (isFlowerLeftPaunchFlg)
             {
-                ShotObj();
+                LeftShot();
+                isFlowerPaunchWaitFlg = true;
             }
-            if (isFlowerRightPaunchFlg)
+            if(isFlowerRightPaunchFlg)
             {
-                ShotObj();
+                RightShot();
+                isFlowerPaunchWaitFlg = true;
             }
         }
     }
@@ -50,17 +68,65 @@ public class Obstacle_Flower : Obstacle
     {
         
     }
-    /// <summary>
-    /// äpìxéÊìæÇ©ÇÁåùê∂ê¨
-    /// </summary>
-    void ShotObj()
+    void RightShot()
     {
-        isFlowerLeftPaunchFlg = false;
-        Invoke("WaitFlg", 6.0f);
+        var newTrans = PaunchPos;
+        newTrans.x += 2.0f;
+        if (paunch.transform.position.x < newTrans.x && !isFlowerPaunchFlg)
+        {
+            Debug.Log("âE");
+            rb.velocity = paunch.transform.right * speed;
+        }
+        else
+        {
+            rb.velocity = new Vector2(0, 0);
+            isFlowerPaunchFlg = true;
+            Invoke("WaitFlg", 4.0f);
+            Debug.Log("ñﬂÇË");
+            paunch.transform.position = Vector3.MoveTowards(paunch.transform.position, thisPos, speed * Time.deltaTime);
+        }
+        Debug.Log(newTrans);
+    }
+    void LeftShot()
+    {
+        var newTrans = PaunchPos;
+        if (isFlowerLeftPaunchFlg && !isFlowerRightPaunchFlg)
+        {
+            newTrans.x -= 2.0f;
+            if (paunch.transform.position.x >= newTrans.x)
+            {
+                Debug.Log("ç∂");
+                rb.velocity = paunch.transform.right * -speed;
+            }
+            else
+            {
+                paunch.transform.position = Vector3.MoveTowards(paunch.transform.position, thisPos, speed * Time.deltaTime);
+            }
+        }
+        if (isFlowerRightPaunchFlg && !isFlowerLeftPaunchFlg)
+        {
+            newTrans.x += 2.0f;
+            if (paunch.transform.position.x <= newTrans.x && !isFlowerPaunchFlg)
+            {
+                Debug.Log("âE");
+                rb.velocity = paunch.transform.right * speed;
+            }
+            else
+            {
+                isFlowerPaunchFlg = true;
+                Debug.Log("ñﬂÇË");
+                paunch.transform.position = Vector3.MoveTowards(paunch.transform.position, thisPos, speed * Time.deltaTime);
+            }
+            Debug.Log(newTrans);
+        }
+        Invoke("WaitFlg", 4.0f);
     }
     void WaitFlg()
     {
         isFlowerPaunchWaitFlg = false;
+        isFlowerPaunchFlg = false;
+        isFlowerLeftPaunchFlg = false;
+        isFlowerRightPaunchFlg = false;
     }
     void OnTriggerEnter2D(Collider2D other)
     {

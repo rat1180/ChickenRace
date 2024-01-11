@@ -383,8 +383,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14beec42d3ad9ae4c91de27b321efafa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionList:
-  - {x: 0, y: 0}
+  obstacleCenterPos: {x: 0, y: 0}
+  collisionList: []
   obstacleID: 0
   obstacleKindID: 0
   myRotation: 0
