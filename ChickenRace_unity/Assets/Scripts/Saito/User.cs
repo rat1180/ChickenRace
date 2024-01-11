@@ -58,18 +58,22 @@ public class User : MonoBehaviour
     /// <param name="mode"></param>
     public void GenerateMouse(int mode)
     {
-        if(mode == 0)
+        mouseObjcet = Instantiate(mouse, transform.position, transform.rotation);
+        mouseObjcet.GetComponent<PlayerMouse>().SetUser(this);
+
+        // 選択フェーズ.
+        if (mode == 0)
         {
             Init();
             GetModeId();
         }
+        // 設置フェーズ.
         else
         {
             GetModeId(mode);
+            mouseObjcet.GetComponent<PlayerMouse>().PlantPhase();
         }
 
-        mouseObjcet = Instantiate(mouse, transform.position, transform.rotation);
-        mouseObjcet.GetComponent<PlayerMouse>().SetUser(this);
     }
 
     /// <summary>

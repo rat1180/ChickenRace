@@ -43,12 +43,6 @@ public class PlayerMouse : MonoBehaviour
     {
         MouseMove();
         MouseTransform();
-        gridPos = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
-        
-        if(itemId != error)
-        {
-            isInstalled = map.GetComponent<MapManager>().JudgeInstall(gridPos, itemId);
-        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -152,6 +146,20 @@ public class PlayerMouse : MonoBehaviour
     private void CantPlant()
     {
 
+    }
+
+    /// <summary>
+    /// 設置フェーズに呼ぶ関数.
+    /// </summary>
+    public void PlantPhase()
+    {
+        
+        gridPos = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
+
+        if (itemId != error)
+        {
+            isInstalled = map.GetComponent<MapManager>().JudgeInstall(gridPos, itemId);
+        }
     }
     
 }
