@@ -137,6 +137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14da063131b210041b424f50e39863b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  charaAnimation: {fileID: 0}
   moveVector: {x: 0, y: 0, z: 0}
   isMove: 0
   moveSpeed: 100
@@ -147,9 +148,10 @@ MonoBehaviour:
   wallJumpPower: {x: 2, y: 1}
   wallSlidingSpeed: 15
   nowHitDir: 0
-  nowPlayerAction: 0
   playerImage: {fileID: 0}
-  instanceObj: {fileID: 0}
+  instanceObj: {fileID: 220035344534385366, guid: 051918674e7d1b540be78bcd83cdd10d, type: 3}
+  isStart: 0
+  isGoal: 0
 --- !u!114 &6990167391782563454
 MonoBehaviour:
   m_ObjectHideFlags: 0

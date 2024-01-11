@@ -29,10 +29,14 @@ public class User : MonoBehaviour
         gameManager = GameManager.instance;
     }
 
+    private void Awake()
+    {
+        // GeneratePlayer();
+    }
+
     void Start()
     {
         Init();
-        GeneratePlayer();
     }
 
 
@@ -45,6 +49,7 @@ public class User : MonoBehaviour
     {
         var obj = Instantiate(player, transform.position, transform.rotation);
         playerObjcet = obj;
+        playerObjcet.GetComponent<Player>().ImageInstance();
     }
 
     /// <summary>
