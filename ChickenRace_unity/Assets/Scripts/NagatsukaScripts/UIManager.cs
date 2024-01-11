@@ -159,15 +159,17 @@ public class UIManager : MonoBehaviourPunCallbacks
         {
             for (int i = 0; i < 3; i++)
             {
-                if (adscore[i] != 0)
+                if (adscore[i] != 0)//加算する分のスコアが0でなければテキスト変更する.
                 {
-                    adscore[i]--;
-                    score[i]++;
+                    adscore[i]--;//加算した分-1する.
+                    score[i]++;  //引いた分+1する.
+
+                    //スコアのテキストを変更する.
                     resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.SCORE).GetComponent<Text>().text
                             = "SCORE:" + score[i].ToString();
                     resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.UPSCORE).GetComponent<Text>().text
                     = "+" + adscore[i].ToString();
-                    if (adscore[i] == 0)
+                    if (adscore[i] == 0)//加算するスコアが0になったらカウントを増やす.
                     {
                         cnt++;
                     }
@@ -176,9 +178,8 @@ public class UIManager : MonoBehaviourPunCallbacks
             //break;
 
                 yield return new WaitForSeconds(0.1f);
-            if (cnt == 3)
+            if (cnt == 3)//最大人数分全てのスコア加算が終了したらループを抜けて順位を表示する.
             {
-                Debug.Log("POINT0");
                 ChangeRank(score);
                 break;
             }
@@ -189,6 +190,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         //Debug.Log("コルーチン終了");
         ActiveResultPanel(false);
         //終了処理書くならココ
+
     }
 
     void ChangeRank(List<int> score)
