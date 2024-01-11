@@ -209,7 +209,6 @@ public class UIManager : MonoBehaviourPunCallbacks
     /// </summary>
     private void ActiveCharacters(int cnt)
     {
-        //for(int i=0;i< ConectServer.RoomProperties.MaxPlayer; i++)
         for (int i = 0; i < 3; i++)
         {
 
@@ -231,10 +230,10 @@ public class UIManager : MonoBehaviourPunCallbacks
     /// </summary>
     void ChangeRank(List<int> score)
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < score.Count; i++)
         {
             int rank = 1;
-            for (int j = 0; j < 3; j++)
+            for (int j = 0; j < score.Count; j++)
             {
                 if (score[i] < score[j])//Ž©•ª‚à”ä‚×‚éŽ–‚É‚È‚é‚ªA–â‘è‚È‚¢,
                 {
