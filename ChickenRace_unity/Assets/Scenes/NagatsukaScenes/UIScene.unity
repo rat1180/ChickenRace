@@ -437,9 +437,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b18b31bcda6187449102931c1d248c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  imageObjects: {fileID: 58778347}
-  id: 01000000030000000200000002000000
-  testSoldOutInex: 0
+  names:
+  - 
+  - 
+  - 
+  beScore: 
+  addscoreTest: 
+  testID: 
 --- !u!4 &662420214
 Transform:
   m_ObjectHideFlags: 0

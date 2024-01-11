@@ -34,6 +34,7 @@ public class UIManager : MonoBehaviourPunCallbacks
     public string[] names = new string[3];
     public List<int> beScore;
     public List<int> addscoreTest;
+    public List<OBSTACLE_OBJECT> testID;
 
     private void Start()
     {
@@ -45,11 +46,12 @@ public class UIManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.K))
-        //{
-        //    Result(beScore, addscoreTest);
-
-        //}
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            //List<int> test = testID;
+            //PushID(testID);
+            StartCoroutine(Result(beScore, addscoreTest));
+        }
     }
 
     /// <summary>
@@ -105,10 +107,13 @@ public class UIManager : MonoBehaviourPunCallbacks
         imageObjects.transform.GetChild(index).gameObject.GetComponent<ObstacleImage>().id = 0;
     }
 
+    #region リザルト変更関連
+
     /// <summary>
-    /// レース終了時リザルト画面を表示するためにGameManagerから呼び出す関数.
+    /// レース終了時リザルト画面を表示するためにGameManagerから呼び出すコルーチン
+    /// 引数に変更前のスコア・加算するするスコアを指定.
     /// </summary>
-    public void Result(List<int> beforeScore, List<int> addScore)
+    IEnumerator Result(List<int> beforeScore, List<int> addScore)
     {
         ActiveCharacters(names.Length);
         //Playerの数分ループして情報を入れる.
@@ -124,10 +129,76 @@ public class UIManager : MonoBehaviourPunCallbacks
                     = "SCORE:" + beforeScore[i].ToString();
                 resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.UPSCORE).GetComponent<Text>().text
                     = "+" + addScore[i].ToString();
-            }       
+            }
         }
-        StartCoroutine(ChangeScoreText(beforeScore, addScore));
+        //StartCoroutine(ChangeScoreText(beforeScore, addScore));
+
+        //スコアのテキストを変更する(旧ChangeScoreText).
+        List<int> score = beforeScore;
+        List<int> adscore = addScore;
+        int cnt = 0;
+        while (true)
+        {
+            for (i = 0; i < score.Count; i++)
+            {
+                if (adscore[i] != 0)//加算する分のスコアが0でなければテキスト変更する.
+                {
+                    adscore[i]--;//加算した分-1する.
+                    score[i]++;  //引いた分+1する.
+
+                    //スコアのテキストを変更する.
+                    resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.SCORE).GetComponent<Text>().text
+                            = "SCORE:" + score[i].ToString();
+                    resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.UPSCORE).GetComponent<Text>().text
+                    = "+" + adscore[i].ToString();
+                    if (adscore[i] == 0)//加算するスコアが0になったらカウントを増やす.
+                    {
+                        cnt++;
+                    }
+                }
+            }
+            //break;
+
+            yield return new WaitForSeconds(0.1f);
+            if (cnt == score.Count)//最大人数分全てのスコア加算が終了したらループを抜けて順位を表示する.
+            {
+                ChangeRank(score);
+                break;
+            }
+        }
+
+
+        yield return new WaitForSeconds(3f);
+        ActiveResultPanel(false);
+        //終了処理書くならココ
+
+        Debug.Log("コルーチンしゅうりょう☆");
+        yield return new WaitForSeconds(0.1f);
+
     }
+
+
+
+  //  public void Result(List<int> beforeScore, List<int> addScore)
+//    {
+        //ActiveCharacters(names.Length);
+        ////Playerの数分ループして情報を入れる.
+        //int i = 0;
+        //for (i = 0; i < beforeScore.Count; i++)
+        //{
+        //    //foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
+        //    {
+        //        //resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text = player.NickName;
+        //        resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text
+        //            = names[i];
+        //        resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.SCORE).GetComponent<Text>().text
+        //            = "SCORE:" + beforeScore[i].ToString();
+        //        resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.UPSCORE).GetComponent<Text>().text
+        //            = "+" + addScore[i].ToString();
+        //    }       
+        //}
+        //StartCoroutine(ChangeScoreText(beforeScore, addScore));
+    //}
 
     private void ActiveCharacters(int cnt)
     {
@@ -157,7 +228,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         int cnt = 0;
         while (true)
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < score.Count; i++)
             {
                 if (adscore[i] != 0)//加算する分のスコアが0でなければテキスト変更する.
                 {
@@ -178,7 +249,7 @@ public class UIManager : MonoBehaviourPunCallbacks
             //break;
 
                 yield return new WaitForSeconds(0.1f);
-            if (cnt == 3)//最大人数分全てのスコア加算が終了したらループを抜けて順位を表示する.
+            if (cnt == score.Count)//最大人数分全てのスコア加算が終了したらループを抜けて順位を表示する.
             {
                 ChangeRank(score);
                 break;
@@ -221,8 +292,11 @@ public class UIManager : MonoBehaviourPunCallbacks
     private void ActiveResultPanel(bool flg)
     {
         resultPanel.SetActive(flg);
-    } 
-        void PushNameTest()
+    }
+
+    #endregion
+
+    void PushNameTest()
         {
             //for(int i = 0; i < 3; i++)
             //{
