@@ -56,6 +56,7 @@ public class PlayerMouse : MonoBehaviour
         if (collision.tag != "SelectImage") return;
         // “–‚½‚Á‚½‰æ‘œ‚ÌID‚ğæ“¾.
         itemId = collision.gameObject.GetComponent<ObstacleImage>().ReturnID();
+        Debug.Log("hit");
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -92,7 +93,7 @@ public class PlayerMouse : MonoBehaviour
         if (isInstalled == true)
         {
             // ƒAƒCƒeƒ€‚Ì¶¬.
-           map.GetComponent<MapManager>().GenerateMapObject(0,saveAngle, gridPos);
+           map.GetComponent<MapManager>().GenerateMapObject(itemId,saveAngle, gridPos);
         }
         else
         {

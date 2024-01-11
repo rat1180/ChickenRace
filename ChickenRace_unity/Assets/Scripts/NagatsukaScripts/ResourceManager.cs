@@ -191,7 +191,7 @@ namespace ResorceNames
     /// </summary>
     public enum OBSTACLE_OBJECT
     {
-        Damage_Arrow,
+        Damage_Arrow = 1,
         Damage_Paunch,
         Move_Cannon,
         Move_Normal_Scaffold_Move,

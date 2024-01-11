@@ -67,7 +67,8 @@ public class GameManager : MonoBehaviour
         DataSharingClass,
         UIManager,
         User,
-        MapManager
+        MapManager,
+        StartPoint
     }
 
     //ゲーム進行に必要な定数
@@ -80,7 +81,8 @@ public class GameManager : MonoBehaviour
     static readonly Dictionary<ProgressName, string> progressPass = new Dictionary<ProgressName, string>() { { ProgressName.DataSharingClass, "NagatsukaObjects/DataSharingClass" },
                                                                                                              { ProgressName.UIManager,"UIManager"},
                                                                                                              { ProgressName.User,"User" },
-                                                                                                             { ProgressName.MapManager,"MapManager" }};
+                                                                                                             { ProgressName.MapManager,"MapManager" },
+                                                                                                             { ProgressName.StartPoint,"StartPoint" }};
 
     /// <summary>
     /// ゲームの進行に必要なマネージャー等をまとめたクラス
@@ -93,6 +95,7 @@ public class GameManager : MonoBehaviour
         public DataSharingClass dataSharingClass;
         public User user;
         public int userActorNumber;
+        public Vector2 startPoint;
     }
 
     #endregion
@@ -256,6 +259,10 @@ public class GameManager : MonoBehaviour
         foreach(var player in PhotonNetwork.PlayerList)
         {
             scores.Add(SumScore(player.GetRankStatus()));
+        }
+        while(scores.Count < ConectServer.RoomProperties.MaxPlayer)
+        {
+            scores.Add((int)DEAD);
         }
 
         return scores;
@@ -582,6 +589,9 @@ public class GameManager : MonoBehaviour
             gameProgress.uiManager = GameObject.Find(progressPass[ProgressName.UIManager]).GetComponent<UIManager>();
             gameProgress.uiManager.FinishSelect();
 
+            //スタート地点を取得
+            gameProgress.startPoint = GameObject.Find(progressPass[ProgressName.StartPoint]).transform.position;
+
             DebugLog("各値の初期化完了");
         }
         //3.初期化完了・他プレイヤーを待機<WAIT
@@ -653,7 +663,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitUntil(() => CheckReady());
 
         //生成済みの障害物を再生成
-        //gameProgress.mapManager
+        gameProgress.mapManager.ReInstallObject();
 
         DebugLog("障害物選択開始");
 
@@ -661,9 +671,15 @@ public class GameManager : MonoBehaviour
         if (PhotonNetwork.IsMasterClient)
         {
             //テスト
-            for (int i = 0; i < 5; i++)
+
             {
-                int id = Random.Range(1, 4);
+                int id = Random.Range((int)OBSTACLE_OBJECT.Normal_Scaffold, (int)OBSTACLE_OBJECT.Normal_Scaffold);
+                gameProgress.dataSharingClass.PushID(id);
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                int id = Random.Range(1, (int)OBSTACLE_OBJECT.Normal_Scaffold);
                 //障害物追加
                 gameProgress.dataSharingClass.PushID(i == 4 ? 0 : id);
             }
@@ -837,6 +853,7 @@ public class GameManager : MonoBehaviour
 
         //キャラの出現
         gameProgress.user.GeneratePlayer();
+        //gameProgress.user
 
         DebugLog("READY演出");
 
@@ -911,6 +928,9 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            //オブジェクトの削除
+
+
             DebugLog("選択フェーズに返る");
             gameState = GameStatus.SELECT;
         }
