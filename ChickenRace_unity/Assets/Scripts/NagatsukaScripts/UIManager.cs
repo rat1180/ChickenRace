@@ -17,35 +17,38 @@ public class UIManager : MonoBehaviourPunCallbacks
         RANK,
     }
 
+    enum CanvasChild
+    {
+        ImageObjects,
+        RaceCount,
+        ResultPanel,
+    }
+
     private GameObject imageObjects;
     private GameObject resultPanel;
     private GameObject resultCharacters;//リザルト画面のキャラクター(Name,Score,Rank表示)
     private List<int> id;
 
 
-
+    [Header("デバッグ用(実際のゲームでは使用しない)")]
     public string[] names = new string[3];
     public List<int> beScore;
     public List<int> addscoreTest;
 
     private void Start()
     {
-        imageObjects = gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
-        resultPanel = gameObject.transform.GetChild(0).gameObject.transform.GetChild(2).gameObject;
+        imageObjects = transform.GetChild(0).transform.GetChild((int)CanvasChild.ImageObjects).gameObject;
+        resultPanel =  transform.GetChild(0).transform.GetChild((int)CanvasChild.ResultPanel).gameObject;
         resultCharacters = resultPanel.transform.GetChild(0).gameObject;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            Result(beScore, addscoreTest);
-
-        }
-        //if (Input.GetKeyDown(KeyCode.L))
+        //if (Input.GetKeyDown(KeyCode.K))
         //{
-        //    SoldOut(testSoldOutInex);
+        //    Result(beScore, addscoreTest);
+
         //}
     }
 
@@ -79,6 +82,7 @@ public class UIManager : MonoBehaviourPunCallbacks
             imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
             //imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =
             ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
+
             //コンポーネントが存在しなければ追加してIDを代入し、逆に存在すればそのままIDを代入する
             if (imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>() == null)
             {
@@ -109,9 +113,8 @@ public class UIManager : MonoBehaviourPunCallbacks
         ActiveCharacters(names.Length);
         //Playerの数分ループして情報を入れる.
         int i = 0;
-        for (i = 0; i < names.Length; i++)
+        for (i = 0; i < beforeScore.Count; i++)
         {
-            //resultCharacters.transform.GetChild(i).gameObject.SetActive(true);
             //foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
             {
                 //resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text = player.NickName;
@@ -121,8 +124,7 @@ public class UIManager : MonoBehaviourPunCallbacks
                     = "SCORE:" + beforeScore[i].ToString();
                 resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.UPSCORE).GetComponent<Text>().text
                     = "+" + addScore[i].ToString();
-            }
-            
+            }       
         }
         StartCoroutine(ChangeScoreText(beforeScore, addScore));
     }
@@ -143,9 +145,14 @@ public class UIManager : MonoBehaviourPunCallbacks
             }
         }
     }
+
+    /// <summary>
+    /// リザルトパネルのスコアを変化させる関数
+    /// 引数に変更前のスコア・加算するするスコアを指定
+    /// </summary>
     IEnumerator ChangeScoreText(List<int> beforeScore, List<int> addScore)
     {
-        List<int> score =  beforeScore;
+        List<int> score = beforeScore;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
         List<int> adscore =  addScore;
         int cnt = 0;
         while (true)
@@ -176,10 +183,12 @@ public class UIManager : MonoBehaviourPunCallbacks
                 break;
             }
         }
-
-
-        yield return new WaitForSeconds(5f);
         
+
+        yield return new WaitForSeconds(3f);
+        //Debug.Log("コルーチン終了");
+        ActiveResultPanel(false);
+        //終了処理書くならココ
     }
 
     void ChangeRank(List<int> score)
@@ -190,9 +199,9 @@ public class UIManager : MonoBehaviourPunCallbacks
             int rank = 1;
             for(int j = 0; j < 3; j++)
             {
-                if (score[i] < score[j])
+                if (score[i] < score[j])//自分も比べる事になるが、問題ない,
                 {
-                    Debug.Log(i + "番目" + "Score1:" + score[i] + "と" + "Score2" + score[j + 1]);
+                    //Debug.Log(i + "番目" + "Score1:" + score[i] + "と" + "Score2" + score[j + 1]);
                     rank++;
                 }
             }
@@ -201,6 +210,16 @@ public class UIManager : MonoBehaviourPunCallbacks
         }
         
     }
+
+    /// <summary>
+    /// リザルトパネルの表示非表示を行う関数
+    /// 引数に切り換えたい方(trune・false)を指定
+    /// </summary>
+    /// <param name="flg"></param>
+    private void ActiveResultPanel(bool flg)
+    {
+        resultPanel.SetActive(flg);
+    } 
         void PushNameTest()
         {
             //for(int i = 0; i < 3; i++)
