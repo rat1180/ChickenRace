@@ -24,32 +24,46 @@ public class UIManager : MonoBehaviourPunCallbacks
         ResultPanel,
     }
 
+    private Vector2[] imagePosition =
+    {
+        new Vector2(-300,90),
+        new Vector2(300, 90),
+        new Vector2(-300,-300),
+        new Vector2(300,-300)
+    };
+
     private GameObject imageObjects;
     private GameObject resultPanel;
     private GameObject resultCharacters;//リザルト画面のキャラクター(Name,Score,Rank表示)
     private List<int> id;
+
+    public GameObject imageObstacle;
 
 
     [Header("デバッグ用(実際のゲームでは使用しない)")]
     public string[] names = new string[3];
     public List<int> beScore;
     public List<int> addscoreTest;
+    public List<int> testID;
 
     private void Start()
     {
         imageObjects = transform.GetChild(0).transform.GetChild((int)CanvasChild.ImageObjects).gameObject;
         resultPanel =  transform.GetChild(0).transform.GetChild((int)CanvasChild.ResultPanel).gameObject;
         resultCharacters = resultPanel.transform.GetChild(0).gameObject;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.K))
-        //{
-        //    Result(beScore, addscoreTest);
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            //List<int> test = testID;
+            PushID(testID);
+            //StartCoroutine(Result(beScore, addscoreTest));
+        }
 
-        //}
     }
 
     /// <summary>
@@ -57,7 +71,11 @@ public class UIManager : MonoBehaviourPunCallbacks
     /// </summary>
     public void FinishSelect()
     {
-        imageObjects.SetActive(false);
+        //imageObjects.SetActive(false);
+        for(int i = 0; i < 4; i++)
+        {
+            Destroy(imageObjects.transform.GetChild(i).gameObject);
+        }
     }
 
     /// <summary>
@@ -67,31 +85,40 @@ public class UIManager : MonoBehaviourPunCallbacks
     {
         id = new List<int>();
         id = iD;
-        imageObjects.SetActive(true);
+        //imageObjects.SetActive(true);
+        
         ChangeObstacleImage();
     }
-
+    
     /// <summary>
     /// 4つの画像を変える
     /// ここでIDも付与する
     /// </summary>
     public void ChangeObstacleImage()
     {
-        for (int i = 0; i < imageObjects.transform.childCount; i++)
+        //for (int i = 0; i < imageObjects.transform.childCount; i++)
+        for (int i = 0; i < 4; i++)
         {
-            imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
-            //imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =
+            GameObject gameObject = Instantiate(imageObstacle, new Vector3(), Quaternion.identity,imageObjects.transform);
+            gameObject.GetComponent<RectTransform>().localPosition= imagePosition[i];
+
+            imageObstacle.GetComponent<Image>().sprite =
             ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
+            imageObstacle.transform.GetChild(i).gameObject.AddComponent<ObstacleImage>().id = i;
+
+            //imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =
+            //imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
+            //ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
 
             //コンポーネントが存在しなければ追加してIDを代入し、逆に存在すればそのままIDを代入する
-            if (imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>() == null)
-            {
-                imageObjects.transform.GetChild(i).gameObject.AddComponent<ObstacleImage>().id = i;
-            }
-            else
-            {
-                imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>().id = i;
-            }
+            //if (imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>() == null)
+            //{
+            //    imageObjects.transform.GetChild(i).gameObject.AddComponent<ObstacleImage>().id = i;
+            //}
+            //else
+            //{
+            //    imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>().id = i;
+            //}
         }
     }
 
@@ -105,10 +132,13 @@ public class UIManager : MonoBehaviourPunCallbacks
         imageObjects.transform.GetChild(index).gameObject.GetComponent<ObstacleImage>().id = 0;
     }
 
+    #region リザルト変更関連
+
     /// <summary>
-    /// レース終了時リザルト画面を表示するためにGameManagerから呼び出す関数.
+    /// レース終了時リザルト画面を表示するためにGameManagerから呼び出すコルーチン
+    /// 引数に変更前のスコア・加算するするスコアを指定.
     /// </summary>
-    public void Result(List<int> beforeScore, List<int> addScore)
+    IEnumerator Result(List<int> beforeScore, List<int> addScore)
     {
         ActiveCharacters(names.Length);
         //Playerの数分ループして情報を入れる.
@@ -124,40 +154,17 @@ public class UIManager : MonoBehaviourPunCallbacks
                     = "SCORE:" + beforeScore[i].ToString();
                 resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.UPSCORE).GetComponent<Text>().text
                     = "+" + addScore[i].ToString();
-            }       
-        }
-        StartCoroutine(ChangeScoreText(beforeScore, addScore));
-    }
-
-    private void ActiveCharacters(int cnt)
-    {
-        //for(int i=0;i< ConectServer.RoomProperties.MaxPlayer; i++)
-        for (int i = 0; i < 3 ; i++)
-        {
-            
-            if (i < cnt)
-            {
-                resultCharacters.transform.GetChild(i).gameObject.SetActive(true);
-            }
-            else
-            {
-                resultCharacters.transform.GetChild(i).gameObject.SetActive(false);
             }
         }
-    }
+        //StartCoroutine(ChangeScoreText(beforeScore, addScore));
 
-    /// <summary>
-    /// リザルトパネルのスコアを変化させる関数
-    /// 引数に変更前のスコア・加算するするスコアを指定
-    /// </summary>
-    IEnumerator ChangeScoreText(List<int> beforeScore, List<int> addScore)
-    {
-        List<int> score = beforeScore;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
-        List<int> adscore =  addScore;
+        //スコアのテキストを変更する(旧ChangeScoreText).
+        List<int> score = beforeScore;
+        List<int> adscore = addScore;
         int cnt = 0;
         while (true)
         {
-            for (int i = 0; i < 3; i++)
+            for (i = 0; i < score.Count; i++)
             {
                 if (adscore[i] != 0)//加算する分のスコアが0でなければテキスト変更する.
                 {
@@ -177,21 +184,45 @@ public class UIManager : MonoBehaviourPunCallbacks
             }
             //break;
 
-                yield return new WaitForSeconds(0.1f);
-            if (cnt == 3)//最大人数分全てのスコア加算が終了したらループを抜けて順位を表示する.
+            yield return new WaitForSeconds(0.1f);
+            if (cnt == score.Count)//最大人数分全てのスコア加算が終了したらループを抜けて順位を表示する.
             {
                 ChangeRank(score);
                 break;
             }
         }
-        
+
 
         yield return new WaitForSeconds(3f);
-        //Debug.Log("コルーチン終了");
         ActiveResultPanel(false);
         //終了処理書くならココ
 
+        Debug.Log("コルーチンしゅうりょう☆");
+        yield return new WaitForSeconds(0.1f);
+
     }
+
+
+
+
+    private void ActiveCharacters(int cnt)
+    {
+        //for(int i=0;i< ConectServer.RoomProperties.MaxPlayer; i++)
+        for (int i = 0; i < 3 ; i++)
+        {
+            
+            if (i < cnt)
+            {
+                resultCharacters.transform.GetChild(i).gameObject.SetActive(true);
+            }
+            else
+            {
+                resultCharacters.transform.GetChild(i).gameObject.SetActive(false);
+            }
+        }
+    }
+
+   
 
     void ChangeRank(List<int> score)
     {
@@ -221,8 +252,11 @@ public class UIManager : MonoBehaviourPunCallbacks
     private void ActiveResultPanel(bool flg)
     {
         resultPanel.SetActive(flg);
-    } 
-        void PushNameTest()
+    }
+
+    #endregion
+
+    void PushNameTest()
         {
             //for(int i = 0; i < 3; i++)
             //{
