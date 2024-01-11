@@ -844,6 +844,7 @@ public class GameManager : MonoBehaviour
         //進行待機
         yield return new WaitUntil(() => CheckInGame());
         //キャラの操作のロックを解除
+        //gameProgress.user.pla
 
         //障害物のロック解除
         isNowRace = true;
@@ -853,7 +854,7 @@ public class GameManager : MonoBehaviour
         {
             //レース中の表示、演出
 
-            DebugLog("レース中");
+            //DebugLog("レース中");
 
             if (Input.GetKeyDown(KeyCode.G)) GoalPlayer();
             if(Input.GetKeyDown(KeyCode.U)) DeadPlayer();
@@ -893,7 +894,7 @@ public class GameManager : MonoBehaviour
         gameProgress.dataSharingClass.PushScore(gameProgress.userActorNumber, scorelist[gameProgress.userActorNumber]);
 
         DebugLog("順位、スコアの反映演出");
-        //gameProgress.uiManager.Result(beforescore, scorelist);
+        gameProgress.uiManager.Result(beforescore, scorelist);
         yield return new WaitForSeconds(2.0f);
 
         DebugLog("演出終了");
