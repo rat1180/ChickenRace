@@ -98,6 +98,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridSize: 1
   color: {r: 1, g: 1, b: 1, a: 1}
-  size: {x: 8, y: 8}
-  posRetouch: {x: 0, y: 0}
+  size: {x: 20, y: 20}
+  posRetouch: {x: 0.5, y: 0.5}
   mapManager: {fileID: 8712431074821331746, guid: 951dc9eda52903349a1e55d4bb53c90d, type: 3}
