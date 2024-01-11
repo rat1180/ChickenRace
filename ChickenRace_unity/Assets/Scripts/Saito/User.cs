@@ -157,4 +157,9 @@ public class User : MonoBehaviour
             }
         }
     }
+
+    public void StartPlayerPosition(Vector3 startpos)
+    {
+        playerObjcet.GetComponent<Player>().StartPosition(startpos);
+    }
 }
