@@ -99,26 +99,24 @@ public class UIManager : MonoBehaviourPunCallbacks
         //for (int i = 0; i < imageObjects.transform.childCount; i++)
         for (int i = 0; i < 4; i++)
         {
-            GameObject gameObject = Instantiate(imageObstacle, new Vector3(), Quaternion.identity,imageObjects.transform);
-            gameObject.GetComponent<RectTransform>().localPosition= imagePosition[i];
+            if (imageObjects.transform.childCount == 4)//4つの画像オブジェクトが生成されているかチェック.
+            {
+                GameObject gameObject = Instantiate(imageObstacle, new Vector3(), Quaternion.identity, imageObjects.transform);
+                gameObject.GetComponent<RectTransform>().localPosition = imagePosition[i];
 
-            imageObstacle.GetComponent<Image>().sprite =
-            ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
-            imageObstacle.AddComponent<ObstacleImage>().id = i;
+                imageObstacle.GetComponent<Image>().sprite =
+                ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
+                imageObstacle.AddComponent<ObstacleImage>().id = i;
+            }
+            else
+            {
+                //imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =//
+                imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
+                ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
 
-            //imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =
-            //imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
-            //ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
-
-            //コンポーネントが存在しなければ追加してIDを代入し、逆に存在すればそのままIDを代入する
-            //if (imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>() == null)
-            //{
-            //    imageObjects.transform.GetChild(i).gameObject.AddComponent<ObstacleImage>().id = i;
-            //}
-            //else
-            //{
-            //    imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>().id = i;
-            //}
+                //コンポーネントが存在すればそのままIDを代入する
+                imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>().id = i;
+            }
         }
     }
 
