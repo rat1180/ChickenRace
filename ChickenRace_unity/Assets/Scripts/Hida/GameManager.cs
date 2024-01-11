@@ -863,6 +863,7 @@ public class GameManager : MonoBehaviour
 
         //キャラの操作のロックを解除
         gameProgress.user.PlayerStart(true);
+        //gameProgress.user
 
         //障害物のロック解除
         isNowRace = true;

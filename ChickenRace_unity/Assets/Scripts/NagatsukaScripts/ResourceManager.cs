@@ -172,15 +172,19 @@ namespace ResorceNames
 { 
     public enum OBSTACLE_IMAGE_NAMES
     {
+        Damage_Arrow = 1,
+        Damage_Paunch,
+        Move_Cannon,
+        Move_Normal_Scaffold_Move,
+        Move_Normal_Scaffold_Rotate,
+        Move_Scaffold_Hole,
+        Move_Scaffold_Surprise,
+        Move_ZeroGravity,
+        Normal_Scaffold,
         Kanbaipop,//Š®”„‰æ‘œ.
         taihou,
         cutter,
-        blackhole,
-        Damage_Arrow,
-        Move_ZeroGravity, 
-        Move_Normal_Scaffold_Rotate,
-        Normal_Scaffold_Stairs,
-        Normal_Scaffold_L,
+        //blackhole
     }
 
     /// <summary>

@@ -56,7 +56,6 @@ public class PlayerMouse : MonoBehaviour
         if (collision.tag != "SelectImage") return;
         // “–‚½‚Á‚½‰æ‘œ‚ÌID‚ðŽæ“¾.
         itemId = collision.gameObject.GetComponent<ObstacleImage>().ReturnID();
-        Debug.Log("hit");
     }
 
     private void OnTriggerExit2D(Collider2D collision)

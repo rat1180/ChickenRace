@@ -26,10 +26,10 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     private Vector2[] imagePosition =
     {
-        new Vector2(-300,90),
-        new Vector2(300, 90),
-        new Vector2(-300,-300),
-        new Vector2(300,-300)
+        new Vector2(-5,3),
+        new Vector2(5, 3),
+        new Vector2(-5,-5),
+        new Vector2(5,-5)
     };
 
     private GameObject imageObjects;
@@ -48,8 +48,8 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        imageObjects = transform.GetChild(0).transform.GetChild((int)CanvasChild.ImageObjects).gameObject;
-        resultPanel =  transform.GetChild(0).transform.GetChild((int)CanvasChild.ResultPanel).gameObject;
+        imageObjects = transform.Find("ImageObjects").gameObject;
+        resultPanel =  transform.GetChild(0).transform.Find("ResultPanel").gameObject;
         resultCharacters = resultPanel.transform.GetChild(0).gameObject;
 
     }
@@ -99,19 +99,20 @@ public class UIManager : MonoBehaviourPunCallbacks
         //for (int i = 0; i < imageObjects.transform.childCount; i++)
         for (int i = 0; i < 4; i++)
         {
-            if (imageObjects.transform.childCount == 4)//4つの画像オブジェクトが生成されているかチェック.
+            if (imageObjects.transform.childCount != 4)//4つの画像オブジェクトが生成されているかチェック.
             {
                 GameObject gameObject = Instantiate(imageObstacle, new Vector3(), Quaternion.identity, imageObjects.transform);
-                gameObject.GetComponent<RectTransform>().localPosition = imagePosition[i];
+                gameObject.transform.position = imagePosition[i];
+                //gameObject.GetComponent<RectTransform>().localPosition = imagePosition[i];
 
-                imageObstacle.GetComponent<Image>().sprite =
+                gameObject.GetComponent<SpriteRenderer>().sprite =
                 ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
-                imageObstacle.AddComponent<ObstacleImage>().id = i;
+                gameObject.AddComponent<ObstacleImage>().id = i;
             }
             else
             {
-                //imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =//
-                imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
+                imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =//
+                //imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
                 ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
 
                 //コンポーネントが存在すればそのままIDを代入する
