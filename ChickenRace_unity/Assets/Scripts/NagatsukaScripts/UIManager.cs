@@ -26,10 +26,10 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     private Vector2[] imagePosition =
     {
-        new Vector2(-300,90),
-        new Vector2(300, 90),
-        new Vector2(-300,-300),
-        new Vector2(300,-300)
+        new Vector2(-5,3),
+        new Vector2(5, 3),
+        new Vector2(-5,-5),
+        new Vector2(5,-5)
     };
 
     private GameObject imageObjects;
@@ -48,8 +48,8 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        imageObjects = transform.GetChild(0).transform.GetChild((int)CanvasChild.ImageObjects).gameObject;
-        resultPanel =  transform.GetChild(0).transform.GetChild((int)CanvasChild.ResultPanel).gameObject;
+        imageObjects = transform.Find("ImageObjects").gameObject;
+        resultPanel = transform.GetChild(0).transform.Find("ResultPanel").gameObject;
         resultCharacters = resultPanel.transform.GetChild(0).gameObject;
 
     }
@@ -72,7 +72,7 @@ public class UIManager : MonoBehaviourPunCallbacks
     public void FinishSelect()
     {
         //imageObjects.SetActive(false);
-        for(int i = 0; i < imageObjects.transform.childCount; i++)//子要素全削除.
+        for (int i = 0; i < imageObjects.transform.childCount; i++)//子要素全削除.
         {
             Destroy(imageObjects.transform.GetChild(i).gameObject);
         }
@@ -86,10 +86,10 @@ public class UIManager : MonoBehaviourPunCallbacks
         id = new List<int>();
         id = iD;
         //imageObjects.SetActive(true);
-        
+
         ChangeObstacleImage();
     }
-    
+
     /// <summary>
     /// 4つの画像を変える
     /// ここでIDも付与する
@@ -99,19 +99,20 @@ public class UIManager : MonoBehaviourPunCallbacks
         //for (int i = 0; i < imageObjects.transform.childCount; i++)
         for (int i = 0; i < 4; i++)
         {
-            if (imageObjects.transform.childCount == 4)//4つの画像オブジェクトが生成されているかチェック.
+            if (imageObjects.transform.childCount != 4)//4つの画像オブジェクトが生成されているかチェック.
             {
                 GameObject gameObject = Instantiate(imageObstacle, new Vector3(), Quaternion.identity, imageObjects.transform);
-                gameObject.GetComponent<RectTransform>().localPosition = imagePosition[i];
+                gameObject.transform.position = imagePosition[i];
+                //gameObject.GetComponent<RectTransform>().localPosition = imagePosition[i];
 
-                imageObstacle.GetComponent<Image>().sprite =
+                gameObject.GetComponent<SpriteRenderer>().sprite =
                 ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
-                imageObstacle.AddComponent<ObstacleImage>().id = i;
+                gameObject.AddComponent<ObstacleImage>().id = i;
             }
             else
             {
-                //imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =//
-                imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
+                imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =//
+                //imageObjects.transform.GetChild(i).GetComponent<Image>().sprite =
                 ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
 
                 //コンポーネントが存在すればそのままIDを代入する
@@ -136,7 +137,7 @@ public class UIManager : MonoBehaviourPunCallbacks
     /// レース終了時リザルト画面を表示するためにGameManagerから呼び出すコルーチン
     /// 引数に変更前のスコア・加算するするスコアを指定.
     /// </summary>
-    IEnumerator Result(List<int> beforeScore, List<int> addScore)
+    public IEnumerator Result(List<int> beforeScore, List<int> addScore)
     {
         ActiveResultPanel(true);
         ActiveCharacters(names.Length);
@@ -209,9 +210,9 @@ public class UIManager : MonoBehaviourPunCallbacks
     private void ActiveCharacters(int cnt)
     {
         //for(int i=0;i< ConectServer.RoomProperties.MaxPlayer; i++)
-        for (int i = 0; i < 3 ; i++)
+        for (int i = 0; i < 3; i++)
         {
-            
+
             if (i < cnt)
             {
                 resultCharacters.transform.GetChild(i).gameObject.SetActive(true);
@@ -223,7 +224,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         }
     }
 
-   
+
     /// <summary>
     /// スコアに応じて順位を変更する関数
     /// 引数に変更後のスコアを指定.
@@ -233,7 +234,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         for (int i = 0; i < 3; i++)
         {
             int rank = 1;
-            for(int j = 0; j < 3; j++)
+            for (int j = 0; j < 3; j++)
             {
                 if (score[i] < score[j])//自分も比べる事になるが、問題ない,
                 {
@@ -243,7 +244,7 @@ public class UIManager : MonoBehaviourPunCallbacks
             }
             resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.RANK).GetComponent<Text>().text
                     = rank.ToString() + "位";
-        }   
+        }
     }
 
     /// <summary>
@@ -259,17 +260,17 @@ public class UIManager : MonoBehaviourPunCallbacks
     #endregion
 
     void PushNameTest()
-        {
-            //for(int i = 0; i < 3; i++)
-            //{
-            //    resultCharacters.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text = names[i];
-            //}
+    {
+        //for(int i = 0; i < 3; i++)
+        //{
+        //    resultCharacters.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text = names[i];
+        //}
 
-            //Playerの数分ループして情報を入れる.
-            int i = 0;
-            foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
-            {
-                resultCharacters.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text = player.NickName;
-            }
+        //Playerの数分ループして情報を入れる.
+        int i = 0;
+        foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
+        {
+            resultCharacters.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text = player.NickName;
         }
+    }
 }
