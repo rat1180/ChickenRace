@@ -138,7 +138,7 @@ public class UIManager : MonoBehaviourPunCallbacks
     /// レース終了時リザルト画面を表示するためにGameManagerから呼び出すコルーチン
     /// 引数に変更前のスコア・加算するするスコアを指定.
     /// </summary>
-    IEnumerator Result(List<int> beforeScore, List<int> addScore)
+    public IEnumerator Result(List<int> beforeScore, List<int> addScore)
     {
         ActiveCharacters(names.Length);
         //Playerの数分ループして情報を入れる.

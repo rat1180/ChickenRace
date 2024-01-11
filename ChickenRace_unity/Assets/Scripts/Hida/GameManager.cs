@@ -587,7 +587,6 @@ public class GameManager : MonoBehaviour
 
             //UIManagerを検索
             gameProgress.uiManager = GameObject.Find(progressPass[ProgressName.UIManager]).GetComponent<UIManager>();
-            gameProgress.uiManager.FinishSelect();
 
             //スタート地点を取得
             gameProgress.startPoint = GameObject.Find(progressPass[ProgressName.StartPoint]).transform.position;
@@ -913,7 +912,7 @@ public class GameManager : MonoBehaviour
         gameProgress.dataSharingClass.PushScore(gameProgress.userActorNumber, scorelist[gameProgress.userActorNumber]);
 
         DebugLog("順位、スコアの反映演出");
-        gameProgress.uiManager.Result(beforescore, scorelist);
+        yield return StartCoroutine(gameProgress.uiManager.Result(beforescore, scorelist));
         yield return new WaitForSeconds(2.0f);
 
         DebugLog("演出終了");
