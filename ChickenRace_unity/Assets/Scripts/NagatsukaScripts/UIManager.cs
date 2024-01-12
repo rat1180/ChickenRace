@@ -22,7 +22,7 @@ public class UIManager : MonoBehaviourPunCallbacks
     {
         ImageObjects,
         RaceCount,
-        ResultPanel,
+        LoaingImage
     }
     #endregion
 
@@ -45,6 +45,9 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     public GameObject imageObstacle;
 
+    //Loadingアニメーション関連.
+    private GameObject loaingImage;
+
 
     [Header("デバッグ用(実際のゲームでは使用しない)")]
     public string[] names = new string[3];
@@ -58,6 +61,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         resultPanel = transform.GetChild(0).transform.Find("ResultPanel").gameObject;
         resultCharacters = resultPanel.transform.GetChild(0).gameObject;
 
+        loaingImage = transform.GetChild(0).transform.GetChild((int)CanvasChild.LoaingImage).gameObject;
     }
 
     // Update is called once per frame
@@ -65,12 +69,12 @@ public class UIManager : MonoBehaviourPunCallbacks
     {
         if (Input.GetKeyDown(KeyCode.K))
         {
-            PushID(testID);
+            //PushID(testID);
             //StartCoroutine(Result(beScore, addscoreTest));
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
-            FinishSelect();
+            //FinishSelect();
             //StartCoroutine(Result(beScore, addscoreTest));
         }
     }
@@ -148,7 +152,7 @@ public class UIManager : MonoBehaviourPunCallbacks
     public IEnumerator Result(List<int> beforeScore, List<int> addScore)
     {
         ActiveResultPanel(true);
-        ActiveCharacters(names.Length);
+        ActiveCharacters(beforeScore.Count);
         //Playerの数分ループして情報を入れる.
         int i = 0;
         for (i = 0; i < beforeScore.Count; i++)
@@ -174,7 +178,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         {
             for (i = 0; i < score.Count; i++)
             {
-                if (adscore[i] != 0)//加算する分のスコアが0でなければテキスト変更する.
+                if (adscore[i] >= 0)//加算する分のスコアが0でなければテキスト変更する.
                 {
                     adscore[i]--;//加算した分-1する.
                     score[i]++;  //引いた分+1する.
@@ -184,7 +188,7 @@ public class UIManager : MonoBehaviourPunCallbacks
                             = "SCORE:" + score[i].ToString();
                     resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.UPSCORE).GetComponent<Text>().text
                     = "+" + adscore[i].ToString();
-                    if (adscore[i] == 0)//加算するスコアが0になったらカウントを増やす.
+                    if (adscore[i] <= 0)//加算するスコアが0になったらカウントを増やす.
                     {
                         cnt++;
                     }
@@ -265,6 +269,18 @@ public class UIManager : MonoBehaviourPunCallbacks
     }
 
     #endregion
+
+    /// <summary>
+    /// 通信中アニメ―ションの表示・非表示を行う関数
+    /// 引数にtrue・falseを指定し、切り換える
+    /// </summary>
+    /// <param name="flg"></param>
+    public void ActiveLoaingImage(bool flg)
+    {
+        loaingImage.SetActive(flg);
+    }
+
+
 
     void PushNameTest()
     {
