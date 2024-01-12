@@ -310,11 +310,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameState: 0
   isFazeEnd: 0
+  isNowRace: 0
   gameProgress:
     mapManager: {fileID: 0}
     uiManager: {fileID: 0}
     dataSharingClass: {fileID: 0}
     user: {fileID: 0}
+    userActorNumber: 0
+    startPoint: {x: 0, y: 0}
   isDebug: 1
 --- !u!4 &255194751
 Transform:
@@ -1277,9 +1280,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b18b31bcda6187449102931c1d248c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  imageObjects: {fileID: 1062579545}
-  id: 
-  testSoldOutInex: 0
+  imageObstacle: {fileID: 0}
+  names:
+  - 
+  - 
+  - 
+  beScore: 
+  addscoreTest: 
+  testID: 
 --- !u!4 &676629885
 Transform:
   m_ObjectHideFlags: 0

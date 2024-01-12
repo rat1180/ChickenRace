@@ -60,12 +60,14 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     // Start is called before the first frame update
     void Start()
     {
-        PhotonNetwork.ConnectUsingSettings();
-        PhotonNetwork.AutomaticallySyncScene = true;//ホストとシーンを同期する.
+            PhotonNetwork.AutomaticallySyncScene = true;//ホストとシーンを同期する.
+            TryRoomJoin();
+
+        
         isInRoom = false;
         isStart = false;
         createPlayerFlg = false;
-        TryRoomJoin();
+
     }
 
     // Update is called once per frame
@@ -74,7 +76,10 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         if (isInRoom)
         {
             RoomStatusUpDate();
-            ShowRoomInformation();
+            if (!PhotonNetwork.OfflineMode)
+            {
+                ShowRoomInformation();
+            }
             
         }
     }
@@ -127,6 +132,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     #endregion
 
 
+
     #region データ共有クラス関連
 
     /// <summary>
@@ -171,7 +177,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     void TryRoomJoin()
     {
         //オフライン以外の時に接続
-        if (ConectServer.RoomProperties.RoomName != "Offline")
+        if (!ConectServer.RoomProperties.offline)
         {
             var roomOptions = new RoomOptions();
             roomOptions.MaxPlayers = ConectServer.RoomProperties.MaxPlayer;
@@ -245,15 +251,18 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     /// </summary>
     void RoomStatusUpDate()
     {
-        // ルームの参加人数を4人に設定する
-        if (PhotonNetwork.CurrentRoom.PlayerCount == ConectServer.RoomProperties.MaxPlayer)
-        {
-            PhotonNetwork.CurrentRoom.IsOpen = false;
-        }
-        else
-        {
-            PhotonNetwork.CurrentRoom.IsOpen = true;
-        }
+            // ルームの参加人数を4人に設定する
+            if (PhotonNetwork.CurrentRoom.PlayerCount == ConectServer.RoomProperties.MaxPlayer ||
+            PhotonNetwork.OfflineMode)
+            {
+                PhotonNetwork.CurrentRoom.IsOpen = false;
+            }
+            else
+            {
+                PhotonNetwork.CurrentRoom.IsOpen = true;
+            }
+    
+        
         if (!isInRoom)
         {
             sceanMoveButton.interactable = false;
@@ -283,6 +292,30 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
             //= "ゲームを始メル(" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + ")";
 
             //メンバリストを表示
+        }
+    }
+
+    public void Connect()
+    {
+        if (!ConectServer.RoomProperties.offline)
+        {
+            PhotonNetwork.ConnectUsingSettings();
+        }
+        else
+        {
+            PhotonNetwork.OfflineMode = true;
+        }
+    }
+
+    public void Disconnect()
+    {
+        if (!ConectServer.RoomProperties.offline)
+        {
+            PhotonNetwork.Disconnect();
+        }
+        else
+        {
+            PhotonNetwork.OfflineMode = false;
         }
     }
 

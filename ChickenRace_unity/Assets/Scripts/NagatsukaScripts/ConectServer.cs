@@ -18,6 +18,7 @@ public class ConectServer : MonoBehaviourPunCallbacks
     {
         [Tooltip("参加するルーム名")] public string RoomName;
         [Tooltip("参加可能人数")] public int MaxPlayer;
+        [Tooltip("オフラインモード")] public bool offline;
     }
 
     [SerializeField, Tooltip("デバッグなどでのオフラインモード")] bool isOffline;

@@ -593,12 +593,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1169473115}
-  m_RootOrder: 0
+  m_Father: {fileID: 2084714277}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -100, y: 100}
+  m_AnchoredPosition: {x: -99.99994, y: 100}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &203446357
@@ -641,7 +641,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -600879164, guid: 952a8c565fdb6e040b75f1161431d232, type: 3}
+  m_Sprite: {fileID: 1672562161, guid: 41c698560d559174aa19d024b6cf4bc3, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1453,7 +1453,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   imageObstacle: {fileID: 6792849930480165428, guid: 83e81ceef11bc7345ba9748440647e17, type: 3}
-  loaingImage: {fileID: 203446355}
   names:
   - Face
   - ass
@@ -2389,8 +2388,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 203446356}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3761,6 +3759,7 @@ RectTransform:
   m_Children:
   - {fileID: 1683705805}
   - {fileID: 1974880395}
+  - {fileID: 203446356}
   m_Father: {fileID: 684223962}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
