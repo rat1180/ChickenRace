@@ -29,10 +29,13 @@ public class Obstacle_Paunch : Obstacle
     }
     protected override void update()
     {
-        if (isPaunchFlg)
-        {       
-           ShotObj();
-        }      
+        if (GameManager.instance.CheckObstacleMove())
+        {
+            if (isPaunchFlg)
+            {
+                ShotObj();
+            }
+        }
     }
     protected override void ObjStart()
     {

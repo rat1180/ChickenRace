@@ -17,6 +17,10 @@ public class Obstacle_Cannon : Obstacle
         obstacleCenterPos = new Vector2Int(0, 0);
         pow = 1.5f;
     }
+    /// <summary>
+    /// ÚG‚É‘å–C‚Ìã•ûŒü‚É“]Š·‚³‚¹‚é
+    /// </summary>
+    /// <param name="other"></param>
     void OnTriggerEnter2D(Collider2D other)
     {
         look = this.transform.rotation;

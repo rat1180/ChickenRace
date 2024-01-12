@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// mikan
+/// </summary>
 public class Obstacle_ParabolaArrowShot : Obstacle_ArrowShot
 {
     [SerializeField]
@@ -29,7 +31,10 @@ public class Obstacle_ParabolaArrowShot : Obstacle_ArrowShot
     // Update is called once per frame
     void Update()
     {
-        ThrowingArrow();
+        if (GameManager.instance.CheckObstacleMove())
+        {
+            ThrowingArrow();
+        }
     }
     /// <summary>
     /// ボールを射出する
@@ -42,8 +47,7 @@ public class Obstacle_ParabolaArrowShot : Obstacle_ArrowShot
             // 射出速度を算出
             Vector3 velocity = CalculateVelocity(this.transform.position, eend, angle);
 
-            // 射出
-            
+            // 射出           
             rrb.AddForce(velocity * rb.mass, ForceMode2D.Impulse);              
     }
 
