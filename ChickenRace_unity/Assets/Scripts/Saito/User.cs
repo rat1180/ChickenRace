@@ -7,7 +7,6 @@ public class User : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] GameObject mouse;
     int isMode;
-    int modeId;
     int itemId;
     [SerializeField] int index;
 
@@ -23,7 +22,6 @@ public class User : MonoBehaviour
     void Init()
     {
         isMode = 0;
-        modeId = 0;
         itemId = -1;
         index = -1;
         gameManager = GameManager.instance;
@@ -58,6 +56,8 @@ public class User : MonoBehaviour
     /// <param name="mode"></param>
     public void GenerateMouse(int mode)
     {
+        isMode = mode;
+
         mouseObjcet = Instantiate(mouse, transform.position, transform.rotation);
         mouseObjcet.GetComponent<PlayerMouse>().SetUser(this);
 
@@ -65,15 +65,12 @@ public class User : MonoBehaviour
         if (mode == 0)
         {
             Init();
-            GetModeId();
         }
         // 設置フェーズ.
         else
         {
-            GetModeId(mode);
-            mouseObjcet.GetComponent<PlayerMouse>().PlantPhase();
-        }
 
+        }
     }
 
     /// <summary>
@@ -95,23 +92,6 @@ public class User : MonoBehaviour
     public int SetMode()
     {
         return isMode;
-    }
-
-    /// <summary>
-    /// GenerateMouseから引数の値を受け取らなかった時に呼ぶ.
-    /// </summary>
-    void GetModeId()
-    {
-        modeId = -1;
-    }
-
-    /// <summary>
-    /// GenerateMouseから引数の値を受け取った時に呼ぶ.
-    /// </summary>
-    /// <param name="mode"></param>
-    private void GetModeId(int mode)
-    {
-        modeId = isMode;
     }
 
     public void SetItemId()
