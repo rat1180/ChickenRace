@@ -13,9 +13,13 @@ public class ResourceManager : MonoBehaviour
     //ロードしたオブジェクトのリスト(実体を持たない)
     public Dictionary<OBSTACLE_IMAGE_NAMES, Sprite> obstacle_images;
     public Dictionary<OBSTACLE_OBJECT, GameObject> obstacle_objects;
+    public Dictionary<SE_NAMES, AudioClip> se;
+    public Dictionary<BGM_NAMES, AudioClip> bgm;
 
     //画像読み込み用パス
     const string OBSTACLE_IMAGES = "Obstacles/";
+
+    
 
     #region Unityイベント(Awake・Update)
     private void Awake()
@@ -48,6 +52,8 @@ public class ResourceManager : MonoBehaviour
     {
         LoadObstacleImages();
         LoadObstacleObject();
+        LoadSE();
+        LoadBGM();
     }
 
     #region ロード関数
@@ -85,6 +91,42 @@ public class ResourceManager : MonoBehaviour
             var prefabobj = FolderObjectFinder.LoadObstacleObject(name.ToString());
 
             obstacle_objects.Add(name, prefabobj);
+        }
+    }
+
+    /// <summary>
+    /// SE読み込み用.
+    /// </summary>
+    void LoadSE()
+    {
+        //初期化
+        se = new Dictionary<SE_NAMES, AudioClip>();
+
+        //名前分繰り返し
+        foreach (SE_NAMES name in Enum.GetValues(typeof(SE_NAMES)))
+        {
+            //生成対象を探索
+            var se_obj = FolderObjectFinder.LoadSE(name.ToString());
+
+            se.Add(name, se_obj);
+        }
+    }
+
+    /// <summary>
+    /// SE読み込み用.
+    /// </summary>
+    void LoadBGM()
+    {
+        //初期化
+        bgm = new Dictionary<BGM_NAMES, AudioClip>();
+
+        //名前分繰り返し
+        foreach (BGM_NAMES name in Enum.GetValues(typeof(BGM_NAMES)))
+        {
+            //生成対象を探索
+            var bgm_obj = FolderObjectFinder.LoadBGM(name.ToString());
+
+            bgm.Add(name, bgm_obj);
         }
     }
 
@@ -144,6 +186,40 @@ public class ResourceManager : MonoBehaviour
             return null;
         }
     }
+
+
+    /// <summary>
+    /// SEを直接名前指定して読み込む.
+    /// </summary>
+    public AudioClip GetSE(SE_NAMES name)
+    {
+        if (se.ContainsKey(name))
+        {
+            return se[name];
+        }
+        else
+        {
+            Debug.LogWarning("リソース取得エラー：入力されたSEがリストにありません");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// SEを直接名前指定して読み込む.
+    /// </summary>
+    public AudioClip GetBGM(BGM_NAMES name)
+    {
+        if (bgm.ContainsKey(name))
+        {
+            return bgm[name];
+        }
+        else
+        {
+            Debug.LogWarning("リソース取得エラー：入力されたBGMがリストにありません");
+            return null;
+        }
+    }
+
     #endregion
 
 
@@ -212,6 +288,15 @@ namespace ResorceNames
         Normal_Scaffold_Three,
         Normal_Scaffold_Two,
     }
+
+    public enum SE_NAMES { 
+    
+    }
+
+    public enum BGM_NAMES
+    {
+
+    }
 }
 
 //オブジェクト名と生成用フォルダを指定することで
@@ -226,6 +311,9 @@ public static class FolderObjectFinder
 
     //画像フォルダへのパス
     const string IMAGES_FOLDER = "Images/";
+
+    //音素材フォルダへのパス.
+    const string SOUNDS_PASS = "Sounds/";
 
     /// <summary>
     /// 生成用フォルダからオブジェクトを探し、返す。
@@ -277,6 +365,38 @@ public static class FolderObjectFinder
         else
         {
             Debug.LogError("リソースファイルに\"" + objectname + "\"が見つかりませんでした");
+            //返した先でエラーが起こらないように中身が空のオブジェクトを返す
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// SE読み込み
+    /// </summary>
+    public static AudioClip LoadSE(string name)
+    {
+        var obj = Resources.Load<AudioClip>(SOUNDS_PASS + "SE/" + name);
+
+        if (obj != null) return obj;
+        else
+        {
+            Debug.LogError("リソースファイルに\"" + name + "\"が見つかりませんでした");
+            //返した先でエラーが起こらないように中身が空のオブジェクトを返す
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// BGM読み込み
+    /// </summary>
+    public static AudioClip LoadBGM(string name)
+    {
+        var obj = Resources.Load<AudioClip>(SOUNDS_PASS + "BGM/" + name);
+
+        if (obj != null) return obj;
+        else
+        {
+            Debug.LogError("リソースファイルに\"" + name + "\"が見つかりませんでした");
             //返した先でエラーが起こらないように中身が空のオブジェクトを返す
             return null;
         }
