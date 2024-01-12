@@ -65,7 +65,10 @@ public class PlayerMouse : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        // itemId = error;
+        if(user.GetComponent<User>().SetMode() == 0)
+        {
+            itemId = error;
+        }
     }
 
     /// <summary>
