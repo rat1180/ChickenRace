@@ -38,4 +38,24 @@ public class GenerateObstacle : MonoBehaviourPun
         Vector2Int vector2int = new Vector2Int(x, y);
         GameManager.instance.GetMapManager().GetComponent<MapManager>().SpawnObstacle(id, angle, vector2int);
     }
+
+
+    //çÌèúóp
+    public void DeleteObstacle(Vector2Int gridPos)
+    {
+        int x, y;
+        x = gridPos.x;
+        y = gridPos.y;
+        photonView.RPC("Delete", RpcTarget.Others,x, y);
+
+        Destroy(gameObject);
+    }
+
+    [PunRPC]
+    void Delete(int x,int y)
+    {
+        Vector2Int vector2int = new Vector2Int(x, y);
+        GameManager.instance.GetMapManager().GetComponent<MapManager>().RemoveObstacle(vector2int);
+    }
+
 }
