@@ -6,14 +6,16 @@ public class Obstacle_PaunchShot : MonoBehaviour
 {
     const float waitTime = 2.0f;  //巻き戻しまでの時間
     const float backSpeed = 2.0f;//巻き戻しスピード
-
-    float speed;
-    bool stopFlg;
-   
-    Rigidbody2D rbb;
-
-    GameObject Pt;
-    GameObject Bt;
+    [SerializeField]
+    float speed; //通常スピード
+    [SerializeField]
+    bool isStopFlg;
+    [SerializeField]
+    Rigidbody2D rb;
+    [SerializeField]
+    GameObject pt;
+    [SerializeField]
+    GameObject bt;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,34 +25,37 @@ public class Obstacle_PaunchShot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (this.transform.position.x != Pt.transform.position.x && this.transform.position.y != Pt.transform.position.y)
+        if (GameManager.instance.CheckObstacleMove())
         {
-            if (!stopFlg)
+            if (this.transform.position.x != pt.transform.position.x && this.transform.position.y != pt.transform.position.y)
             {
-                Paunching();
+                if (!isStopFlg)
+                {
+                    Paunching();
+                }
             }
-        }
-        else
-        {
-            stopFlg = true;
-            rbb.velocity = Vector3.zero;
-            StartCoroutine(DelayBack(waitTime));
+            else
+            {
+                isStopFlg = true;
+                rb.velocity = Vector3.zero;
+                StartCoroutine(DelayBack(waitTime));
+            }
         }
     }
     //直進させる
     protected virtual void Paunching()
     {
-        this.transform.position = Vector3.MoveTowards(transform.position, Pt.transform.position, speed * Time.deltaTime);
+        this.transform.position = Vector3.MoveTowards(transform.position, pt.transform.position, speed * Time.deltaTime);
     }
     /// <summary>
     /// 角度とか取得
     /// </summary>
     /// <param name="rot"></param>
-    public void PaunchShot(float rot,GameObject pt,GameObject bt)
+    public void PaunchShot(float rot,GameObject paunch_t,GameObject back_t)
     {
         this.transform.rotation = Quaternion.Euler(0, 0, rot);
-        Pt = pt;
-        Bt = bt;
+        pt = paunch_t;
+        bt = back_t;
     }
     /// <summary>
     /// 巻き戻しの遅延
@@ -59,21 +64,22 @@ public class Obstacle_PaunchShot : MonoBehaviour
     /// <returns></returns>
     IEnumerator DelayBack(float wt)
     {
+        //巻き戻す
         speed = backSpeed;
         yield return new WaitForSeconds(wt);
-        this.transform.position = Vector3.MoveTowards(transform.position, Bt.transform.position, speed * Time.deltaTime);
-
-        if (this.transform.position.x == Bt.transform.position.x || this.transform.position.y == Bt.transform.position.y)
+        this.transform.position = Vector3.MoveTowards(transform.position, bt.transform.position, speed * Time.deltaTime);
+        //生成位置まで来たら消滅
+        if (this.transform.position.x == bt.transform.position.x || this.transform.position.y == bt.transform.position.y)
         {
             Debug.Log("拳");
-            rbb.velocity = Vector3.zero;
+            rb.velocity = Vector3.zero;
             Destroy(this.gameObject);
         }
     }
     void Init()
     {
-        rbb = this.transform.GetComponent<Rigidbody2D>();
-        stopFlg = false;
+        rb = this.transform.GetComponent<Rigidbody2D>();
+        isStopFlg = false;
         speed = 3.0f;
     }
     //void OnBecameInvisible()

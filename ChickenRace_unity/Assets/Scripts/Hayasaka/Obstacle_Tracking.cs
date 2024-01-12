@@ -3,30 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Obstacle_Tracking : Obstacle
+public class Obstacle_Tracking : MonoBehaviour
 {
-    public GameObject trakingTarget;
-    /// <summary>
-    /// èâä˙âª
-    /// </summary>
-    protected override void Init()
+    [SerializeField]
+    GameObject trackingTarget;
+   
+    void Update()
     {
-        obstacleCenterPos = new Vector2Int(0, 0);
-    }
-    protected override void update()
-    {
-        Tracking();
+        if (GameManager.instance.CheckObstacleMove())
+        {
+            Tracking();
+        }
     }
     /// <summary>
     /// ñ_Ç…Ç≠Ç¡Ç¬Ç≠
     /// </summary>
     void Tracking()
     {
-        this.transform.position = trakingTarget.transform.position;
-    }
-    protected override void ObjStart()
-    {
-       
+        this.transform.position = trackingTarget.transform.position;
     }
     
 }

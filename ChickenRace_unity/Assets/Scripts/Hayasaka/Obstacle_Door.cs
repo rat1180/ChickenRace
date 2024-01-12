@@ -7,16 +7,16 @@ public class Obstacle_Door : Obstacle
 {
     [SerializeField]
     float colCnt;
-
     [SerializeField]
     bool isColFlg;
-
-    BoxCollider2D bc2d;
+    [SerializeField]
     BoxCollider2D cbc2d;
+    [SerializeField]
     BoxCollider2D cbc2d2;
-
-    GameObject ChildObj;
-    GameObject ChildObj2;
+    [SerializeField]
+    GameObject childObj;
+    [SerializeField]
+    GameObject childObj2;
     /// <summary>
     /// 初期化
     /// </summary>
@@ -26,26 +26,27 @@ public class Obstacle_Door : Obstacle
         colCnt = 3.0f;
         isColFlg = true;
 
-        bc2d = this.GetComponent<BoxCollider2D>();
+        childObj = gameObject.transform.GetChild(0).gameObject;
+        childObj2 = gameObject.transform.GetChild(1).gameObject;
 
-        ChildObj = gameObject.transform.GetChild(0).gameObject;
-        ChildObj2 = gameObject.transform.GetChild(1).gameObject;
-
-        cbc2d = ChildObj.GetComponent<BoxCollider2D>();
-        cbc2d2 = ChildObj2.GetComponent<BoxCollider2D>();
+        cbc2d = childObj.GetComponent<BoxCollider2D>();
+        cbc2d2 = childObj2.GetComponent<BoxCollider2D>();
     }
     protected override void update()
     {
-        if (isColFlg)
+        if (GameManager.instance.CheckObstacleMove())
         {
-            if (colCnt > 0.0f)
+            if (isColFlg)
             {
-                colCnt -= Time.deltaTime;
-            }
-            if (colCnt < 0.0f)
-            {
-                ChangeActive();
-                colCnt = 3.0f;
+                if (colCnt > 0.0f)
+                {
+                    colCnt -= Time.deltaTime;
+                }
+                if (colCnt < 0.0f)
+                {
+                    ChangeActive();
+                    colCnt = 3.0f;
+                }
             }
         }
     }
@@ -54,16 +55,11 @@ public class Obstacle_Door : Obstacle
         colCnt = 3.0f;
         isColFlg = true;
     }
+    /// <summary>
+    /// オブジェクトの表示非表示を繰り返す
+    /// </summary>
     void ChangeActive()
     {
-        //if (bc2d.enabled)
-        //{
-        //    bc2d.enabled = false;
-        //}
-        //else
-        //{
-        //    bc2d.enabled = true;
-        //}
         if (cbc2d.enabled && cbc2d2.enabled)
         {
             cbc2d.enabled = false;

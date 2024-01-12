@@ -343,6 +343,38 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// ローディング表示を行う
+    /// </summary>
+    /// <param name="isLoading"></param>
+    void NowLoading(bool isLoading)
+    {
+
+    }
+
+    bool CheckKeys(InGameStatus gamestatus)
+    {
+        bool isCheck;
+        switch (gamestatus)
+        {
+            case InGameStatus.READY:
+                isCheck = CheckReady();
+                break;
+            case InGameStatus.INGAME:
+                isCheck = CheckInGame();
+                break;
+            case InGameStatus.END:
+                isCheck = CheckEnd();
+                break;
+            default:
+                isCheck = false;
+                break;
+        }
+
+        NowLoading(isCheck);
+        return isCheck;
+    }
+
     #endregion
 
     #region クラス外で使用する関数
@@ -530,7 +562,7 @@ public class GameManager : MonoBehaviour
             }
 
             //進行待機
-            yield return new WaitUntil(() => CheckReady());
+            yield return new WaitUntil(() => CheckKeys(InGameStatus.READY));
             DebugLog("接続確認!");
 
         }
@@ -550,7 +582,7 @@ public class GameManager : MonoBehaviour
         }
 
         //他のプレイヤーを待機
-        yield return new WaitUntil(() => CheckInGame());
+        yield return new WaitUntil(() => CheckKeys(InGameStatus.INGAME));
         DebugLog("値の初期化開始");
 
         //2.各値を初期化<RESET
@@ -599,7 +631,7 @@ public class GameManager : MonoBehaviour
 
             //同時にゲーム開始
             //他のプレイヤーを待機
-            yield return new WaitUntil(() => CheckEnd());
+            yield return new WaitUntil(() => CheckKeys(InGameStatus.END));
         }
         DebugLog("初期化完了");
         gameState = GameStatus.START;
@@ -659,7 +691,7 @@ public class GameManager : MonoBehaviour
     IEnumerator StateSELECT()
     {
         //進行待機
-        yield return new WaitUntil(() => CheckReady());
+        yield return new WaitUntil(() => CheckKeys(InGameStatus.READY));
 
         //生成済みの障害物を再生成
         gameProgress.mapManager.ReInstallObject();
@@ -695,7 +727,7 @@ public class GameManager : MonoBehaviour
         DebugLog("抽選終了");
 
         //進行待機
-        yield return new WaitUntil(() => CheckInGame());
+        yield return new WaitUntil(() => CheckKeys(InGameStatus.INGAME));
 
        //選択クラスを生成
        gameProgress.user.GenerateMouse(0);
@@ -754,7 +786,7 @@ public class GameManager : MonoBehaviour
 
         DebugLog("選択終了待機");
         //全員の障害物選択まで待機
-        while (!CheckEnd())
+        while (!CheckKeys(InGameStatus.END))
         {
             //障害物候補を表示
             List<int> list = new List<int>();
@@ -829,7 +861,7 @@ public class GameManager : MonoBehaviour
 
         DebugLog("設置終了待機");
         //全員の障害物選択まで待機
-        yield return new WaitUntil(() => CheckEnd());
+        yield return new WaitUntil(() => CheckKeys(InGameStatus.END));
 
         DebugLog("障害物設置終了");
         gameState++;
@@ -848,7 +880,7 @@ public class GameManager : MonoBehaviour
     {
         DebugLog("レースフェーズ開始");
         //進行待機
-        yield return new WaitUntil(() => CheckReady());
+        yield return new WaitUntil(() => CheckKeys(InGameStatus.READY));
 
         //キャラの出現
         gameProgress.user.GeneratePlayer();
@@ -858,7 +890,7 @@ public class GameManager : MonoBehaviour
 
         DebugLog("レーススタート");
         //進行待機
-        yield return new WaitUntil(() => CheckInGame());
+        yield return new WaitUntil(() => CheckKeys(InGameStatus.INGAME));
         //スタート演出
 
         //キャラの操作のロックを解除
@@ -882,7 +914,7 @@ public class GameManager : MonoBehaviour
         }
 
         //進行待機
-        yield return new WaitUntil(() => CheckEnd());
+        yield return new WaitUntil(() => CheckKeys(InGameStatus.END));
 
         //キャラを削除
         gameProgress.user.DestroyPlayer();
@@ -898,14 +930,14 @@ public class GameManager : MonoBehaviour
         DebugLog("リザルトフェーズ開始");
         var beforescore = gameProgress.dataSharingClass.score;
         //進行待機
-        yield return new WaitUntil(() => CheckReady());
+        yield return new WaitUntil(() => CheckKeys(InGameStatus.READY));
 
         //順位の計算
         int rank = CheckRaceRank();
         PhotonNetwork.LocalPlayer.SetRankStatus(rank);
 
         //進行待機
-        yield return new WaitUntil(() => CheckInGame());
+        yield return new WaitUntil(() => CheckKeys(InGameStatus.INGAME));
 
 
         //スコアの計算
@@ -918,7 +950,7 @@ public class GameManager : MonoBehaviour
 
         DebugLog("演出終了");
         //進行待機
-        yield return new WaitUntil(() => CheckEnd());
+        yield return new WaitUntil(() => CheckKeys(InGameStatus.END));
 
 
         if (GameEnd())

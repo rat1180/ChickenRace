@@ -7,7 +7,8 @@ public class Obstacle_Move : Obstacle
 {
     [SerializeField]
     Vector3 pos;
-    public GameObject RF;
+    [SerializeField]
+    GameObject rf;
     /// <summary>
     /// èâä˙âª
     /// </summary>
@@ -18,10 +19,13 @@ public class Obstacle_Move : Obstacle
     }
     protected override void update()
     {
-        //MoveBeside();
-        //MoveVertical();
-        //MoveDiagonal();
-        MoveRotate();
+        if (GameManager.instance.CheckObstacleMove())
+        {
+            //MoveBeside();
+            //MoveVertical();
+            //MoveDiagonal();
+            MoveRotate();
+        }
     }
     void MoveBeside()
     {
@@ -37,7 +41,7 @@ public class Obstacle_Move : Obstacle
     }
     void MoveRotate()
     {
-        RF.transform.Rotate(new Vector3(0, 0, 0.2f));
+        rf.transform.Rotate(new Vector3(0, 0, 0.2f));
     }
     protected override void ObjStart()
     {

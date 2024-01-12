@@ -5,7 +5,8 @@ using UnityEngine.Events;
 
 public class Obstacle : MonoBehaviour
 {
-    protected Vector2Int obstacleCenterPos; // 中心グリッド位置
+    [SerializeField]
+    protected Vector2Int obstacleCenterPos;   // 中心グリッド位置
     [SerializeField]
     protected List<Vector2Int> collisionList; // 相対グリッド
 
@@ -14,9 +15,9 @@ public class Obstacle : MonoBehaviour
     [SerializeField]
     protected int obstacleKindID; // 種類のID
     [SerializeField]
-    protected float myRotation; // 回転
+    protected float myRotation; // 生成時の角度を受け取る
     [SerializeField]
-    protected UnityEvent ue; // イベント関数
+    protected UnityEvent ue;    // イベント関数
     void Awake()
     {
         Init();
@@ -31,7 +32,10 @@ public class Obstacle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        update();
+        //if (GameManager.instance.CheckObstacleMove())
+        {
+            update();
+        }
     }
     protected virtual void update()
     {
@@ -46,7 +50,7 @@ public class Obstacle : MonoBehaviour
         myRotation = rot;
     }
     /// <summary>
-    /// 破壊
+    /// 破壊される
     /// </summary>
     void Destoroy()
     {

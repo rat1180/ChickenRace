@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3223944115481292466}
   - component: {fileID: -1920697274835821353}
   m_Layer: 0
-  m_Name: Move_Normal_Scaffold_Move
+  m_Name: Move_Scaffold_Move
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -132,4 +132,5 @@ MonoBehaviour:
   ue:
     m_PersistentCalls:
       m_Calls: []
-  RF: {fileID: 4242550120382962803}
+  pos: {x: 0, y: 0, z: 0}
+  rf: {fileID: 4242550120382962803}
