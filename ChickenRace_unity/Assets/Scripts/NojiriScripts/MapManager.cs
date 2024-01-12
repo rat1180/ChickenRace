@@ -380,7 +380,6 @@ public class MapManager : MonoBehaviour
             {
                 // 親オブジェクトの座標を子オブジェクトの個数分追加
                 usedGridDic.Add(gridPos + childList[i], installNum);
-                //usedGridDic.Add(gridPos, id);
             }
         }
         objStatus.AngleList.Add(angle);
@@ -394,7 +393,7 @@ public class MapManager : MonoBehaviour
     /// </summary>
     /// <param name="id"></param>
     /// <param name="gridPos"></param>
-    public void DeleteObject(int id, Vector2Int gridPos)
+    public void DeleteObject(Vector2Int gridPos)
     {
         if (!isRunning)
         {
@@ -408,8 +407,8 @@ public class MapManager : MonoBehaviour
         if (!debugMode) // オフの時
         {
             // 他のプレイヤーでRemoveObstacleメソッドの実行
-            //var Obj = PhotonNetwork.Instantiate("GenerateObstacle", new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
-            //Obj.GetComponent<GenerateObstacle>().SetObstacleID(id, angle, gridPos);
+            var Obj = PhotonNetwork.Instantiate("GenerateObstacle", new Vector3(0, 0), Quaternion.identity);
+            Obj.GetComponent<GenerateObstacle>().DeleteObstacle(gridPos);
         }
     }
 

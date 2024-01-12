@@ -133,6 +133,8 @@ public class GridLineDraw : MonoBehaviour
         originColor = color;
         originPosRetouch = posRetouch;
 
+        ChangeItemSize(originGridSize);
+
         return mesh;
     }
 
@@ -150,5 +152,13 @@ public class GridLineDraw : MonoBehaviour
             ret[i] = Quaternion.LookRotation(rotDirection) * vertices[i];
         }
         return ret;
+    }
+
+    /// <summary>
+    /// グリッドのサイズが変更されたとき、アイテムの大きさをグリッドサイズに合わせる
+    /// </summary>
+    private void ChangeItemSize(float size)
+    {
+
     }
 }
