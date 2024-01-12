@@ -43,6 +43,17 @@ public class PlayerMouse : MonoBehaviour
     {
         MouseMove();
         MouseTransform();
+
+        // アイテム選択フェーズ.
+        if(user.GetComponent<User>().SetMode() == 0)
+        {
+
+        }
+        // アイテム設置フェーズ.
+        else
+        {
+            PlantPhase();
+        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -54,7 +65,7 @@ public class PlayerMouse : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        itemId = error;
+        // itemId = error;
     }
 
     /// <summary>
@@ -153,11 +164,12 @@ public class PlayerMouse : MonoBehaviour
     /// </summary>
     public void PlantPhase()
     {
-        
+       
         gridPos = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
 
         if (itemId != error)
         {
+            Debug.Log("aaa");
             isInstalled = map.GetComponent<MapManager>().JudgeInstall(gridPos, itemId);
         }
     }
