@@ -11,7 +11,7 @@ using Dictionary;
 [System.Serializable]
 public class ObjectStatus
 {
-    public List<float> AngleList;                     // 障害物の設置方向リスト
+    public List<float> AngleList;      // 障害物の設置方向リスト
     public List<Vector2Int> childList; // テスト用
 }
 
@@ -23,11 +23,11 @@ public class MapManager : MonoBehaviour
     [SerializeField] private Dictionary_Unity<int, int> InstalledDic;       // <Key：置かれた順番, Value：id情報>
     [SerializeField] private Dictionary_Unity<Vector2Int, int> usedGridDic; // <Key：設置済位置情報, Value：置かれた順番>
 
-    private GameObject obstacleObj; // 移動したいオブジェクトの情報取得
-    private GameObject gridObj;
-    private GameObject panelObj;
-    private List<Vector2Int> childList;
-    private Vector2 panelSize;
+    private GameObject obstacleObj;      // 移動したいオブジェクトの情報取得
+    private GameObject gridObj;          // グリッド表示用オブジェクト
+    private GameObject panelObj;         // グリッド表示用パネル
+    private List<Vector2Int> childList;  // 障害物の子オブジェクトリスト
+    private Vector2 panelSize;           // パネルサイズ変更用
 
     private bool isRunning = false; // コルーチン実行判定フラグ
     private bool isInstall = false; // 設置フラグ
@@ -389,12 +389,12 @@ public class MapManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 障害物爆破用メソッド
-    /// 指定されたマスに障害物があるとき、その障害物を削除
-    /// 複数マスを持っている障害物の場合、指定されたマス以外の同じキーを持った障害物を削除
+    /// 削除処理実行用メソッド
+    /// RemoveObstacleメソッドにて障害物削除後、全プレイヤーが同じメソッドを実行
     /// </summary>
-    /// <param name="deletPos">Vector2Int型のマウス位置（TKey）</param>
-    public void DeleteObstacle(Vector2Int deletePos)
+    /// <param name="id"></param>
+    /// <param name="gridPos"></param>
+    public void DeleteObject(int id, Vector2Int gridPos)
     {
         if (!isRunning)
         {
@@ -402,30 +402,47 @@ public class MapManager : MonoBehaviour
             return;
         }
 
-        // 指定されたマス(deletePos)情報が存在するかどうか探索
-        // 既に存在する時、同じTValueの要素を全て削除
+        // 障害物削除
+        RemoveObstacle(gridPos);
 
-        if(childList == null)
+        if (!debugMode) // オフの時
+        {
+            // 他のプレイヤーでRemoveObstacleメソッドの実行
+            //var Obj = PhotonNetwork.Instantiate("GenerateObstacle", new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
+            //Obj.GetComponent<GenerateObstacle>().SetObstacleID(id, angle, gridPos);
+        }
+    }
+
+    /// <summary>
+    /// 障害物爆破用メソッド
+    /// 指定されたマスに障害物があるとき、その障害物を削除
+    /// 複数マスを持っている障害物の場合、指定されたマス以外の同じキーを持った障害物を削除
+    /// </summary>
+    /// <param name="deletePos">Vector2Int型のマウス位置（TKey）</param>
+    public void RemoveObstacle(Vector2Int deletePos)
+    {
+        // 削除したい位置情報から、Value(id)を取得
+        var deleteNum = usedGridDic.GetValue(deletePos);
+
+        // 要素の削除
+        if (childList == null)
         {
             usedGridDic.Remove(deletePos);
         }
         else
         {
-            // 削除したい位置情報から、Valueを取得
-            var deleteNum = usedGridDic.GetValue(deletePos);
-
-            // 取得したValueから、Keyリストを取得
+            // 取得したValue(id)に対応したKeyリストを取得
             var keyList = usedGridDic.GetKeyList(deleteNum);
 
-            // 同じValueを持った要素を削除
+            // Keyリストの要素を削除
             foreach (var list in keyList)
             {
                 usedGridDic.Remove(list);
             }
-
-            // 設置した順番に対応した、idリストの要素を削除
-            InstalledDic.Remove(deleteNum);
         }
+
+        // Value(id)に対応した、idリストの要素を削除
+        InstalledDic.Remove(deleteNum);
     }
 
     /// <summary>
