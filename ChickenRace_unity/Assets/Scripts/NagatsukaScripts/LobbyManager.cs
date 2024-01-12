@@ -16,6 +16,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         "ねずみ","ごりら","さかな","ちんあなご","いぬ"};
     #endregion
 
+    const int OFFLINE = 8;
+
     [SerializeField, Tooltip("1ルームの参加人数")] int maxPlayer;
     [SerializeField, Tooltip("参加ボタンリスト")] CanvasGroup ButtonRoot;
     [SerializeField, Tooltip("名前入力用")] InputField inputNickName;    //名前を入力する用.
@@ -49,9 +51,20 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         ConectServer.RoomProperties.MaxPlayer = maxPlayer;
         connectRoomButton.interactable = false;                          //他のルームのボタンを押下不可にする.
-        ConectServer.RoomProperties.RoomName = roomNameDropdown.value.ToString(); //入室するルームの名前を設定.
-        PhotonNetwork.NickName = inputNickName.text;
-        SceneManager.LoadScene(SceneNames.WaitRoom.ToString());                       //ゲーム待機シーンに移動.
+        if (roomNameDropdown.value == OFFLINE)
+        {
+            ConectServer.RoomProperties.offline = true; //入室するルームの名前を設定.
+            ConectServer.RoomProperties.RoomName = roomNameDropdown.value.ToString();
+            PhotonNetwork.NickName = inputNickName.text;
+            SceneManager.LoadScene(SceneNames.WaitRoom.ToString());                       //ゲーム待機シーンに移動.
+        }
+        else
+        {
+            ConectServer.RoomProperties.RoomName = roomNameDropdown.value.ToString(); //入室するルームの名前を設定.
+            PhotonNetwork.NickName = inputNickName.text;
+            SceneManager.LoadScene(SceneNames.WaitRoom.ToString());                       //ゲーム待機シーンに移動.
+        }
+
     }
 
     public void SoloMode()
