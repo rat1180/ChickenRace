@@ -153,7 +153,6 @@ public class PlayerMouse : MonoBehaviour
     /// </summary>
     public void PlantPhase()
     {
-        
         gridPos = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
 
         if (itemId != error)

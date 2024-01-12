@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject instanceObj; // 生成したオブジェクト.
     [SerializeField] bool isStart;           // ゲームがスタートしたかの判定.
     [SerializeField] bool isGoal;            // プレイヤーがゴールしたかの判定.
+    [SerializeField] float time;
 
     /// <summary>
     /// 初期化用関数.
@@ -136,6 +137,14 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
+    /// 3秒指定したボタン・キーが押されたときに呼ばれる.
+    /// </summary>
+    void OnGiveUp()
+    {
+        myDestroy();
+    }
+
+    /// <summary>
     /// 壁滑り処理.
     /// </summary>
     private void WallSliding()
@@ -233,5 +242,13 @@ public class Player : MonoBehaviour
     public void StartPosition(Vector3 startpos)
     {
         transform.position = startpos;
+    }
+
+    /// <summary>
+    /// 自身を削除.
+    /// </summary>
+    private void myDestroy()
+    {
+        Destroy(gameObject);
     }
 }
