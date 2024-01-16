@@ -55,7 +55,7 @@ public class UIManager : MonoBehaviourPunCallbacks
     public List<int> addscoreTest;
     public List<int> testID;
 
-    private void Start()
+    private void Awake()
     {
         imageObjects = transform.Find("ImageObjects").gameObject;
         resultPanel = transform.GetChild(0).transform.Find("ResultPanel").gameObject;

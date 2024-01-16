@@ -349,7 +349,7 @@ public class GameManager : MonoBehaviour
     /// <param name="isLoading"></param>
     void NowLoading(bool isLoading)
     {
-
+        gameProgress.uiManager.ActiveLoaingImage(isLoading);
     }
 
     bool CheckKeys(InGameStatus gamestatus)
@@ -371,7 +371,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
 
-        NowLoading(isCheck);
+        NowLoading(!isCheck);
         return isCheck;
     }
 
@@ -548,8 +548,13 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     IEnumerator GameInit()
     {
+        gameProgress = new GameProgress();
+
         //自分自身を取得
         var localplayer = PhotonNetwork.LocalPlayer;
+
+        //UIManagerを検索
+        gameProgress.uiManager = GameObject.Find(progressPass[ProgressName.UIManager]).GetComponent<UIManager>();
 
         //1.接続を確認<CONECT
         {
@@ -587,7 +592,6 @@ public class GameManager : MonoBehaviour
 
         //2.各値を初期化<RESET
         {
-            gameProgress = new GameProgress();
             gameState = GameStatus.READY;
             isFazeEnd = false;
             stateCoroutine = null;
@@ -616,9 +620,6 @@ public class GameManager : MonoBehaviour
             //MapManagerを生成
             var map_class = Instantiate((GameObject)Resources.Load(progressPass[ProgressName.MapManager]), Vector3.zero, Quaternion.identity);
             gameProgress.mapManager = map_class.GetComponent<MapManager>();
-
-            //UIManagerを検索
-            gameProgress.uiManager = GameObject.Find(progressPass[ProgressName.UIManager]).GetComponent<UIManager>();
 
             //スタート地点を取得
             gameProgress.startPoint = GameObject.Find(progressPass[ProgressName.StartPoint]).transform.position;
