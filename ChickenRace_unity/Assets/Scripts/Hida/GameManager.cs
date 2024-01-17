@@ -738,6 +738,9 @@ public class GameManager : MonoBehaviour
         //進行待機
         yield return new WaitUntil(() => CheckKeys(InGameStatus.INGAME));
 
+        //選択演出
+        yield return StartCoroutine(gameProgress.effectManager.SelectEffect());
+
        //選択クラスを生成
        gameProgress.user.GenerateMouse(0);
 

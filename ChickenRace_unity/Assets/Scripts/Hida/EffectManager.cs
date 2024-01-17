@@ -15,7 +15,7 @@ public class EffectManager : MonoBehaviour
     enum AnimObject
     {
         StartEffect,
-        //Select,
+        SelectEffect,
         Count
     }
 
@@ -27,7 +27,7 @@ public class EffectManager : MonoBehaviour
         Init();
         
         //テスト
-        //StartCoroutine(StartEffect());
+        //StartCoroutine(SelectEffect());
     }
 
     // Update is called once per frame
@@ -67,5 +67,23 @@ public class EffectManager : MonoBehaviour
         anim.SetTrigger("End");
         yield return new WaitForSeconds(0.5f);
         yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("None") ? true : false);
+    }
+
+    public IEnumerator SelectEffect()
+    {
+        var obj = EffectObject[(int)AnimObject.SelectEffect];
+        obj.SetActive(true);
+        var anim = obj.GetComponent<Animator>();
+
+        anim.SetTrigger("SelectStart");
+        yield return new WaitForSeconds(0.5f);
+        yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("None") ? true : false);
+
+        anim.SetTrigger("Select");
+        yield return new WaitForSeconds(0.5f);
+        yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("None") ? true : false);
+        //爆発エフェクト
+
+        obj.SetActive(false);
     }
 }
