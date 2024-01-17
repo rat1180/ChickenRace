@@ -146,6 +146,12 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     #region リザルト変更関連
 
+    public IEnumerator Result(List<int> beforeScore, List<int> addScore)
+    {
+        Debug.Log("GameManagerの916行目付近のバグ対策用、修正したら関数ごと消す");
+        return null;
+    }
+
     /// <summary>
     /// レース終了時リザルト画面を表示するためにGameManagerから呼び出すコルーチン
     /// 引数に変更前のスコア・加算するするスコア、レース数を指定.
