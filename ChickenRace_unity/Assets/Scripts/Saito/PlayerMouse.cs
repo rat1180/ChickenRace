@@ -22,6 +22,8 @@ public class PlayerMouse : MonoBehaviour
     [SerializeField] float angle;
     [SerializeField] float saveAngle;
 
+    [SerializeField] Sprite spriteImage;
+
     /// <summary>
     /// 初期化用関数.
     /// </summary>
@@ -52,6 +54,7 @@ public class PlayerMouse : MonoBehaviour
         // アイテム設置フェーズ.
         else
         {
+            ImageDisplay();
             PlantPhase();
         }
     }
@@ -176,5 +179,15 @@ public class PlayerMouse : MonoBehaviour
             isInstalled = map.GetComponent<MapManager>().JudgeInstall(gridPos, itemId);
         }
     }
-    
+
+    /// <summary>
+    /// アイテム画像の表示.
+    /// </summary>
+    void ImageDisplay()
+    {
+        Debug.Log("Image");
+        mouseImage.GetComponent<SpriteRenderer>().sprite = spriteImage;
+    }
+
+
 }
