@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Goal
   - SelectImage
+  - Debug
   layers:
   - Default
   - TransparentFX

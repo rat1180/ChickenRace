@@ -50,6 +50,7 @@ public class Obstacle_Paunch : Obstacle
 
         myRotation = this.transform.localEulerAngles.z;
         var ps = Instantiate(paunchShot,paunchChild.transform.position, Quaternion.identity);
+        ps.transform.localScale += this.transform.localScale;
         ps.GetComponent<Obstacle_PaunchShot>().PaunchShot(myRotation,paunchTarget,backTarget);
         isPaunchWaitFlg = true;
         isPaunchFlg = false;
