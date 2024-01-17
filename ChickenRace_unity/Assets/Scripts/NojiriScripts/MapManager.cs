@@ -209,7 +209,7 @@ public class MapManager : MonoBehaviour
         }
 
         isRunning = true;
-        isInstall = true;
+        isInstall = false;
         StartCoroutine(CreativeMode());
         GridDraw();
         GenerateImage();
@@ -230,7 +230,7 @@ public class MapManager : MonoBehaviour
         }
 
         isRunning = false;
-        isInstall = false;
+        isInstall = true;
         StopCoroutine(CreativeMode());
         GridDraw();
         DestroyImage();
@@ -367,7 +367,7 @@ public class MapManager : MonoBehaviour
         obstacleObj = GetObstaclePrefab(id);
 
         // 生成する障害物のサイズ変更
-        obstacleObj.transform.localScale = new Vector3(itemSize, itemSize);
+        obstacleObj.transform.localScale = new Vector3(itemSize, itemSize,1);
 
         // 障害物の生成
         Instantiate(obstacleObj, new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));

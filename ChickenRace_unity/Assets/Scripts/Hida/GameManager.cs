@@ -68,7 +68,8 @@ public class GameManager : MonoBehaviour
         UIManager,
         User,
         MapManager,
-        StartPoint
+        StartPoint,
+        EffectManager,
     }
 
     //ゲーム進行に必要な定数
@@ -82,7 +83,8 @@ public class GameManager : MonoBehaviour
                                                                                                              { ProgressName.UIManager,"UIManager"},
                                                                                                              { ProgressName.User,"User" },
                                                                                                              { ProgressName.MapManager,"MapManager" },
-                                                                                                             { ProgressName.StartPoint,"StartPoint" }};
+                                                                                                             { ProgressName.StartPoint,"StartPoint" },
+                                                                                                             { ProgressName.EffectManager,"EffectManager"} };
 
     /// <summary>
     /// ゲームの進行に必要なマネージャー等をまとめたクラス
@@ -96,6 +98,7 @@ public class GameManager : MonoBehaviour
         public User user;
         public int userActorNumber;
         public Vector2 startPoint;
+        public EffectManager effectManager;
     }
 
     #endregion
@@ -577,7 +580,7 @@ public class GameManager : MonoBehaviour
         if (PhotonNetwork.IsMasterClient)
         {
             Debug.Log("開始まで待機");
-            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.S));
+            //yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.S));
             //状態を送信
             PhotonNetwork.LocalPlayer.SetGameInGameStatus(true);
         }
@@ -625,6 +628,9 @@ public class GameManager : MonoBehaviour
 
             //スタート地点を取得
             gameProgress.startPoint = GameObject.Find(progressPass[ProgressName.StartPoint]).transform.position;
+
+            //エフェクトマネージャーを取得
+            gameProgress.effectManager = GameObject.Find(progressPass[ProgressName.EffectManager]).GetComponent<EffectManager>();
 
             DebugLog("各値の初期化完了");
         }
@@ -675,7 +681,7 @@ public class GameManager : MonoBehaviour
         while (!isFazeEnd)
         {
             DebugLog("演出中...");
-            yield return new WaitForSeconds(3.0f);
+            yield return StartCoroutine(gameProgress.effectManager.StartEffect());
             EndFaze();
             yield return null;
         }

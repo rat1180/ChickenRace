@@ -268,6 +268,7 @@ namespace ResorceNames
     /// ギミックなし：Normal
     /// ダメージギミック:Damage
     /// 動くギミック:Move_
+    /// 削除用ID:Destriy_
     /// </summary>
     public enum OBSTACLE_OBJECT
     {
@@ -287,6 +288,7 @@ namespace ResorceNames
         Normal_Scaffold_Stairs,
         Normal_Scaffold_Three,
         Normal_Scaffold_Two,
+        Destroy_Bom,
     }
 
     public enum SE_NAMES { 

@@ -26,8 +26,8 @@ public class GridLineDraw : MonoBehaviour
 
     void Start()
     {
-        // mapManager = GameManager.instance.GetMapManager();
-        mapObj = GameObject.Find("MapManager");
+        mapObj = GameManager.instance.GetMapManager();
+        //mapObj = GameObject.Find("MapManager");
         mapManager = mapObj.GetComponent<MapManager>();
         GetComponent<MeshFilter>().mesh = mesh = new Mesh();
         mesh = ReGrid(mesh);
@@ -50,7 +50,7 @@ public class GridLineDraw : MonoBehaviour
             ReGrid(mesh);
         }
 
-        if(mapManager.IsInstallReference())
+        if(!mapManager.IsInstallReference())
         {
             // アイテムサイズの変更
             if(mapManager.itemSize != gridSize)
