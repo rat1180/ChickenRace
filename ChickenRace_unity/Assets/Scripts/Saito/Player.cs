@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject instanceObj; // 生成したオブジェクト.
     [SerializeField] bool isStart;           // ゲームがスタートしたかの判定.
     [SerializeField] bool isGoal;            // プレイヤーがゴールしたかの判定.
+    [SerializeField] bool isDeath;           // プレイヤーが死亡したかの判定.
     [SerializeField] float time;
 
     /// <summary>
@@ -44,12 +45,13 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(isStart && !isGoal)
+        if(isStart && !isGoal && !isDeath)
         {
             PlayerMove();
             WallSliding();
         }
         PlayerTransform();
+        PlayerDeath();
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -68,9 +70,10 @@ public class Player : MonoBehaviour
         {
             isGoal = true;
         }
-        else if(collision.gameObject.tag == "ダメージを与える系のタグ?")
+        else if(collision.gameObject.tag == "Damage")
         {
             // プレイヤー死亡処理.
+            isDeath = true;
         }
     }
 
@@ -141,7 +144,7 @@ public class Player : MonoBehaviour
     /// </summary>
     void OnGiveUp()
     {
-        myDestroy();
+        PlayerDelete();
     }
 
     /// <summary>
@@ -247,8 +250,19 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 自身を削除.
     /// </summary>
-    private void myDestroy()
+    private void PlayerDelete()
     {
         Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// プレイヤーがやられたときに呼ぶ関数.
+    /// </summary>
+    void PlayerDeath()
+    {
+        if (isDeath)
+        {
+            charaAnimation.nowAnimations = CharaAnimation.Animations.DEATH;
+        }
     }
 }
