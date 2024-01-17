@@ -29,7 +29,7 @@ public class Obstacle_Paunch : Obstacle
     }
     protected override void update()
     {
-        if (GameManager.instance.CheckObstacleMove())
+        //if (GameManager.instance.CheckObstacleMove())
         {
             if (isPaunchFlg)
             {

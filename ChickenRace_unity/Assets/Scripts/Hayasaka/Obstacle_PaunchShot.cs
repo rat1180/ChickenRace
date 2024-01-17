@@ -25,7 +25,7 @@ public class Obstacle_PaunchShot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.instance.CheckObstacleMove())
+        //if (GameManager.instance.CheckObstacleMove())
         {
             if (this.transform.position.x != pt.transform.position.x || this.transform.position.y != pt.transform.position.y)
             {

@@ -22,7 +22,7 @@ public class Obstacle_Surprise : MonoBehaviour
     }
     void Update()
     {
-        if (GameManager.instance.CheckObstacleMove())
+        //if (GameManager.instance.CheckObstacleMove())
         {
             if (isMoveFlg && counter < 100)
             {
