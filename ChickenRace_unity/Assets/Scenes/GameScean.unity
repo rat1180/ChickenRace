@@ -1800,6 +1800,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 566334d548fe26e4ca7c6e361ff75b29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  testeffect: {fileID: 2433282508537954060, guid: 614d932cb596cd74aaff01b628664b6a, type: 3}
 --- !u!1 &832711942
 GameObject:
   m_ObjectHideFlags: 0

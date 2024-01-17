@@ -20,6 +20,7 @@ public class EffectManager : MonoBehaviour
     }
 
     List<GameObject> EffectObject = new List<GameObject>();
+    public GameObject testeffect;
 
     // Start is called before the first frame update
     void Start()
@@ -83,6 +84,7 @@ public class EffectManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("None") ? true : false);
         //爆発エフェクト
+        Instantiate(testeffect, obj.transform.GetChild(1).position, Quaternion.identity);
 
         obj.SetActive(false);
     }
