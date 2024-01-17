@@ -41,6 +41,7 @@ public class UIManager : MonoBehaviourPunCallbacks
     private GameObject imageObjects;
     private GameObject resultPanel;
     private GameObject resultCharacters;//リザルト画面のキャラクター(Name,Score,Rank表示)
+    private Text raceCountText;//第何レースかを表示するテキスト.
     private List<int> id;
 
     public GameObject imageObstacle;
@@ -60,7 +61,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         imageObjects = transform.Find("ImageObjects").gameObject;
         resultPanel = transform.GetChild(0).transform.Find("ResultPanel").gameObject;
         resultCharacters = resultPanel.transform.GetChild(0).gameObject;
-
+        raceCountText= resultPanel.transform.GetChild(1).GetComponent<Text>();
         loaingImage = transform.GetChild(0).transform.GetChild((int)CanvasChild.LoaingImage).gameObject;
     }
 
@@ -145,14 +146,21 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     #region リザルト変更関連
 
+    public IEnumerator Result(List<int> beforeScore, List<int> addScore)
+    {
+        Debug.Log("GameManagerの916行目付近のバグ対策用、修正したら関数ごと消す");
+        return null;
+    }
+
     /// <summary>
     /// レース終了時リザルト画面を表示するためにGameManagerから呼び出すコルーチン
-    /// 引数に変更前のスコア・加算するするスコアを指定.
+    /// 引数に変更前のスコア・加算するするスコア、レース数を指定.
     /// </summary>
-    public IEnumerator Result(List<int> beforeScore, List<int> addScore)
+    public IEnumerator Result(List<int> beforeScore, List<int> addScore,int raceCount)
     {
         ActiveResultPanel(true);
         ActiveCharacters(beforeScore.Count);
+        raceCountText.text = "第" + raceCount + "レース終了結果";
         //Playerの数分ループして情報を入れる.
         int i = 0;
         for (i = 0; i < beforeScore.Count; i++)
@@ -168,7 +176,6 @@ public class UIManager : MonoBehaviourPunCallbacks
                     = "+" + addScore[i].ToString();
             }
         }
-        //StartCoroutine(ChangeScoreText(beforeScore, addScore));
 
         //スコアのテキストを変更する(旧ChangeScoreText).
         List<int> score = beforeScore;
