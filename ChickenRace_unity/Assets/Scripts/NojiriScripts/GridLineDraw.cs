@@ -11,35 +11,52 @@ public class GridLineDraw : MonoBehaviour
     public Color color = Color.white; // 描画線の色
     public Vector2Int size = new Vector2Int(8, 8); // 縦線と横線の数
 
-    [Header("グリッド位置調整用")]
-    public Vector2 posRetouch = new Vector2(0, 0);
+    //[Header("グリッド位置調整用")]
+    //public Vector2 posRetouch = new Vector2(0.5f, 0.5f);
 
     // 値が変更されたとき用に、元のInspectorの値を保持しておく
     private float originGridSize = 0;
     private Color originColor = Color.white;
     private Vector2Int originSize = new Vector2Int(0, 0);
-    private Vector2 originPosRetouch = new Vector2(0, 0);
     private Vector2 backGroundSize;
 
-    public MapManager mapManager;
+    private GameObject mapObj;
+    private MapManager mapManager;
     private Mesh mesh;
 
     void Start()
     {
+        // mapManager = GameManager.instance.GetMapManager();
+        mapObj = GameObject.Find("MapManager");
+        mapManager = mapObj.GetComponent<MapManager>();
         GetComponent<MeshFilter>().mesh = mesh = new Mesh();
         mesh = ReGrid(mesh);
     }
 
     void Update()
     {
+        UpdateGrid(); // 更新処理
+    }
+
+    private void UpdateGrid()
+    {
         // 処理軽減、値が更新されたときにメッシュを再取得
         if (gridSize != originGridSize || size.x != originSize.x ||
-            size.y != originSize.y || originColor != color || originPosRetouch != posRetouch)
+            size.y != originSize.y || originColor != color)
         {
             if (gridSize < 0) { gridSize = 0.000001f; }
             if (size.x < 0) { size.x = 1; }
             if (size.y < 0) { size.y = 1; }
             ReGrid(mesh);
+        }
+
+        if(mapManager.IsInstallReference())
+        {
+            // アイテムサイズの変更
+            if(mapManager.itemSize != gridSize)
+            {
+                mapManager.itemSize = gridSize;
+            }
         }
     }
 
@@ -65,6 +82,7 @@ public class GridLineDraw : MonoBehaviour
         float verticalWidth = gridSize * verticalDrawSize / 4.0f;
 
         // 横線と縦線の始点終点
+        Vector2 posRetouch = new Vector2(gridSize / 2, gridSize / 2);
         Vector2 horizontalStartPosition = new Vector2(-horizontalWidth + posRetouch.x, -verticalWidth + posRetouch.y);
         Vector2 verticalStartPosition = new Vector2(-horizontalWidth + posRetouch.x, -verticalWidth + posRetouch.y);
         Vector2 horizontalEndPosition = new Vector2(horizontalWidth + posRetouch.x, verticalWidth + posRetouch.y);
@@ -131,7 +149,6 @@ public class GridLineDraw : MonoBehaviour
         originSize.x = size.x;
         originSize.y = size.y;
         originColor = color;
-        originPosRetouch = posRetouch;
 
         return mesh;
     }
