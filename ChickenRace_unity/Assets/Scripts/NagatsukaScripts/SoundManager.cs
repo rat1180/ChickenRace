@@ -32,6 +32,8 @@ namespace SoundName
         BGM_Ready,
         BGM_Race,
         BGM_END,
+
+        BGM_PANIC
     }
 
     public enum SECode
@@ -48,13 +50,12 @@ namespace SoundName
 
 public class SoundManager : MonoBehaviour
 {
-
     List<AudioClip> SoundList = new List<AudioClip>();
 
     [SerializeField] BGMCode nowBGM;
-    [SerializeField] AudioSource audioSource;
+    AudioSource audioSource;
 
-    private GameObject seObject;
+
 
     // Start is called before the first frame update
     void Start()
@@ -66,11 +67,30 @@ public class SoundManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            PlayBGM(nowBGM);
+        }
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            StopBGM();
+        }
     }
 
-    public void PlaySE(SECode se_code)
+    public void PlaySE(SECode id)
     {
+        audioSource.PlayOneShot(ResourceManager.instance.GetSE(id));
+    }
 
+    public void StopBGM()
+    {
+        audioSource.Stop();
+    }
+
+    public void PlayBGM(BGMCode id)
+    {
+        //audioSource.clip = BGMList[(int)id];
+        audioSource.clip = ResourceManager.instance.GetBGM(id);
+        audioSource.Play();
     }
 }
