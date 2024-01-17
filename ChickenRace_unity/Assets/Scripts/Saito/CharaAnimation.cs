@@ -16,6 +16,7 @@ public class CharaAnimation : MonoBehaviour
         JUMP,
         FALL,
         WALLSLIDING,
+        DEATH,
         DANCE,
         WIN,
     }
