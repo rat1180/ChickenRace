@@ -108,7 +108,8 @@ public class GameManager : MonoBehaviour
     [SerializeField, Tooltip("現在レース中かどうかを判定")] bool isNowRace;
     [SerializeField, Tooltip("ゲームの進行に必要なクラスのまとめ")] GameProgress gameProgress;
     [SerializeField, Tooltip("デバッグ用のログを表示するかどうか")] bool isDebug;
-    [SerializeField,Tooltip("デバッグ用のテキスト表示（Setは任意）")] 
+    [SerializeField, Tooltip("現在のレース数")] int raceCount;
+    //[SerializeField,Tooltip("デバッグ用のテキスト表示（Setは任意）")] 
 
 
     public static GameManager instance;
@@ -597,6 +598,7 @@ public class GameManager : MonoBehaviour
             stateCoroutine = null;
             isNowRace = false;
             instance = this;
+            raceCount = 0;
             gameProgress.userActorNumber = PhotonNetwork.LocalPlayer.ActorNumber - 1;  //主な用途がリストなので番号調整
 
 
@@ -887,6 +889,9 @@ public class GameManager : MonoBehaviour
         gameProgress.user.GeneratePlayer();
         //gameProgress.user
 
+        //レースカウントを増やす
+        raceCount++;
+
         DebugLog("READY演出");
 
         DebugLog("レーススタート");
@@ -946,7 +951,7 @@ public class GameManager : MonoBehaviour
         gameProgress.dataSharingClass.PushScore(gameProgress.userActorNumber, scorelist[gameProgress.userActorNumber]);
 
         DebugLog("順位、スコアの反映演出");
-        yield return StartCoroutine(gameProgress.uiManager.Result(beforescore, scorelist));
+        yield return StartCoroutine(gameProgress.uiManager.Result(beforescore, scorelist,raceCount));
         yield return new WaitForSeconds(2.0f);
 
         DebugLog("演出終了");
