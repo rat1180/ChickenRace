@@ -49,18 +49,21 @@ public class MapManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // テスト用
-        if (Input.GetKeyDown(KeyCode.X))
+        if (debugMode)
         {
-            CreativeModeStart();
-        }
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            CreativeModeEnd();
-        }
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            ReInstallObject();
+            // テスト用
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                CreativeModeStart();
+            }
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                CreativeModeEnd();
+            }
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                ReInstallObject();
+            }
         }
     }
 
