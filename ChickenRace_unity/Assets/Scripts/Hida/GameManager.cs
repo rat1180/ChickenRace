@@ -124,13 +124,14 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        gameState = GameStatus.SLEEP;
+        StartCoroutine(GameInit());
     }
 
     private void Awake()
     {
-        gameState = GameStatus.SLEEP;
-        StartCoroutine(GameInit());
+
+        instance = this;
     }
 
     // Update is called once per frame
@@ -600,7 +601,6 @@ public class GameManager : MonoBehaviour
             isFazeEnd = false;
             stateCoroutine = null;
             isNowRace = false;
-            instance = this;
             raceCount = 0;
             gameProgress.userActorNumber = PhotonNetwork.LocalPlayer.ActorNumber - 1;  //主な用途がリストなので番号調整
 
@@ -963,7 +963,7 @@ public class GameManager : MonoBehaviour
         gameProgress.dataSharingClass.PushScore(gameProgress.userActorNumber, scorelist[gameProgress.userActorNumber]);
 
         DebugLog("順位、スコアの反映演出");
-        yield return StartCoroutine(gameProgress.uiManager.Result(beforescore, scorelist,raceCount));
+        yield return StartCoroutine(gameProgress.uiManager.Result(scorelist,raceCount));
         yield return new WaitForSeconds(2.0f);
 
         DebugLog("演出終了");
