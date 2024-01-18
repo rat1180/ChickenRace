@@ -146,4 +146,14 @@ public class User : MonoBehaviour
     {
         playerObjcet.GetComponent<Player>().StartPosition(startpos);
     }
+
+    /// <summary>
+    /// ゲームマネージャーからスプライトを取得しPlayerMouseに渡す.
+    /// </summary>
+    /// <param name="sprite"></param>
+    /// <returns></returns>
+    public void SetSpriteImage(Sprite sprite)
+    {
+        mouseObjcet.GetComponent<PlayerMouse>().ImageDisplay(sprite);
+    }
 }
