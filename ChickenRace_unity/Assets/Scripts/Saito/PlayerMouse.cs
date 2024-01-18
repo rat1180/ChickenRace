@@ -56,6 +56,7 @@ public class PlayerMouse : MonoBehaviour
         else
         {
             PlantPhase();
+            NotPlant();
         }
     }
 
@@ -197,16 +198,6 @@ public class PlayerMouse : MonoBehaviour
     public void ImageDisplay(Sprite sprite)
     {
         mouseImage.GetComponent<SpriteRenderer>().sprite = sprite;
-
-        // 設置ができない場合は画像を赤くする.
-        if (isInstalled)
-        {
-            mouseImage.GetComponent<SpriteRenderer>().color = saveColor;
-        }
-        else
-        {
-            mouseImage.GetComponent<SpriteRenderer>().color = new Color(255, GetComponent<SpriteRenderer>().color.g, GetComponent<SpriteRenderer>().color.b, GetComponent<SpriteRenderer>().color.a);
-        }
     }
 
     public void ImageDelete()
@@ -225,6 +216,22 @@ public class PlayerMouse : MonoBehaviour
         // 画像のサイズ変更.
         mouseImage.transform.localScale = new Vector3(itemsize, itemsize, itemsize);
 
+    }
+
+    /// <summary>
+    /// 設置できないときに呼ぶ関数.
+    /// </summary>
+    void NotPlant()
+    {
+        // 設置ができない場合は画像を赤くする.
+        if (isInstalled)
+        {
+            mouseImage.GetComponent<SpriteRenderer>().color = saveColor;
+        }
+        else
+        {
+            mouseImage.GetComponent<SpriteRenderer>().color = new Color(255, GetComponent<SpriteRenderer>().color.g, GetComponent<SpriteRenderer>().color.b, GetComponent<SpriteRenderer>().color.a);
+        }
     }
 
 }
