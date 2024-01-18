@@ -18,10 +18,14 @@ public class Obstacle_ArrowShot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (GameManager.instance.CheckObstacleMove())
+        if (GameManager.instance.CheckObstacleMove())
         {
             Moving();
         }
+        //if (GameManager.instance.GetRaceEnd())
+        //{
+        //    Destoroy();
+        //}
     }
     //íºêiÇ≥ÇπÇÈ
     protected virtual void Moving()
@@ -46,6 +50,10 @@ public class Obstacle_ArrowShot : MonoBehaviour
         
     }
     void OnBecameInvisible()
+    {
+        Destroy(this.gameObject);
+    }
+    void Destoroy()
     {
         Destroy(this.gameObject);
     }

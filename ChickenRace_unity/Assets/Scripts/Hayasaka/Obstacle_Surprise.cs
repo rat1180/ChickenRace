@@ -24,7 +24,7 @@ public class Obstacle_Surprise : MonoBehaviour
     }
     void Update()
     {
-        //if (GameManager.instance.CheckObstacleMove())
+        if (GameManager.instance.CheckObstacleMove())
         {
             if (isMoveFlg && counter < 100)
             {
@@ -36,6 +36,10 @@ public class Obstacle_Surprise : MonoBehaviour
                 }
             }
         }
+        //if (GameManager.instance.GetRaceEnd())
+        //{
+        //    Destoroy();
+        //}
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -50,6 +54,10 @@ public class Obstacle_Surprise : MonoBehaviour
         {
             isMoveFlg = false; ;
         }
+    }
+    void Destoroy()
+    {
+        Destroy(parentObj.gameObject);
     }
 }
 

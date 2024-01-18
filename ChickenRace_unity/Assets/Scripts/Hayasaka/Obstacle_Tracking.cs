@@ -22,5 +22,4 @@ public class Obstacle_Tracking : MonoBehaviour
     {
         this.transform.position = trackingTarget.transform.position;
     }
-    
 }

@@ -25,7 +25,7 @@ public class Obstacle_PaunchShot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (GameManager.instance.CheckObstacleMove())
+        if (GameManager.instance.CheckObstacleMove())
         {
             if (this.transform.position.x != pt.transform.position.x || this.transform.position.y != pt.transform.position.y)
             {
@@ -42,6 +42,10 @@ public class Obstacle_PaunchShot : MonoBehaviour
                 StartCoroutine(DelayBack(waitTime));
             }
         }
+        //if (GameManager.instance.GetRaceEnd())
+        //{
+        //    Destoroy();
+        //}
     }
     //íºêiÇ≥ÇπÇÈ
     protected virtual void Paunching()
@@ -87,4 +91,8 @@ public class Obstacle_PaunchShot : MonoBehaviour
     //{
     //    Destroy(this.gameObject);
     //}
+    void Destoroy()
+    {
+        Destroy(this.gameObject);
+    }
 }
