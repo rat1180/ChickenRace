@@ -104,7 +104,18 @@ public class PlayerMouse : MonoBehaviour
         {
             // アイテムの生成.
            map.GetComponent<MapManager>().GenerateMapObject(itemId,saveAngle, gridPos);
-           ImageDelete();
+            
+            // アイテム選択フェーズ.
+            if (user.GetComponent<User>().SetMode() == 0)
+            {
+                ImageDelete();
+            }
+            // アイテム設置フェーズ.
+            else
+            {
+                PlantPhase();
+                ImageDelete();
+            }
         }
         else
         {
@@ -207,15 +218,14 @@ public class PlayerMouse : MonoBehaviour
     /// <summary>
     /// マウスの初期化.
     /// </summary>
-    public void MouseInit()
+    public void MouseInit(float itemsize)
     {
         Init();
 
         // 画像の色を戻す.
         mouseImage.GetComponent<SpriteRenderer>().color = saveColor;
 
-        // 画像のサイズを戻す.
-        float itemsize = map.GetComponent<MapManager>().itemSize;
+        // 画像のサイズ変更.
         mouseImage.transform.localScale = new Vector3(itemsize, itemsize, itemsize);
 
     }

@@ -36,6 +36,7 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         nowHitDir = HitDirList.NONE;
         charaAnimation.nowAnimations = CharaAnimation.Animations.IDLE;
+        rb.isKinematic = true; // 重力の停止.
     }
 
     void Start()
@@ -49,6 +50,7 @@ public class Player : MonoBehaviour
         {
             PlayerMove();
             WallSliding();
+            rb.isKinematic = false; // 重力の開始.
         }
         PlayerTransform();
     }
