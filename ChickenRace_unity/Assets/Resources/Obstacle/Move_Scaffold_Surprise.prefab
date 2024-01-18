@@ -344,7 +344,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMoveFlg: 0
-  speed: 0
+  speed: 0.05
   counter: 0
 --- !u!50 &7785099114641492356
 Rigidbody2D:

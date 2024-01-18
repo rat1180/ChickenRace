@@ -209,6 +209,8 @@ public class PlayerMouse : MonoBehaviour
     /// </summary>
     public void MouseInit()
     {
+        Init();
+
         // ‰æ‘œ‚ÌF‚ğ–ß‚·.
         mouseImage.GetComponent<SpriteRenderer>().color = saveColor;
 

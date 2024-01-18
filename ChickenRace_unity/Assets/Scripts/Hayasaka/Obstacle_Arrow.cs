@@ -53,7 +53,7 @@ public class Obstacle_Arrow : Obstacle
         //Debug.Log("”­ŽË");
 
         myRotation = this.transform.localEulerAngles.z;
-        var ars = "Resources/Obstacle/Damage_ArrowShot".SafeInstantiate(arrowChild.transform.position, Quaternion.identity);
+        var ars = "Obstacle/Damage_ArrowShot".SafeInstantiate(arrowChild.transform.position, Quaternion.identity);
         ars.GetComponent<Obstacle_ArrowShot>().ArrowShot(myRotation);
     }
     void OnTrggerEnter2D(Collision other)

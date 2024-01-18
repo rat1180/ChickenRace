@@ -743,6 +743,7 @@ public class GameManager : MonoBehaviour
 
        //選択クラスを生成
        gameProgress.user.GenerateMouse(0);
+       //gameProgress.user
        gameProgress.user.SetSpriteImage(ResourceManager.instance.GetObstacleImage(ResorceNames.OBSTACLE_IMAGE_NAMES.DefalutMouse));
 
         //選択クラスによって終了呼び出し
