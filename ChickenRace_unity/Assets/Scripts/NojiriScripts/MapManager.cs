@@ -93,6 +93,8 @@ public class MapManager : MonoBehaviour
         panelObj = GameObject.Find("CanvasUI/GridPanel");
         panelSize = panelObj.transform.GetComponent<RectTransform>().sizeDelta;
 
+        itemSize = gridObj.GetComponent<GridLineDraw>().gridSize;
+
         // ‰Šú‚Í”ñ•\¦
         gridObj.SetActive(false);
         panelObj.SetActive(false);

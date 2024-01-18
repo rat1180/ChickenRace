@@ -38,7 +38,7 @@ public class PlayerMouse : MonoBehaviour
 
     void Start()
     {
-        Init();
+        //Init();
     }
 
     

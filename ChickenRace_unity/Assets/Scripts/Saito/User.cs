@@ -60,7 +60,7 @@ public class User : MonoBehaviour
 
         mouseObjcet = Instantiate(mouse, transform.position, transform.rotation);
         mouseObjcet.GetComponent<PlayerMouse>().SetUser(this);
-        mouseObjcet.GetComponent<PlayerMouse>().MouseInit();
+        mouseObjcet.GetComponent<PlayerMouse>().MouseInit(gameManager.GetMapManager().GetComponent<MapManager>().itemSize);
 
         // 選択フェーズ.
         if (mode == 0)
