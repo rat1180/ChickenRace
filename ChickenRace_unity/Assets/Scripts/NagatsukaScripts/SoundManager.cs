@@ -53,8 +53,21 @@ public class SoundManager : MonoBehaviour
 
     [SerializeField] BGMCode nowBGM;
     AudioSource audioSource;
+    public static SoundManager instance;
 
 
+    private void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(this);
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()

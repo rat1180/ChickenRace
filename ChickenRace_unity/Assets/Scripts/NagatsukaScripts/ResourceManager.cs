@@ -259,6 +259,7 @@ namespace ResorceNames
         Move_ZeroGravity,
         Normal_Scaffold,
         Kanbaipop,//Š®”„‰æ‘œ.
+        DefalutMouse,
         taihou,
         cutter,
         //blackhole
