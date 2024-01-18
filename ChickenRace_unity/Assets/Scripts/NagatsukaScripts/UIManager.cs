@@ -66,7 +66,8 @@ public class UIManager : MonoBehaviourPunCallbacks
 
         resultCharacters = resultPanel.transform.GetChild(0).gameObject;
         raceCountText= resultPanel.transform.GetChild(1).GetComponent<Text>();
-        
+
+        imageObjects= transform.GetChild(1).gameObject;
     }
 
     // Update is called once per frame
