@@ -156,4 +156,13 @@ public class User : MonoBehaviour
     {
         mouseObjcet.GetComponent<PlayerMouse>().ImageDisplay(sprite);
     }
+
+    /// <summary>
+    /// ゲームマネージャーからアイテムサイズを取得しPlayerMouseに渡す.
+    /// </summary>
+    /// <param name="mousesize"></param>
+    public void SetMouseInit(float mousesize)
+    {
+        mouseObjcet.GetComponent<PlayerMouse>().MouseInit(mousesize);
+    }
 }
