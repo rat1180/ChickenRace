@@ -750,9 +750,10 @@ public class GameManager : MonoBehaviour
 
         //選択演出
         yield return StartCoroutine(gameProgress.effectManager.SelectEffect());
+        gameProgress.uiManager.SwitchActiveOsara(true);
 
        //選択クラスを生成
-       gameProgress.user.GenerateMouse(0);
+        gameProgress.user.GenerateMouse(0);
        //gameProgress.user
        gameProgress.user.SetSpriteImage(ResourceManager.instance.GetObstacleImage(ResorceNames.OBSTACLE_IMAGE_NAMES.DefalutMouse));
 
@@ -824,6 +825,7 @@ public class GameManager : MonoBehaviour
 
         //UI系を非表示
         gameProgress.uiManager.FinishSelect();
+        gameProgress.uiManager.SwitchActiveOsara(false) ;
 
         DebugLog("障害物選択終了");
         gameState++;
