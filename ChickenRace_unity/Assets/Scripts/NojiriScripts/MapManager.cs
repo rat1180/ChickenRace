@@ -11,29 +11,31 @@ using Dictionary;
 [System.Serializable]
 public class ObjectStatus
 {
+    [Header("テスト用リスト")]
     public List<Vector2Int> childList; // テスト用
+    [Header("オブジェクト設置方向")]
     public Dictionary_Unity<int, float> AngleList;        // <Key：設置順番, Value：設置向き情報>
+    [Header("設置済みIDリスト")]
     public Dictionary_Unity<int, int> InstalledDic;       // <Key：設置順番, Value：障害物id情報>
+    [Header("設置済み位置リスト")]
     public Dictionary_Unity<Vector2Int, int> usedGridDic; // <Key：設置済位置情報, Value：設置順番>
 }
 
 public class MapManager : MonoBehaviour
 {
-    //public float itemSize { get; set; } // アイテムサイズ変更用
-    public float itemSize; // アイテムサイズ変更用
-    public bool debugMode = false; // デバッグモードフラグ
+    /*[System.NonSerialized] */public float itemSize;    // アイテムサイズ変更用
+    public bool debugMode = false;                   // デバッグモードフラグ
 
     [SerializeField] private ObjectStatus objStatus; // 障害物用の構造体情報
-
-    private GameObject obstacleObj;      // 移動したいオブジェクトの情報
-    private GameObject gridObj;          // グリッド表示用オブジェクト
-    private GameObject panelObj;         // グリッド表示用パネル
-    private List<Vector2Int> childList;  // 障害物の子オブジェクトリスト
-    private Vector2 panelSize;           // パネルサイズ変更用
-
-    private bool isRunning = false; // コルーチン実行判定フラグ
-    private bool isInstall = false; // 設置フラグ true：設置可能　false：設置不可
-    private int installNum; // 置かれた順番
+    private GameObject obstacleObj;       // 移動したいオブジェクトの情報
+    private GameObject gridObj;           // グリッド表示用オブジェクト
+    private GameObject imageObj;          // 画像生成用オブジェクト取得
+    private GameObject panelObj;          // グリッド表示用パネル
+    private List<Vector2Int> childList;   // 障害物の子オブジェクトリスト
+    private Vector2 panelSize;            // パネルサイズ変更用
+    private int installNum;               // 置かれた順番
+    private bool isRunning = false;       // コルーチン実行判定フラグ
+    private bool isInstall = true;       // 設置フラグ true：設置不可　false：設置可能
 
     // テスト用
     [SerializeField] private bool childTest = false;
@@ -47,18 +49,21 @@ public class MapManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // テスト用
-        if (Input.GetKeyDown(KeyCode.X))
+        if (debugMode)
         {
-            CreativeModeStart();
-        }
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            CreativeModeEnd();
-        }
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            ReInstallObject();
+            // テスト用
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                CreativeModeStart();
+            }
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                CreativeModeEnd();
+            }
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                ReInstallObject();
+            }
         }
     }
 
@@ -76,20 +81,16 @@ public class MapManager : MonoBehaviour
         installNum = 0;
 
         // テスト用
-        if (debugMode)
-        {
-            // CollisionList情報テスト用
-            objStatus.childList.Add(new Vector2Int(0, 1));
-            objStatus.childList.Add(new Vector2Int(-1, 0));
-
-            // テスト用
-            //usedGridDic.Add(new Vector2Int(0, 0), 0);
-            //usedGridDic.Add(new Vector2Int(0, 0), 0);
-            //usedGridDic.Add(new Vector2Int(2, 0), 1);
-        }
+        //if (debugMode)
+        //{
+        //    // CollisionList情報テスト用
+        //    objStatus.childList.Add(new Vector2Int(0, 1));
+        //    objStatus.childList.Add(new Vector2Int(-1, 0));
+        //}
 
         // グリッドとパネルの情報を取得
         gridObj = Instantiate((GameObject)Resources.Load("GridObject"));
+        imageObj = (GameObject)Resources.Load("ImageObject");
         panelObj = GameObject.Find("CanvasUI/GridPanel");
         panelSize = panelObj.transform.GetComponent<RectTransform>().sizeDelta;
 
@@ -159,24 +160,37 @@ public class MapManager : MonoBehaviour
     /// </summary>
     private void GenerateImage()
     {
+        // 設置済みIDの最大値を取得
+        //var idMax = objStatus.InstalledDic.VelueMax();
+
         // 画像生成
-        for (int i = 0; i < installNum; i++)
+        for (int i = 0; i < 30 /* <= idMax*/; i++)
         {
-            // Value(id)に対応した画像取得(仮画像)
-            //var image = ResourceManager.instance.GetObstacleImage((OBSTACLE_IMAGE_NAMES)i);
-            GameObject imageObj = (GameObject)Resources.Load("shiitake");
+            //var image = (GameObject)Resources.Load("shiitake");
 
-            Debug.Log(imageObj);
-
-            // iと等しいValueがあるとき
-            if (objStatus.usedGridDic.ContainValue(i))
+            // iと等しい設置済みid情報があるとき
+            if (objStatus.InstalledDic.ContainValue(i))
             {
-                // 生成位置をリストで取得
-                var key = objStatus.usedGridDic.GetKey(i);
+                var image = ResourceManager.instance.GetObstacleImage((OBSTACLE_IMAGE_NAMES)i); // idに対応した画像取得
+                var installNumList = objStatus.InstalledDic.GetKeyList(i);                      // idに対応した設置順番をリスト取得
 
-                // 親オブジェクトの生成
-                var obj = Instantiate(imageObj, new Vector3(key.x, key.y), Quaternion.identity);
-                obj.transform.parent = transform;
+                for (int j = 0; j < installNumList.Count; j++)
+                {
+                    // 設置順番に対応した生成位置をリストで取得
+                    var key = objStatus.usedGridDic.GetKey(installNumList[j]);
+
+                    // イメージオブジェクトの生成
+                    var obj = Instantiate(imageObj, new Vector3(key.x * itemSize, key.y * itemSize), Quaternion.identity);
+
+                    //// サイズ変更
+                    obj.transform.localScale = new Vector3(obj.transform.localScale.x * itemSize, obj.transform.localScale.y * itemSize);
+
+                    // 静止画の適用
+                    obj.GetComponent<SpriteRenderer>().sprite = image;
+
+                    // MapManagerの子オブジェクトにする
+                    obj.transform.parent = transform;
+                }
             }
         }
     }
@@ -214,7 +228,7 @@ public class MapManager : MonoBehaviour
         isInstall = false;
         StartCoroutine(CreativeMode());
         GridDraw();
-        GenerateImage();
+        //GenerateImage();
 
         Debug.Log("クリエイティブモード開始");
     }
@@ -235,7 +249,7 @@ public class MapManager : MonoBehaviour
         isInstall = true;
         StopCoroutine(CreativeMode());
         GridDraw();
-        DestroyImage();
+        //DestroyImage();
 
         Debug.Log("クリエイティブモード終了");
     }
@@ -372,7 +386,7 @@ public class MapManager : MonoBehaviour
         obstacleObj.transform.localScale = new Vector3(itemSize, itemSize,1);
 
         // 障害物の生成
-        Instantiate(obstacleObj, new Vector3(gridPos.x, gridPos.y), Quaternion.Euler(0, 0, angle));
+        Instantiate(obstacleObj, new Vector3(gridPos.x * itemSize, gridPos.y * itemSize), Quaternion.Euler(0, 0, angle));
 
         // 設置したオブジェクトIDを追加
         objStatus.InstalledDic.Add(installNum, id);
@@ -426,6 +440,12 @@ public class MapManager : MonoBehaviour
     /// <param name="deletePos">Vector2Int型のマウス位置（TKey）</param>
     public void RemoveObstacle(Vector2Int deletePos)
     {
+        if (!isRunning)
+        {
+            Debug.LogError("クリエイティブモードが開始されていません。");
+            return;
+        }
+
         // 削除したい位置情報から、Value(id)を取得
         var deleteNum = objStatus.usedGridDic.GetValue(deletePos);
 
@@ -470,15 +490,17 @@ public class MapManager : MonoBehaviour
             // Keyに対応したValue(id)のオブジェクト取得
             obstacleObj = GetObstaclePrefab(objStatus.InstalledDic.GetValue(i));
 
+            // 生成する障害物のサイズ変更
+            obstacleObj.transform.localScale = new Vector3(itemSize, itemSize);
+
             // iと等しいValueがあるとき
             if (objStatus.usedGridDic.ContainValue(i))
             {
                 var key = objStatus.usedGridDic.GetKey(i);   // 生成位置をリストで取得
                 var angle = objStatus.AngleList.GetValue(i); // 生成角度を取得
-                Debug.Log(angle);
 
                 // 親オブジェクトの生成
-                Instantiate(obstacleObj, new Vector3(key.x, key.y), Quaternion.Euler(0, 0, angle));
+                Instantiate(obstacleObj, new Vector3(key.x * itemSize, key.y * itemSize), Quaternion.Euler(0, 0, angle));
             }
         }
     }
@@ -486,20 +508,11 @@ public class MapManager : MonoBehaviour
     /// <summary>
     /// フラグ参照メソッド
     /// </summary>
-    /// <returns>設置フラグ　true:設置済み　false:未設置</returns>
+    /// <returns>設置フラグ　true:設置不可　false:設置可能</returns>
     public bool IsInstallReference()
     {
         return isInstall;
     }
-
-    /// <summary>
-    /// グリッドのサイズが変更されたとき、アイテムの大きさをグリッドサイズに合わせる
-    /// </summary>
-    /// <param name="size">変更後のグリッドサイズ</param>
-    //public void ChangeItemSize(float size)
-    //{
-    //    itemSize = size;
-    //}
 
     // テスト
     //public void GetGridSize(Vector2 gridSize)

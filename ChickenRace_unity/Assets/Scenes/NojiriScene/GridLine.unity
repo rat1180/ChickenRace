@@ -200,9 +200,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveVector: {x: 0, y: 0, z: 0}
   moveSpeed: 5
-  itemId: 5
+  itemId: 1
   index: 0
-  isInstalled: 0
+  isInstalled: 1
   mouseImage: {fileID: 4384123820751128111, guid: 380291cd5af83394c98584b29215eb3b, type: 3}
   mouseInstanceObj: {fileID: 0}
   map: {fileID: 0}
@@ -728,7 +728,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523101eee2a954847959e8b1f6dcdacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemSize: 0
   debugMode: 1
   objStatus:
     childList: []
