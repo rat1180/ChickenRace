@@ -11,6 +11,8 @@ public class Obstacle_Surprise : MonoBehaviour
     float speed;
     [SerializeField]
     int counter;
+    [SerializeField]
+    GameObject parentObj;
     /// <summary>
     /// ‰Šú‰»
     /// </summary>
@@ -26,7 +28,7 @@ public class Obstacle_Surprise : MonoBehaviour
         {
             if (isMoveFlg && counter < 100)
             {
-                this.transform.Translate(new Vector3(0, speed, 0));
+                parentObj.transform.Translate(new Vector3(0, speed, 0));
                 counter++;
                 if (counter == 100)
                 {
@@ -40,6 +42,13 @@ public class Obstacle_Surprise : MonoBehaviour
         if (collision.gameObject.tag == "Debug")
         {
             isMoveFlg = true;
+        }
+    }
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Debug")
+        {
+            isMoveFlg = false; ;
         }
     }
 }

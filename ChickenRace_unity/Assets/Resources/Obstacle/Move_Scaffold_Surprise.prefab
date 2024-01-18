@@ -346,6 +346,7 @@ MonoBehaviour:
   isMoveFlg: 0
   speed: 0
   counter: 0
+  parentObj: {fileID: 4242550120382962803}
 --- !u!50 &7785099114641492356
 Rigidbody2D:
   serializedVersion: 4
