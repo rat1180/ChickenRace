@@ -145,7 +145,10 @@ public class PlayerMouse : MonoBehaviour
     /// </summary>
     private void MouseTransform()
     {
-        mouseImage.GetComponent<Character>().PositionUpdate(transform.position);
+        if(mouseImage != null)
+        {
+            mouseImage.GetComponent<Character>().PositionUpdate(transform.position);
+        }
     }
 
     /// <summary>
@@ -187,7 +190,6 @@ public class PlayerMouse : MonoBehaviour
 
         if (itemId != error)
         {
-            Debug.Log("aaa");
             isInstalled = map.GetComponent<MapManager>().JudgeInstall(gridPos, itemId);
         }
     }
@@ -202,7 +204,7 @@ public class PlayerMouse : MonoBehaviour
         // İ’u‚ª‚Å‚«‚È‚¢ê‡‚Í‰æ‘œ‚ğÔ‚­‚·‚é.
         if (isInstalled)
         {
-            mouseImage.GetComponent<SpriteRenderer>().color = new Color(0, GetComponent<SpriteRenderer>().color.g, GetComponent<SpriteRenderer>().color.b, GetComponent<SpriteRenderer>().color.a);
+            mouseImage.GetComponent<SpriteRenderer>().color = saveColor;
         }
         else
         {
