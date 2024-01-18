@@ -14,7 +14,6 @@ public class PlayerMouse : MonoBehaviour
     int error;                               // エラー番号.
     [SerializeField] bool isInstalled;       // アイテムの設置が可能か.
     [SerializeField] GameObject mouseImage;  // 自身の画像.
-    [SerializeField] GameObject mouseInstanceObj; // 生成した画像.
     [SerializeField] GameObject map;
     [SerializeField] GameObject user;
     Vector2Int gridPos;
@@ -23,6 +22,7 @@ public class PlayerMouse : MonoBehaviour
     [SerializeField] float saveAngle;
 
     [SerializeField] Sprite spriteImage;
+    [SerializeField] Color saveColor;
 
     /// <summary>
     /// 初期化用関数.
@@ -55,7 +55,6 @@ public class PlayerMouse : MonoBehaviour
         // アイテム設置フェーズ.
         else
         {
-            ImageDisplay();
             PlantPhase();
         }
     }
@@ -105,12 +104,12 @@ public class PlayerMouse : MonoBehaviour
         {
             // アイテムの生成.
            map.GetComponent<MapManager>().GenerateMapObject(itemId,saveAngle, gridPos);
+           ImageDelete();
         }
         else
         {
             // Debug.Log("設置できません");
             CantPlant();
-
         }
 
         if (itemId != error)
@@ -127,6 +126,7 @@ public class PlayerMouse : MonoBehaviour
     {
         // mouseImage = Instantiate(mouseImage, transform.position, transform.rotation);
         mouseImage = "mouseImage".SafeInstantiate(transform.position, transform.rotation);
+        saveColor = mouseImage.GetComponent<SpriteRenderer>().color;
     }
 
     /// <summary>
@@ -187,7 +187,35 @@ public class PlayerMouse : MonoBehaviour
     public void ImageDisplay(Sprite sprite)
     {
         mouseImage.GetComponent<SpriteRenderer>().sprite = sprite;
+
+        // 設置ができない場合は画像を赤くする.
+        if (isInstalled)
+        {
+            mouseImage.GetComponent<SpriteRenderer>().color = new Color(0, GetComponent<SpriteRenderer>().color.g, GetComponent<SpriteRenderer>().color.b, GetComponent<SpriteRenderer>().color.a);
+        }
+        else
+        {
+            mouseImage.GetComponent<SpriteRenderer>().color = new Color(255, GetComponent<SpriteRenderer>().color.g, GetComponent<SpriteRenderer>().color.b, GetComponent<SpriteRenderer>().color.a);
+        }
     }
 
+    public void ImageDelete()
+    {
+        Destroy(mouseImage);
+    }
+
+    /// <summary>
+    /// マウスの初期化.
+    /// </summary>
+    public void MouseInit()
+    {
+        // 画像の色を戻す.
+        mouseImage.GetComponent<SpriteRenderer>().color = saveColor;
+
+        // 画像のサイズを戻す.
+        float itemsize = map.GetComponent<MapManager>().itemSize;
+        mouseImage.transform.localScale = new Vector3(itemsize, itemsize, itemsize);
+
+    }
 
 }
