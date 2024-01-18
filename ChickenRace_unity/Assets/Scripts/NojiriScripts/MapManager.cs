@@ -226,7 +226,7 @@ public class MapManager : MonoBehaviour
         isInstall = false;
         StartCoroutine(CreativeMode());
         GridDraw();
-        GenerateImage();
+        //GenerateImage();
 
         Debug.Log("クリエイティブモード開始");
     }
@@ -247,7 +247,7 @@ public class MapManager : MonoBehaviour
         isInstall = true;
         StopCoroutine(CreativeMode());
         GridDraw();
-        DestroyImage();
+        //DestroyImage();
 
         Debug.Log("クリエイティブモード終了");
     }
