@@ -25,7 +25,6 @@ namespace SoundName
 
     public enum BGMCode
     {
-        None,  //âπÉNÉäÉAópnull
         BGM_Title,
         BGM_Mode,
         BGM_Wait,
@@ -61,7 +60,7 @@ public class SoundManager : MonoBehaviour
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        nowBGM = BGMCode.None;
+        nowBGM = BGMCode.BGM_Title;
     }
 
     // Update is called once per frame
