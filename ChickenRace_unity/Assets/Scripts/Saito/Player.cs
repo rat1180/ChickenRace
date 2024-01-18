@@ -266,6 +266,7 @@ public class Player : MonoBehaviour
         if (isDeath)
         {
             charaAnimation.nowAnimations = CharaAnimation.Animations.DEATH;
+            GameManager.instance.DeadPlayer();
         }
     }
 }

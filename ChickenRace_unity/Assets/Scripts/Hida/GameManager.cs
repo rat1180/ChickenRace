@@ -729,7 +729,7 @@ public class GameManager : MonoBehaviour
 
             for (int i = 0; i < 4; i++)
             {
-                int id = Random.Range(1, (int)OBSTACLE_OBJECT.Normal_Scaffold);
+                int id = Random.Range(1, (int)OBSTACLE_OBJECT.Count -1);
                 //áŠQ•¨’Ç‰Á
                 gameProgress.dataSharingClass.PushID(i == 4 ? 0 : id);
             }

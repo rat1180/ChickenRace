@@ -271,9 +271,18 @@ public class MapManager : MonoBehaviour
         }
         else
         {
-            // CollisionListを取得
-            var obj = ResourceManager.instance.GetObstacleObject((OBSTACLE_OBJECT)id);
-            childList = obj.GetComponent<Obstacle>().GetCollisionList();
+            //飛田追加:消去オブジェクトの時の例外処理
+            if ((OBSTACLE_OBJECT)id == OBSTACLE_OBJECT.Destroy_Bom)
+            {
+                return !JudgeInstallCenter(installPos);
+            }
+            else
+            {
+
+                // CollisionListを取得
+                var obj = ResourceManager.instance.GetObstacleObject((OBSTACLE_OBJECT)id);
+                childList = obj.GetComponent<Obstacle>().GetCollisionList();
+            }
         }
 
         // 設置位置が一つのとき
@@ -349,6 +358,13 @@ public class MapManager : MonoBehaviour
         if (!isRunning)
         {
             Debug.LogError("クリエイティブモードが開始されていません。");
+            return;
+        }
+
+        //飛田追加:消去オブジェクトの時の例外処理
+        if ((OBSTACLE_OBJECT)id == OBSTACLE_OBJECT.Destroy_Bom)
+        {
+            DeleteObject(gridPos);
             return;
         }
 

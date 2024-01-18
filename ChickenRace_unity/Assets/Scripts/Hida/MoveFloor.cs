@@ -1,26 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class Obstacle_Tracking : MonoBehaviour
+public class MoveFloor : MonoBehaviour
 {
-    [SerializeField]
-    GameObject trackingTarget;
-   
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
     void Update()
     {
-        if (GameManager.instance.CheckObstacleMove())
-        {
-            Tracking();
-        }
-    }
-    /// <summary>
-    /// –_‚É‚­‚Á‚Â‚­
-    /// </summary>
-    void Tracking()
-    {
-        this.transform.position = trackingTarget.transform.position;
+        
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -34,9 +27,13 @@ public class Obstacle_Tracking : MonoBehaviour
         {
             if (collision.transform.parent == transform)
             {
-                collision.transform.parent = null;
+                var parent = transform;
+                while(parent.parent != null)
+                {
+                    parent = parent.parent;
+                }
+                collision.transform.parent = parent;
             }
         }
     }
-
 }
