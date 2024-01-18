@@ -104,7 +104,18 @@ public class PlayerMouse : MonoBehaviour
         {
             // アイテムの生成.
            map.GetComponent<MapManager>().GenerateMapObject(itemId,saveAngle, gridPos);
-           ImageDelete();
+            
+            // アイテム選択フェーズ.
+            if (user.GetComponent<User>().SetMode() == 0)
+            {
+                ImageDelete();
+            }
+            // アイテム設置フェーズ.
+            else
+            {
+                PlantPhase();
+                ImageDelete();
+            }
         }
         else
         {
