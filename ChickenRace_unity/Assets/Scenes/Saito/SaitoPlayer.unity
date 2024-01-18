@@ -211,6 +211,7 @@ MonoBehaviour:
   user: {fileID: 0}
   angle: 45
   saveAngle: 0
+  spriteImage: {fileID: 0}
 --- !u!50 &166799418
 Rigidbody2D:
   serializedVersion: 4
@@ -253,6 +254,22 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6990167391782563444, guid: 97f29c69ac67e9741ba987c162c49308, type: 3}
   m_PrefabInstance: {fileID: 6990167393407714194}
   m_PrefabAsset: {fileID: 0}
+--- !u!58 &201476414
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 201476413}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1
 --- !u!1 &556914858
 GameObject:
   m_ObjectHideFlags: 0
@@ -885,13 +902,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523101eee2a954847959e8b1f6dcdacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemSize: 0
   debugMode: 0
   objStatus:
-    InstalledList: 
-    AngleList: []
     childList: []
-  usedGridDic:
-    keyPairs: []
+    AngleList:
+      keyPairs: []
+    InstalledDic:
+      keyPairs: []
+    usedGridDic:
+      keyPairs: []
+  childTest: 0
 --- !u!4 &1401999054
 Transform:
   m_ObjectHideFlags: 0
@@ -1090,6 +1111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53d2e400124289647836b814dae26286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obstacleCenterPos: {x: 0, y: 0}
   collisionList: []
   obstacleID: 0
   obstacleKindID: 0
@@ -1182,11 +1204,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1773392995 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5915672202672228639, guid: 3c108227eec0b1a49adc8d1cfbba2980, type: 3}
-  m_PrefabInstance: {fileID: 5915672204390800764}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1850606749
 GameObject:
   m_ObjectHideFlags: 0
@@ -1485,14 +1502,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 6990167391782563444, guid: 97f29c69ac67e9741ba987c162c49308, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6990167391782563449, guid: 97f29c69ac67e9741ba987c162c49308, type: 3}
-      propertyPath: m_CollisionDetection
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6990167391782563450, guid: 97f29c69ac67e9741ba987c162c49308, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -1536,14 +1545,6 @@ PrefabInstance:
     - target: {fileID: 6990167391782563450, guid: 97f29c69ac67e9741ba987c162c49308, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6990167391782563451, guid: 97f29c69ac67e9741ba987c162c49308, type: 3}
-      propertyPath: playerImage
-      value: 
-      objectReference: {fileID: 1773392995}
-    - target: {fileID: 6990167391782563451, guid: 97f29c69ac67e9741ba987c162c49308, type: 3}
-      propertyPath: minMoveSpeed
-      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97f29c69ac67e9741ba987c162c49308, type: 3}
