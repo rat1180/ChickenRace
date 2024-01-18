@@ -86,7 +86,7 @@ public class User : MonoBehaviour
     /// </summary>
     public void DestroyPlayer()
     {
-        Destroy(playerObjcet);
+        playerObjcet.GetComponent<Player>().PlayerDelete();
     }
 
     public int SetMode()

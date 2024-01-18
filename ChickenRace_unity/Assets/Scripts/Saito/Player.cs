@@ -51,7 +51,6 @@ public class Player : MonoBehaviour
             WallSliding();
         }
         PlayerTransform();
-        PlayerDeath();
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -144,7 +143,8 @@ public class Player : MonoBehaviour
     /// </summary>
     void OnGiveUp()
     {
-        PlayerDelete();
+        Debug.Log("éÄñS");
+        PlayerDeath();
     }
 
     /// <summary>
@@ -250,8 +250,9 @@ public class Player : MonoBehaviour
     /// <summary>
     /// é©êgÇçÌèú.
     /// </summary>
-    private void PlayerDelete()
+    public void PlayerDelete()
     {
+        Destroy(instanceObj);
         Destroy(gameObject);
     }
 

@@ -31,7 +31,8 @@ public class PlayerMouse : MonoBehaviour
     {
         error = -1;
         MouseImageInstance();
-        map = GameManager.instance.GetMapManager();
+        //map = GameManager.instance.GetMapManager();
+        map = GameObject.Find("MapManager");
         itemId = user.GetComponent<User>().GetItemId();
     }
 
