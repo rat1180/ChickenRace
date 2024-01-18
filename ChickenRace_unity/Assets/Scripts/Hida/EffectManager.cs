@@ -74,6 +74,7 @@ public class EffectManager : MonoBehaviour
     {
         var obj = EffectObject[(int)AnimObject.SelectEffect];
         obj.SetActive(true);
+        obj.transform.GetChild(1).GetComponent<SpriteRenderer>().color = Color.white;
         var anim = obj.GetComponent<Animator>();
 
         anim.SetTrigger("SelectStart");
