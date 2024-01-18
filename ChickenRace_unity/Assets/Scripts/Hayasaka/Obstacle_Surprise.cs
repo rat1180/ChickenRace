@@ -17,12 +17,12 @@ public class Obstacle_Surprise : MonoBehaviour
     void Start()
     {
         isMoveFlg = false;
-        speed = 0.05f;
+        speed = 0.02f;
         counter = 0;
     }
     void Update()
     {
-        if (GameManager.instance.CheckObstacleMove())
+        //if (GameManager.instance.CheckObstacleMove())
         {
             if (isMoveFlg && counter < 100)
             {
@@ -37,6 +37,10 @@ public class Obstacle_Surprise : MonoBehaviour
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
-        isMoveFlg = true;
+        if (collision.gameObject.tag == "Debug")
+        {
+            isMoveFlg = true;
+        }
     }
 }
+

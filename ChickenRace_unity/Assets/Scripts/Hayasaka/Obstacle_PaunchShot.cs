@@ -25,10 +25,11 @@ public class Obstacle_PaunchShot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.instance.CheckObstacleMove())
+        //if (GameManager.instance.CheckObstacleMove())
         {
-            if (this.transform.position.x != pt.transform.position.x && this.transform.position.y != pt.transform.position.y)
+            if (this.transform.position.x != pt.transform.position.x || this.transform.position.y != pt.transform.position.y)
             {
+                Debug.Log("asass");
                 if (!isStopFlg)
                 {
                     Paunching();
@@ -69,7 +70,7 @@ public class Obstacle_PaunchShot : MonoBehaviour
         yield return new WaitForSeconds(wt);
         this.transform.position = Vector3.MoveTowards(transform.position, bt.transform.position, speed * Time.deltaTime);
         //ê∂ê¨à íuÇ‹Ç≈óàÇΩÇÁè¡ñ≈
-        if (this.transform.position.x == bt.transform.position.x || this.transform.position.y == bt.transform.position.y)
+        if (this.transform.position.x == bt.transform.position.x && this.transform.position.y == bt.transform.position.y)
         {
             Debug.Log("åù");
             rb.velocity = Vector3.zero;
