@@ -31,8 +31,8 @@ public class PlayerMouse : MonoBehaviour
     {
         error = -1;
         MouseImageInstance();
-        //map = GameManager.instance.GetMapManager();
-        map = GameObject.Find("MapManager");
+        map = GameManager.instance.GetMapManager();
+        if(map == null) map = GameObject.Find("MapManager");
         itemId = user.GetComponent<User>().GetItemId();
     }
 
@@ -55,7 +55,6 @@ public class PlayerMouse : MonoBehaviour
         // アイテム設置フェーズ.
         else
         {
-            ImageDisplay();
             PlantPhase();
         }
     }

@@ -842,7 +842,7 @@ public class GameManager : MonoBehaviour
 
         //マウス生成
         gameProgress.user.GenerateMouse(gameProgress.user.GetItemId());
-        //gameProgress.user(ResourceManager.instance.GetObstacleImage(gameProgress.user.GetItemId()));
+        gameProgress.user.SetSpriteImage(ResourceManager.instance.GetObstacleImage(gameProgress.user.GetItemId()));
 
 
         //進行待機
