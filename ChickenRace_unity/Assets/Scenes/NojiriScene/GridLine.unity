@@ -209,6 +209,7 @@ MonoBehaviour:
   user: {fileID: 8928751519379337991, guid: 8c1f10d99ce1e3a4a85471002345c620, type: 3}
   angle: 45
   saveAngle: 0
+  spriteImage: {fileID: 0}
 --- !u!1 &556914858
 GameObject:
   m_ObjectHideFlags: 0
@@ -737,7 +738,7 @@ MonoBehaviour:
       keyPairs: []
     usedGridDic:
       keyPairs: []
-  childTest: 1
+  childTest: 0
 --- !u!4 &1401999054
 Transform:
   m_ObjectHideFlags: 0

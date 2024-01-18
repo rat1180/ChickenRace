@@ -31,7 +31,8 @@ public class PlayerMouse : MonoBehaviour
     {
         error = -1;
         MouseImageInstance();
-        map = GameManager.instance.GetMapManager();
+        //map = GameManager.instance.GetMapManager();
+        map = GameObject.Find("MapManager");
         itemId = user.GetComponent<User>().GetItemId();
     }
 
@@ -183,10 +184,9 @@ public class PlayerMouse : MonoBehaviour
     /// <summary>
     /// アイテム画像の表示.
     /// </summary>
-    void ImageDisplay()
+    public void ImageDisplay(Sprite sprite)
     {
-        Debug.Log("Image");
-        mouseImage.GetComponent<SpriteRenderer>().sprite = spriteImage;
+        mouseImage.GetComponent<SpriteRenderer>().sprite = sprite;
     }
 
 
