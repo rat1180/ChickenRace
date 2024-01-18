@@ -29,13 +29,17 @@ public class Obstacle_Paunch : Obstacle
     }
     protected override void update()
     {
-        //if (GameManager.instance.CheckObstacleMove())
+        if (GameManager.instance.CheckObstacleMove())
         {
             if (isPaunchFlg)
             {
                 ShotObj();
             }
         }
+        //if (GameManager.instance.GetRaceEnd())
+        //{
+        //    Destoroy();
+        //}
     }
     protected override void ObjStart()
     {
@@ -69,8 +73,8 @@ public class Obstacle_Paunch : Obstacle
             isPaunchFlg = true;
         }
     }
-    //void Destoroy()
-    //{
-    //    Destroy(this.gameObject);
-    //}
+    void Destoroy()
+    {
+        Destroy(this.gameObject);
+    }
 }

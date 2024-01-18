@@ -26,6 +26,10 @@ public class Obstacle_Move : Obstacle
             //MoveDiagonal();
             MoveRotate();
         }
+        //if (GameManager.instance.GetRaceEnd())
+        //{
+        //    Destoroy();
+        //}
     }
     void MoveBeside()
     {
@@ -41,11 +45,14 @@ public class Obstacle_Move : Obstacle
     }
     void MoveRotate()
     {
-        rf.transform.Rotate(new Vector3(0, 0, 0.1f));
+        rf.transform.Rotate(new Vector3(0, 0, 0.2f));
     }
     protected override void ObjStart()
     {
        
     }
-
+    void Destoroy()
+    {
+        Destroy(this.gameObject);
+    }
 }

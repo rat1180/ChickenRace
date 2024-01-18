@@ -11,6 +11,8 @@ public class Obstacle_Surprise : MonoBehaviour
     float speed;
     [SerializeField]
     int counter;
+    [SerializeField]
+    GameObject parentObj;
     /// <summary>
     /// èâä˙âª
     /// </summary>
@@ -22,11 +24,11 @@ public class Obstacle_Surprise : MonoBehaviour
     }
     void Update()
     {
-        //if (GameManager.instance.CheckObstacleMove())
+        if (GameManager.instance.CheckObstacleMove())
         {
             if (isMoveFlg && counter < 50)
             {
-                this.transform.Translate(new Vector3(0, speed, 0));
+                parentObj.transform.Translate(new Vector3(0, speed, 0));
                 counter++;
                 if (counter == 50)
                 {
@@ -34,6 +36,10 @@ public class Obstacle_Surprise : MonoBehaviour
                 }
             }
         }
+        //if (GameManager.instance.GetRaceEnd())
+        //{
+        //    Destoroy();
+        //}
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -41,6 +47,17 @@ public class Obstacle_Surprise : MonoBehaviour
         {
             isMoveFlg = true;
         }
+    }
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Debug")
+        {
+            isMoveFlg = false; ;
+        }
+    }
+    void Destoroy()
+    {
+        Destroy(parentObj.gameObject);
     }
 }
 

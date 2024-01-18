@@ -24,7 +24,7 @@ public class Obstacle_Arrow : Obstacle
     }
     protected override void update()
     {
-        //if (GameManager.instance.CheckObstacleMove())
+        if (GameManager.instance.CheckObstacleMove())
         {
             if (isShotFlg)
             {
@@ -39,6 +39,10 @@ public class Obstacle_Arrow : Obstacle
                 }
             }
         }
+        //if (GameManager.instance.GetRaceEnd())
+        //{
+        //    Destoroy();
+        //}
     }
     protected override void ObjStart()
     {
