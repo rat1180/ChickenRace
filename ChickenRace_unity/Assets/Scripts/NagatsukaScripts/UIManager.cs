@@ -19,8 +19,8 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     enum CanvasChild
     {
-        ImageObjects,
-        RaceCount,
+        OsaraObject,
+        ResultPanel,
         LoaingImage
     }
     #endregion
@@ -37,9 +37,11 @@ public class UIManager : MonoBehaviourPunCallbacks
         new Vector2(5,-5)
     };
 
+    private GameObject osaraPanel;//選べテキストとお皿.
     private GameObject imageObjects;
     private GameObject resultPanel;
     private GameObject resultCharacters;//リザルト画面のキャラクター(Name,Score,Rank表示)
+    //private GameObject[] resultCharacters;
     private Text raceCountText;//第何レースかを表示するテキスト.
     private List<int> id;
 
@@ -57,11 +59,14 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        imageObjects = transform.Find("ImageObjects").gameObject;
-        resultPanel = transform.GetChild(0).transform.Find("ResultPanel").gameObject;
+        GameObject canvasUI = transform.GetChild(0).gameObject;
+        osaraPanel = canvasUI.transform.GetChild((int)CanvasChild.OsaraObject).gameObject;
+        resultPanel = canvasUI.transform.GetChild((int)CanvasChild.ResultPanel).gameObject;
+        loaingImage = canvasUI.transform.GetChild((int)CanvasChild.LoaingImage).gameObject;
+
         resultCharacters = resultPanel.transform.GetChild(0).gameObject;
         raceCountText= resultPanel.transform.GetChild(1).GetComponent<Text>();
-        loaingImage = transform.GetChild(0).transform.GetChild((int)CanvasChild.LoaingImage).gameObject;
+        
     }
 
     // Update is called once per frame
@@ -349,5 +354,14 @@ public class UIManager : MonoBehaviourPunCallbacks
         {
             resultCharacters.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text = player.NickName;
         }
+    }
+
+    /// <summary>
+    /// お皿と選べテキストの表示を切り換える関数
+    /// 引数にbool型を指定し、アクティブを切り換える.
+    /// </summary>
+    public void SwitchActiveOsara(bool flg)
+    {
+        osaraPanel.SetActive(flg);
     }
 }
