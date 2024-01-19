@@ -42,10 +42,10 @@ public class Obstacle_PaunchShot : MonoBehaviour
                 StartCoroutine(DelayBack(waitTime));
             }
         }
-        //if (GameManager.instance.GetRaceEnd())
-        //{
-        //    Destoroy();
-        //}
+        if (GameManager.instance.CheckRaceEnd())
+        {
+            Destoroy();
+        }
     }
     //íºêiÇ≥ÇπÇÈ
     protected virtual void Paunching()

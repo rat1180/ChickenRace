@@ -39,10 +39,10 @@ public class Obstacle_Arrow : Obstacle
                 }
             }
         }
-        //if (GameManager.instance.GetRaceEnd())
-        //{
-        //    Destoroy();
-        //}
+        if (GameManager.instance.CheckRaceEnd())
+        {
+            Destoroy();
+        }
     }
     protected override void ObjStart()
     {
@@ -60,7 +60,7 @@ public class Obstacle_Arrow : Obstacle
         var ars = "Obstacle/Damage_ArrowShot".SafeInstantiate(arrowChild.transform.position, Quaternion.identity);
         ars.GetComponent<Obstacle_ArrowShot>().ArrowShot(myRotation);
     }
-    void OnTrggerEnter2D(Collision other)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         Destoroy();
     }

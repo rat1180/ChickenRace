@@ -22,10 +22,10 @@ public class Obstacle_ArrowShot : MonoBehaviour
         {
             Moving();
         }
-        //if (GameManager.instance.GetRaceEnd())
-        //{
-        //    Destoroy();
-        //}
+        if (GameManager.instance.CheckRaceEnd())
+        {
+            Destoroy();
+        }
     }
     //íºêiÇ≥ÇπÇÈ
     protected virtual void Moving()
