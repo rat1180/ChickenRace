@@ -953,6 +953,8 @@ public class GameManager : MonoBehaviour
         //キャラを削除
         gameProgress.user.DestroyPlayer();
 
+        isNowRace = false;
+
         gameState++;
 
         //ステートコルーチンの終了処理
