@@ -19,10 +19,15 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     enum CanvasChild
     {
-        OsaraObject,
+        LoaingImage,
         ResultPanel,
-        LoaingImage
+        OsaraObject,
     }
+    enum UIManagerChild { 
+        ImageObjects,
+        CanvasUI,
+    }
+
     #endregion
 
     #region íËêîíl
@@ -59,7 +64,8 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        GameObject canvasUI = transform.GetChild(0).gameObject;
+        imageObjects = transform.GetChild((int)UIManagerChild.ImageObjects).gameObject;
+        GameObject canvasUI = transform.GetChild((int)UIManagerChild.CanvasUI).gameObject;
         osaraPanel = canvasUI.transform.GetChild((int)CanvasChild.OsaraObject).gameObject;
         resultPanel = canvasUI.transform.GetChild((int)CanvasChild.ResultPanel).gameObject;
         loaingImage = canvasUI.transform.GetChild((int)CanvasChild.LoaingImage).gameObject;
@@ -67,7 +73,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         resultCharacters = resultPanel.transform.GetChild(0).gameObject;
         raceCountText= resultPanel.transform.GetChild(1).GetComponent<Text>();
 
-        imageObjects= transform.GetChild(1).gameObject;
+        
     }
 
     // Update is called once per frame
@@ -76,7 +82,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         if (Input.GetKeyDown(KeyCode.K))
         {
             //PushID(testID);
-            StartCoroutine(Result(beScore,5));
+            //StartCoroutine(Result(beScore,5));
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
