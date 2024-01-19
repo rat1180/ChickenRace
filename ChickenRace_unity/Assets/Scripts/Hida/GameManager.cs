@@ -994,6 +994,7 @@ public class GameManager : MonoBehaviour
 
             DebugLog("選択フェーズに返る");
             gameState = GameStatus.SELECT;
+            gameProgress.user.SetIndex(-1);
         }
 
         //ステートコルーチンの終了処理
