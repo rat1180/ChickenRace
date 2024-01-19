@@ -7,10 +7,10 @@ public class Obstacle_Death : Obstacle
 {
     void Update()
     {
-        //if (GameManager.instance.GetRaceEnd())
-        //{
-        //    Destoroy();
-        //}
+        if (GameManager.instance.CheckRaceEnd())
+        {
+            Destoroy();
+        }
     }
     /// <summary>
     /// èâä˙âª
@@ -29,11 +29,11 @@ public class Obstacle_Death : Obstacle
     }
     void OnTriggerEnter2D(Collider2D other)
     {
-        Destroy(other.gameObject);
+        Destroy(gameObject);
     }
     void OnCollisionEnter2D(Collision2D other)
     {
-        Destroy(other.gameObject);
+        Destroy(gameObject);
     }
     void Destoroy()
     {

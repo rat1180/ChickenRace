@@ -389,11 +389,11 @@ public class MapManager : MonoBehaviour
     /// <param name="gridPos">生成する位置</param>
     public void SpawnObstacle(int id, float angle, Vector2Int gridPos)
     {
-        if (!isRunning)
-        {
-            Debug.LogError("クリエイティブモードが開始されていません。");
-            return;
-        }
+        //if (!isRunning)
+        //{
+        //    Debug.LogError("クリエイティブモードが開始されていません。");
+        //    return;
+        //}
 
         // 障害物の取得
         obstacleObj = GetObstaclePrefab(id);

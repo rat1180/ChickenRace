@@ -22,10 +22,10 @@ public class Obstacle_ArrowShot : MonoBehaviour
         {
             Moving();
         }
-        //if (GameManager.instance.GetRaceEnd())
-        //{
-        //    Destoroy();
-        //}
+        if (GameManager.instance.CheckRaceEnd())
+        {
+            Destoroy();
+        }
     }
     //íºêiÇ≥ÇπÇÈ
     protected virtual void Moving()
@@ -56,5 +56,15 @@ public class Obstacle_ArrowShot : MonoBehaviour
     void Destoroy()
     {
         Destroy(this.gameObject);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Destoroy();
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Destoroy();
     }
 }

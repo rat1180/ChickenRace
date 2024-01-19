@@ -6,10 +6,11 @@ using Photon.Pun;
 public class Character : MonoBehaviourPun, IPunObservable
 {
     public Vector3 targetPos;
-    [SerializeField] GameObject target;
+    public GameObject target;
     Vector3 savePos;
     Vector3 relativeVector;
     [SerializeField] float threshold; // アニメーション用閾値.
+    public bool isTurnFlg = true;
 
     void Start()
     {
@@ -19,6 +20,7 @@ public class Character : MonoBehaviourPun, IPunObservable
     void FixedUpdate()
     {
         TargetMove();
+        myDestroy();
         IsTurn();
     }
 
@@ -65,7 +67,7 @@ public class Character : MonoBehaviourPun, IPunObservable
     /// </summary>
     private void myDestroy()
     {
-        if(target == null)
+        if(target == null && photonView.IsMine)
         {
             Destroy(gameObject);
         }
@@ -76,6 +78,8 @@ public class Character : MonoBehaviourPun, IPunObservable
     /// </summary>
     public void IsTurn()
     {
+        if (!isTurnFlg) return;
+
         // 相対ベクター取得.
         relativeVector = transform.position - savePos;
 

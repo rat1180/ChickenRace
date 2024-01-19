@@ -188,6 +188,7 @@ public class GameManager : MonoBehaviour
     {
         int index = gameProgress.user.GetIndex();
         if (index == -1) return false;
+        Debug.Log("index:" + index);
         //正常に持っているか確認
         if (gameProgress.dataSharingClass.ID[index] != 0)
         {
@@ -709,6 +710,8 @@ public class GameManager : MonoBehaviour
         //進行待機
         yield return new WaitUntil(() => CheckKeys(InGameStatus.READY));
 
+        gameProgress.user.SetIndex(-1);
+
         //障害物への消滅指示を消す
         isRaceEnd = false;
 
@@ -727,18 +730,20 @@ public class GameManager : MonoBehaviour
                 gameProgress.dataSharingClass.PushID(id);
             }
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 int id = Random.Range(1, (int)OBSTACLE_OBJECT.Count -1);
                 //障害物追加
-                gameProgress.dataSharingClass.PushID(i == 4 ? 0 : id);
+                gameProgress.dataSharingClass.PushID(id);
             }
+            gameProgress.dataSharingClass.PushID(0);
 
         }
         //ゲストなら抽選まで待機
         else
         {
             DebugLog("抽選を待機");
+            NowLoading(true);
             yield return new WaitUntil(() => gameProgress.dataSharingClass.ID.Count != 0 ? true : false);
             yield return new WaitUntil(() => gameProgress.dataSharingClass.ID[gameProgress.dataSharingClass.ID.Count - 1] == 0);
         }
@@ -947,6 +952,8 @@ public class GameManager : MonoBehaviour
 
         //キャラを削除
         gameProgress.user.DestroyPlayer();
+
+        isNowRace = false;
 
         gameState++;
 
