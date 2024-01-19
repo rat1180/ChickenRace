@@ -173,7 +173,7 @@ public class UIManager : MonoBehaviourPunCallbacks
     {
         ActiveResultPanel(true);
         //ActiveCharacters(score.Count);
-        ActiveCharacters(PhotonNetwork.CountOfPlayers);
+        ActiveCharacters(PhotonNetwork.CurrentRoom.PlayerCount);
         raceCountText.text = "第" + raceCount + "レース終了結果";
         //Playerの数分ループして情報を入れる.
         int i = 0;
