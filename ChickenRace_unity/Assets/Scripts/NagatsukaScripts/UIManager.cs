@@ -128,14 +128,12 @@ public class UIManager : MonoBehaviourPunCallbacks
     /// </summary>
     public void ChangeObstacleImage()
     {
-        //for (int i = 0; i < imageObjects.transform.childCount; i++)
         for (int i = 0; i < IMAGE_OBSTACLE_NUM; i++)
         {
             if (imageObjects.transform.childCount != IMAGE_OBSTACLE_NUM)//4つの画像オブジェクトが生成されているかチェック.
             {
                 GameObject gameObject = Instantiate(imageObstacle, new Vector3(), Quaternion.identity, imageObjects.transform);
                 gameObject.transform.position = imagePosition[i];
-                //gameObject.GetComponent<RectTransform>().localPosition = imagePosition[i];
 
                 gameObject.GetComponent<SpriteRenderer>().sprite =
                 ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
@@ -178,13 +176,14 @@ public class UIManager : MonoBehaviourPunCallbacks
         raceCountText.text = "第" + raceCount + "レース終了結果";
         //Playerの数分ループして情報を入れる.
         int i = 0;
-        for (i = 0; i < score.Count; i++)
+        //for (i = 0; i < score.Count; i++)
         {
-            //foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
+            foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
             {
-                //resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text = player.NickName;
-                resultCharacters[i].transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text
-                    = names[i];
+                resultCharacters[i].transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text 
+                    = player.NickName;
+                //resultCharacters[i].transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text
+                //    = names[i];
             }
         }
 
@@ -227,18 +226,18 @@ public class UIManager : MonoBehaviourPunCallbacks
         raceCountText.text = "第" + raceCount + "レース終了結果";
         //Playerの数分ループして情報を入れる.
         int i = 0;
-        for (i = 0; i < beforeScore.Count; i++)
-        {
-            //foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
-            {
-                //resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text = player.NickName;
-                resultCharacters[i].transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text
-                    = names[i];
+        //for (i = 0; i < beforeScore.Count; i++)
+        //{
+            foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
+        { 
+                resultCharacters[i].transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text 
+                = player.NickName;
+                //resultCharacters[i].transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text
+                //    = names[i];
                 resultCharacters[i].transform.GetChild((int)ResultCharacterChild.SCORE).GetComponent<Text>().text
                     = "SCORE:" + beforeScore[i].ToString();
                 //resultCharacters.transform.GetChild(i).transform.GetChild((int)ResultCharacterChild.UPSCORE).GetComponent<Text>().text
                 //    = "+" + addScore[i].ToString();
-            }
         }
 
         //スコアのテキストを変更する(旧ChangeScoreText).
