@@ -57,4 +57,14 @@ public class Obstacle_ArrowShot : MonoBehaviour
     {
         Destroy(this.gameObject);
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Destoroy();
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Destoroy();
+    }
 }

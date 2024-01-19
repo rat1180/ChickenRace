@@ -60,12 +60,5 @@ public class Obstacle_Arrow : Obstacle
         var ars = "Obstacle/Damage_ArrowShot".SafeInstantiate(arrowChild.transform.position, Quaternion.identity);
         ars.GetComponent<Obstacle_ArrowShot>().ArrowShot(myRotation);
     }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        Destoroy();
-    }
-    void Destoroy()
-    {
-        Destroy(this.gameObject);
-    }
+    
 }
