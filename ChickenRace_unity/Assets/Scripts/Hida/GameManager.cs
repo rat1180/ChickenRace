@@ -730,18 +730,20 @@ public class GameManager : MonoBehaviour
                 gameProgress.dataSharingClass.PushID(id);
             }
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 int id = Random.Range(1, (int)OBSTACLE_OBJECT.Count -1);
                 //障害物追加
-                gameProgress.dataSharingClass.PushID(i == 4 ? 0 : id);
+                gameProgress.dataSharingClass.PushID(id);
             }
+            gameProgress.dataSharingClass.PushID(0);
 
         }
         //ゲストなら抽選まで待機
         else
         {
             DebugLog("抽選を待機");
+            NowLoading(true);
             yield return new WaitUntil(() => gameProgress.dataSharingClass.ID.Count != 0 ? true : false);
             yield return new WaitUntil(() => gameProgress.dataSharingClass.ID[gameProgress.dataSharingClass.ID.Count - 1] == 0);
         }
