@@ -186,7 +186,7 @@ public class PlayerMouse : MonoBehaviour
     {
        
         gridPos = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
-
+        mouseImage.transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, saveAngle);
         if (itemId != error)
         {
             isInstalled = map.GetComponent<MapManager>().JudgeInstall(gridPos, itemId);
