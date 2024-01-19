@@ -137,6 +137,7 @@ public class PlayerMouse : MonoBehaviour
         mouseImage = "mouseImage".SafeInstantiate(transform.position, transform.rotation);
         saveColor = mouseImage.GetComponent<SpriteRenderer>().color;
         mouseImage.GetComponent<Character>().target = gameObject;
+        mouseImage.GetComponent<Character>().isTurnFlg = false;
     }
 
     /// <summary>
