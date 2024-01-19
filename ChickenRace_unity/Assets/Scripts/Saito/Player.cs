@@ -46,6 +46,7 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        PlayerDeath();
         if(isStart && !isGoal && !isDeath)
         {
             PlayerMove();
