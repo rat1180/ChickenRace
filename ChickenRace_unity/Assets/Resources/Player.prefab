@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 6990167391782563450}
   - component: {fileID: 6990167391782563445}
   - component: {fileID: 6990167391782563449}
-  - component: {fileID: 6990167391782563448}
-  - component: {fileID: 6990167391782563451}
+  - component: {fileID: 8794073069995061950}
   - component: {fileID: 6990167391782563454}
+  - component: {fileID: 6990167391782563451}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -109,8 +109,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!70 &6990167391782563448
-CapsuleCollider2D:
+--- !u!58 &8794073069995061950
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -122,36 +122,9 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 2}
-  m_Direction: 0
---- !u!114 &6990167391782563451
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6990167391782563444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14da063131b210041b424f50e39863b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  charaAnimation: {fileID: 0}
-  moveVector: {x: 0, y: 0, z: 0}
-  isMove: 0
-  moveSpeed: 100
-  minMoveSpeed: 0.05
-  maxMoveSpeed: 10
-  moveDecay: 0.8
-  jumpPower: 10
-  wallJumpPower: {x: 2, y: 1}
-  wallSlidingSpeed: 15
-  nowHitDir: 0
-  playerImage: {fileID: 0}
-  instanceObj: {fileID: 220035344534385366, guid: 051918674e7d1b540be78bcd83cdd10d, type: 3}
-  isStart: 0
-  isGoal: 0
+  m_Offset: {x: 0, y: -0.5}
+  serializedVersion: 2
+  m_Radius: 0.8
 --- !u!114 &6990167391782563454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,3 +155,31 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &6990167391782563451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6990167391782563444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14da063131b210041b424f50e39863b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charaAnimation: {fileID: 0}
+  moveVector: {x: 0, y: 0, z: 0}
+  isMove: 0
+  moveSpeed: 100
+  minMoveSpeed: 0.5
+  maxMoveSpeed: 10
+  moveDecay: 0.8
+  jumpPower: 10
+  wallJumpPower: {x: 2, y: 1}
+  wallSlidingSpeed: 15
+  nowHitDir: 0
+  instanceObj: {fileID: 220035344534385366, guid: 051918674e7d1b540be78bcd83cdd10d, type: 3}
+  isStart: 0
+  isGoal: 0
+  isDeath: 0
+  time: 0

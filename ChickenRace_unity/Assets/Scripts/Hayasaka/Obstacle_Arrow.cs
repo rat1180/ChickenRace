@@ -39,6 +39,10 @@ public class Obstacle_Arrow : Obstacle
                 }
             }
         }
+        //if (GameManager.instance.GetRaceEnd())
+        //{
+        //    Destoroy();
+        //}
     }
     protected override void ObjStart()
     {

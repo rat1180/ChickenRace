@@ -68,21 +68,23 @@ public class GameManager : MonoBehaviour
         UIManager,
         User,
         MapManager,
-        StartPoint
+        StartPoint,
+        EffectManager,
     }
 
     //ゲーム進行に必要な定数
     const float DEAD = -1f;
-    const int BONUS_SCORE = 1;
-    const int BASE_SCORE = 3;
-    const int GAME_END_SCORE = 10;
+    const int BONUS_SCORE = 0;
+    const int BASE_SCORE = 1;
+    const int GAME_END_SCORE = 3;
 
     //進行に必要なクラスの、生成先・探索先のパス
     static readonly Dictionary<ProgressName, string> progressPass = new Dictionary<ProgressName, string>() { { ProgressName.DataSharingClass, "NagatsukaObjects/DataSharingClass" },
                                                                                                              { ProgressName.UIManager,"UIManager"},
                                                                                                              { ProgressName.User,"User" },
                                                                                                              { ProgressName.MapManager,"MapManager" },
-                                                                                                             { ProgressName.StartPoint,"StartPoint" }};
+                                                                                                             { ProgressName.StartPoint,"StartPoint" },
+                                                                                                             { ProgressName.EffectManager,"EffectManager"} };
 
     /// <summary>
     /// ゲームの進行に必要なマネージャー等をまとめたクラス
@@ -96,6 +98,7 @@ public class GameManager : MonoBehaviour
         public User user;
         public int userActorNumber;
         public Vector2 startPoint;
+        public EffectManager effectManager;
     }
 
     #endregion
@@ -106,6 +109,7 @@ public class GameManager : MonoBehaviour
     [SerializeField, Tooltip("進行中のステートコルーチン")] Coroutine stateCoroutine;
     [SerializeField, Tooltip("他のクラスから渡される、現在のフェーズ終了を知らせる変数")] bool isFazeEnd; //Int型にして複数の状態に対応出来るようにするかも
     [SerializeField, Tooltip("現在レース中かどうかを判定")] bool isNowRace;
+    [SerializeField, Tooltip("レースの終了を知らせる")] bool isRaceEnd;
     [SerializeField, Tooltip("ゲームの進行に必要なクラスのまとめ")] GameProgress gameProgress;
     [SerializeField, Tooltip("デバッグ用のログを表示するかどうか")] bool isDebug;
     [SerializeField, Tooltip("現在のレース数")] int raceCount;
@@ -121,13 +125,14 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        gameState = GameStatus.SLEEP;
+        StartCoroutine(GameInit());
     }
 
     private void Awake()
     {
-        gameState = GameStatus.SLEEP;
-        StartCoroutine(GameInit());
+
+        instance = this;
     }
 
     // Update is called once per frame
@@ -261,7 +266,7 @@ public class GameManager : MonoBehaviour
         {
             scores.Add(SumScore(player.GetRankStatus()));
         }
-        while(scores.Count <= ConectServer.RoomProperties.MaxPlayer)
+        while(scores.Count < ConectServer.RoomProperties.MaxPlayer)
         {
             scores.Add(0);
         }
@@ -455,6 +460,11 @@ public class GameManager : MonoBehaviour
         return isNowRace;
     }
 
+    public bool CheckRaceEnd()
+    {
+        return isRaceEnd;
+    }
+
     #endregion
 
     #region デバッグ用
@@ -577,7 +587,7 @@ public class GameManager : MonoBehaviour
         if (PhotonNetwork.IsMasterClient)
         {
             Debug.Log("開始まで待機");
-            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.S));
+            //yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.S));
             //状態を送信
             PhotonNetwork.LocalPlayer.SetGameInGameStatus(true);
         }
@@ -597,7 +607,7 @@ public class GameManager : MonoBehaviour
             isFazeEnd = false;
             stateCoroutine = null;
             isNowRace = false;
-            instance = this;
+            isRaceEnd = false;
             raceCount = 0;
             gameProgress.userActorNumber = PhotonNetwork.LocalPlayer.ActorNumber - 1;  //主な用途がリストなので番号調整
 
@@ -625,6 +635,9 @@ public class GameManager : MonoBehaviour
 
             //スタート地点を取得
             gameProgress.startPoint = GameObject.Find(progressPass[ProgressName.StartPoint]).transform.position;
+
+            //エフェクトマネージャーを取得
+            gameProgress.effectManager = GameObject.Find(progressPass[ProgressName.EffectManager]).GetComponent<EffectManager>();
 
             DebugLog("各値の初期化完了");
         }
@@ -675,7 +688,7 @@ public class GameManager : MonoBehaviour
         while (!isFazeEnd)
         {
             DebugLog("演出中...");
-            yield return new WaitForSeconds(3.0f);
+            yield return StartCoroutine(gameProgress.effectManager.StartEffect());
             EndFaze();
             yield return null;
         }
@@ -696,6 +709,9 @@ public class GameManager : MonoBehaviour
         //進行待機
         yield return new WaitUntil(() => CheckKeys(InGameStatus.READY));
 
+        //障害物への消滅指示を消す
+        isRaceEnd = false;
+
         //生成済みの障害物を再生成
         gameProgress.mapManager.ReInstallObject();
 
@@ -713,7 +729,7 @@ public class GameManager : MonoBehaviour
 
             for (int i = 0; i < 4; i++)
             {
-                int id = Random.Range(1, (int)OBSTACLE_OBJECT.Normal_Scaffold);
+                int id = Random.Range(1, (int)OBSTACLE_OBJECT.Count -1);
                 //障害物追加
                 gameProgress.dataSharingClass.PushID(i == 4 ? 0 : id);
             }
@@ -732,8 +748,14 @@ public class GameManager : MonoBehaviour
         //進行待機
         yield return new WaitUntil(() => CheckKeys(InGameStatus.INGAME));
 
+        //選択演出
+        yield return StartCoroutine(gameProgress.effectManager.SelectEffect());
+        gameProgress.uiManager.SwitchActiveOsara(true);
+
        //選択クラスを生成
-       gameProgress.user.GenerateMouse(0);
+        gameProgress.user.GenerateMouse(0);
+       //gameProgress.user
+       gameProgress.user.SetSpriteImage(ResourceManager.instance.GetObstacleImage(ResorceNames.OBSTACLE_IMAGE_NAMES.DefalutMouse));
 
         //選択クラスによって終了呼び出し
         while (!isFazeEnd)
@@ -784,9 +806,6 @@ public class GameManager : MonoBehaviour
         //マウス削除
         gameProgress.user.DestroyMouse();
 
-        //障害物をリセット
-
-
         DebugLog("選択終了待機");
         //全員の障害物選択まで待機
         while (!CheckKeys(InGameStatus.END))
@@ -806,6 +825,7 @@ public class GameManager : MonoBehaviour
 
         //UI系を非表示
         gameProgress.uiManager.FinishSelect();
+        gameProgress.uiManager.SwitchActiveOsara(false) ;
 
         DebugLog("障害物選択終了");
         gameState++;
@@ -833,6 +853,7 @@ public class GameManager : MonoBehaviour
 
         //マウス生成
         gameProgress.user.GenerateMouse(gameProgress.user.GetItemId());
+        gameProgress.user.SetSpriteImage(ResourceManager.instance.GetObstacleImage(gameProgress.user.GetItemId()));
 
 
         //進行待機
@@ -894,6 +915,8 @@ public class GameManager : MonoBehaviour
 
         DebugLog("READY演出");
 
+        //レール中
+
         DebugLog("レーススタート");
         //進行待機
         yield return new WaitUntil(() => CheckKeys(InGameStatus.INGAME));
@@ -951,7 +974,7 @@ public class GameManager : MonoBehaviour
         gameProgress.dataSharingClass.PushScore(gameProgress.userActorNumber, scorelist[gameProgress.userActorNumber]);
 
         DebugLog("順位、スコアの反映演出");
-        yield return StartCoroutine(gameProgress.uiManager.Result(beforescore, scorelist,raceCount));
+        yield return StartCoroutine(gameProgress.uiManager.Result(gameProgress.dataSharingClass.score,raceCount));
         yield return new WaitForSeconds(2.0f);
 
         DebugLog("演出終了");
@@ -967,7 +990,7 @@ public class GameManager : MonoBehaviour
         else
         {
             //オブジェクトの削除
-
+            isRaceEnd = true;
 
             DebugLog("選択フェーズに返る");
             gameState = GameStatus.SELECT;

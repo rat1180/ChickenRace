@@ -22,6 +22,10 @@ public class Obstacle_ArrowShot : MonoBehaviour
         {
             Moving();
         }
+        //if (GameManager.instance.GetRaceEnd())
+        //{
+        //    Destoroy();
+        //}
     }
     //íºêiÇ≥ÇπÇÈ
     protected virtual void Moving()
@@ -46,6 +50,10 @@ public class Obstacle_ArrowShot : MonoBehaviour
         
     }
     void OnBecameInvisible()
+    {
+        Destroy(this.gameObject);
+    }
+    void Destoroy()
     {
         Destroy(this.gameObject);
     }

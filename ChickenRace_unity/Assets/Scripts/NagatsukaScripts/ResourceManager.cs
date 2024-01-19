@@ -251,14 +251,24 @@ namespace ResorceNames
     {
         Damage_Arrow = 1,
         Damage_Paunch,
+        Damage_DeathObj,
         Move_Cannon,
-        Move_Normal_Scaffold_Move,
-        Move_Normal_Scaffold_Rotate,
-        Move_Scaffold_Hole,
+        //Move_Scaffold_Move,
+        Move_Scaffold_Rotate,
+        //Move_Scaffold_Hole,
         Move_Scaffold_Surprise,
-        Move_ZeroGravity,
+        //Move_ZeroGravity,
         Normal_Scaffold,
+        Normal_Scaffold_Four,
+        Normal_Scaffold_Hole2,
+        Normal_Scaffold_L,
+        //Normal_Scaffold_Square,
+        Normal_Scaffold_Stairs,
+        //Normal_Scaffold_Three,
+        //Normal_Scaffold_Two,
+        Destroy_Bom,
         Kanbaipop,//完売画像.
+        DefalutMouse,
         taihou,
         cutter,
         //blackhole
@@ -269,25 +279,29 @@ namespace ResorceNames
     /// ギミックなし：Normal
     /// ダメージギミック:Damage
     /// 動くギミック:Move_
+    /// 削除用ID:Destriy_
     /// </summary>
     public enum OBSTACLE_OBJECT
     {
         Damage_Arrow = 1,
         Damage_Paunch,
+        Damage_DeathObj,
         Move_Cannon,
-        Move_Normal_Scaffold_Move,
-        Move_Normal_Scaffold_Rotate,
-        Move_Scaffold_Hole,
+        //Move_Scaffold_Move,
+        Move_Scaffold_Rotate,
+        //Move_Scaffold_Hole,
         Move_Scaffold_Surprise,
-        Move_ZeroGravity,
+        //Move_ZeroGravity,
         Normal_Scaffold,
         Normal_Scaffold_Four,
         Normal_Scaffold_Hole2,
         Normal_Scaffold_L,
-        Normal_Scaffold_Square,
+        //Normal_Scaffold_Square,
         Normal_Scaffold_Stairs,
-        Normal_Scaffold_Three,
-        Normal_Scaffold_Two,
+        //Normal_Scaffold_Three,
+        //Normal_Scaffold_Two,
+        Destroy_Bom,
+        Count
     }
 
 }

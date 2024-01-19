@@ -60,6 +60,7 @@ public class User : MonoBehaviour
 
         mouseObjcet = Instantiate(mouse, transform.position, transform.rotation);
         mouseObjcet.GetComponent<PlayerMouse>().SetUser(this);
+        mouseObjcet.GetComponent<PlayerMouse>().MouseInit(gameManager.GetMapManager().GetComponent<MapManager>().itemSize);
 
         // 選択フェーズ.
         if (mode == 0)
@@ -86,7 +87,7 @@ public class User : MonoBehaviour
     /// </summary>
     public void DestroyPlayer()
     {
-        Destroy(playerObjcet);
+        playerObjcet.GetComponent<Player>().PlayerDelete();
     }
 
     public int SetMode()
@@ -145,5 +146,24 @@ public class User : MonoBehaviour
     public void StartPlayerPosition(Vector3 startpos)
     {
         playerObjcet.GetComponent<Player>().StartPosition(startpos);
+    }
+
+    /// <summary>
+    /// ゲームマネージャーからスプライトを取得しPlayerMouseに渡す.
+    /// </summary>
+    /// <param name="sprite"></param>
+    /// <returns></returns>
+    public void SetSpriteImage(Sprite sprite)
+    {
+        mouseObjcet.GetComponent<PlayerMouse>().ImageDisplay(sprite);
+    }
+
+    /// <summary>
+    /// ゲームマネージャーからアイテムサイズを取得しPlayerMouseに渡す.
+    /// </summary>
+    /// <param name="mousesize"></param>
+    public void SetMouseInit(float mousesize)
+    {
+        mouseObjcet.GetComponent<PlayerMouse>().MouseInit(mousesize);
     }
 }

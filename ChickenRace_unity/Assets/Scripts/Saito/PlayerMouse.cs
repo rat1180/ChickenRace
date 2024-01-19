@@ -14,7 +14,6 @@ public class PlayerMouse : MonoBehaviour
     int error;                               // エラー番号.
     [SerializeField] bool isInstalled;       // アイテムの設置が可能か.
     [SerializeField] GameObject mouseImage;  // 自身の画像.
-    [SerializeField] GameObject mouseInstanceObj; // 生成した画像.
     [SerializeField] GameObject map;
     [SerializeField] GameObject user;
     Vector2Int gridPos;
@@ -23,6 +22,7 @@ public class PlayerMouse : MonoBehaviour
     [SerializeField] float saveAngle;
 
     [SerializeField] Sprite spriteImage;
+    [SerializeField] Color saveColor;
 
     /// <summary>
     /// 初期化用関数.
@@ -32,12 +32,13 @@ public class PlayerMouse : MonoBehaviour
         error = -1;
         MouseImageInstance();
         map = GameManager.instance.GetMapManager();
+        if(map == null) map = GameObject.Find("MapManager");
         itemId = user.GetComponent<User>().GetItemId();
     }
 
     void Start()
     {
-        Init();
+        //Init();
     }
 
     
@@ -54,8 +55,8 @@ public class PlayerMouse : MonoBehaviour
         // アイテム設置フェーズ.
         else
         {
-            ImageDisplay();
             PlantPhase();
+            NotPlant();
         }
     }
 
@@ -103,13 +104,21 @@ public class PlayerMouse : MonoBehaviour
         if (isInstalled == true)
         {
             // アイテムの生成.
-           map.GetComponent<MapManager>().GenerateMapObject(itemId,saveAngle, gridPos);
+            map.GetComponent<MapManager>().GenerateMapObject(itemId, saveAngle, gridPos);
+
+            PlantPhase();
+            ImageDelete();
         }
         else
         {
             // Debug.Log("設置できません");
             CantPlant();
+        }
 
+        // アイテム選択フェーズ.
+        if (user.GetComponent<User>().SetMode() == 0)
+        {
+            ImageDelete();
         }
 
         if (itemId != error)
@@ -126,6 +135,7 @@ public class PlayerMouse : MonoBehaviour
     {
         // mouseImage = Instantiate(mouseImage, transform.position, transform.rotation);
         mouseImage = "mouseImage".SafeInstantiate(transform.position, transform.rotation);
+        saveColor = mouseImage.GetComponent<SpriteRenderer>().color;
     }
 
     /// <summary>
@@ -133,7 +143,10 @@ public class PlayerMouse : MonoBehaviour
     /// </summary>
     private void MouseTransform()
     {
-        mouseImage.GetComponent<Character>().PositionUpdate(transform.position);
+        if(mouseImage != null)
+        {
+            mouseImage.GetComponent<Character>().PositionUpdate(transform.position);
+        }
     }
 
     /// <summary>
@@ -175,7 +188,6 @@ public class PlayerMouse : MonoBehaviour
 
         if (itemId != error)
         {
-            Debug.Log("aaa");
             isInstalled = map.GetComponent<MapManager>().JudgeInstall(gridPos, itemId);
         }
     }
@@ -183,11 +195,45 @@ public class PlayerMouse : MonoBehaviour
     /// <summary>
     /// アイテム画像の表示.
     /// </summary>
-    void ImageDisplay()
+    public void ImageDisplay(Sprite sprite)
     {
-        Debug.Log("Image");
-        mouseImage.GetComponent<SpriteRenderer>().sprite = spriteImage;
+        mouseImage.GetComponent<SpriteRenderer>().sprite = sprite;
     }
 
+    public void ImageDelete()
+    {
+        Destroy(mouseImage);
+    }
+
+    /// <summary>
+    /// マウスの初期化.
+    /// </summary>
+    public void MouseInit(float itemsize)
+    {
+        Init();
+
+        // 画像の色を戻す.
+        mouseImage.GetComponent<SpriteRenderer>().color = saveColor;
+
+        // 画像のサイズ変更.
+        mouseImage.transform.localScale = new Vector3(itemsize, itemsize, itemsize);
+
+    }
+
+    /// <summary>
+    /// 設置できないときに呼ぶ関数.
+    /// </summary>
+    void NotPlant()
+    {
+        // 設置ができない場合は画像を赤くする.
+        if (isInstalled)
+        {
+            mouseImage.GetComponent<SpriteRenderer>().color = saveColor;
+        }
+        else
+        {
+            mouseImage.GetComponent<SpriteRenderer>().color = new Color(255, GetComponent<SpriteRenderer>().color.g, GetComponent<SpriteRenderer>().color.b, GetComponent<SpriteRenderer>().color.a);
+        }
+    }
 
 }
