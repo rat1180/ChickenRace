@@ -19,14 +19,20 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     enum CanvasChild
     {
-        OsaraObject,
+        LoaingImage,
         ResultPanel,
-        LoaingImage
+        OsaraObject,
     }
+    enum UIManagerChild { 
+        ImageObjects,
+        CanvasUI,
+    }
+
     #endregion
 
     #region 定数値
     const int IMAGE_OBSTACLE_NUM = 4;//選択する障害物の画像の数.
+    const int MAX_PLAYERS = 3;
     #endregion
 
     private Vector2[] imagePosition =
@@ -40,8 +46,8 @@ public class UIManager : MonoBehaviourPunCallbacks
     private GameObject osaraPanel;//選べテキストとお皿.
     private GameObject imageObjects;
     private GameObject resultPanel;
-    private GameObject resultCharacters;//リザルト画面のキャラクター(Name,Score,Rank表示)
-    //private GameObject[] resultCharacters;
+    //private GameObject resultCharacters;//リザルト画面のキャラクター(Name,Score,Rank表示)
+    private GameObject[] resultCharacters;
     private Text raceCountText;//第何レースかを表示するテキスト.
     private List<int> id;
 
@@ -59,15 +65,23 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        GameObject canvasUI = transform.GetChild(0).gameObject;
-        osaraPanel = canvasUI.transform.GetChild((int)CanvasChild.OsaraObject).gameObject;
-        resultPanel = canvasUI.transform.GetChild((int)CanvasChild.ResultPanel).gameObject;
+        imageObjects = transform.GetChild((int)UIManagerChild.ImageObjects).gameObject;
+        GameObject canvasUI = transform.GetChild((int)UIManagerChild.CanvasUI).gameObject;
+        
+        
         loaingImage = canvasUI.transform.GetChild((int)CanvasChild.LoaingImage).gameObject;
+        resultPanel = canvasUI.transform.GetChild((int)CanvasChild.ResultPanel).gameObject;
+        osaraPanel = canvasUI.transform.GetChild((int)CanvasChild.OsaraObject).gameObject;
 
-        resultCharacters = resultPanel.transform.GetChild(0).gameObject;
+        resultCharacters = new GameObject[3];
+        for(int i = 0; i < 3; i++)
+        {
+            resultCharacters[i] = resultPanel.transform.GetChild(0).gameObject.transform.GetChild(i).gameObject;
+        }
+        
         raceCountText= resultPanel.transform.GetChild(1).GetComponent<Text>();
 
-        imageObjects= transform.GetChild(1).gameObject;
+        
     }
 
     // Update is called once per frame
@@ -76,7 +90,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         if (Input.GetKeyDown(KeyCode.K))
         {
             //PushID(testID);
-            StartCoroutine(Result(beScore,5));
+            //StartCoroutine(Result(beScore,5));
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
@@ -104,7 +118,6 @@ public class UIManager : MonoBehaviourPunCallbacks
     {
         id = new List<int>();
         id = iD;
-        //imageObjects.SetActive(true);
 
         ChangeObstacleImage();
     }
@@ -170,7 +183,7 @@ public class UIManager : MonoBehaviourPunCallbacks
             //foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
             {
                 //resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text = player.NickName;
-                resultCharacters.transform.GetChild(i).transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text
+                resultCharacters[i].transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text
                     = names[i];
             }
         }
@@ -181,7 +194,7 @@ public class UIManager : MonoBehaviourPunCallbacks
            for(int j = 0; j < score[i]; j++)//スコア分子要素をアクティブにする.
             {
                 //星を取得.
-                GameObject gameObject = resultCharacters.transform.GetChild(i).transform.GetChild((int)ResultCharacterChild.SCORE).transform.GetChild(j).gameObject;
+                GameObject gameObject = resultCharacters[i].transform.GetChild((int)ResultCharacterChild.SCORE).transform.GetChild(j).gameObject;
                 if (!gameObject.activeSelf)//まだアクティブになっていなければアクティブに.
                 {
                     gameObject.SetActive(true);
@@ -219,9 +232,9 @@ public class UIManager : MonoBehaviourPunCallbacks
             //foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
             {
                 //resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text = player.NickName;
-                resultCharacters.transform.GetChild(i).transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text
+                resultCharacters[i].transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text
                     = names[i];
-                resultCharacters.transform.GetChild(i).transform.GetChild((int)ResultCharacterChild.SCORE).GetComponent<Text>().text
+                resultCharacters[i].transform.GetChild((int)ResultCharacterChild.SCORE).GetComponent<Text>().text
                     = "SCORE:" + beforeScore[i].ToString();
                 //resultCharacters.transform.GetChild(i).transform.GetChild((int)ResultCharacterChild.UPSCORE).GetComponent<Text>().text
                 //    = "+" + addScore[i].ToString();
@@ -284,11 +297,11 @@ public class UIManager : MonoBehaviourPunCallbacks
 
             if (i < cnt)
             {
-                resultCharacters.transform.GetChild(i).gameObject.SetActive(true);
+                resultCharacters[i].SetActive(true);
             }
             else
             {
-                resultCharacters.transform.GetChild(i).gameObject.SetActive(false);
+                resultCharacters[i].SetActive(false);
             }
         }
     }
@@ -302,7 +315,7 @@ public class UIManager : MonoBehaviourPunCallbacks
     {
         for (int i = 0; i < score.Count; i++)
         {
-            resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.RANK).
+            resultCharacters[i].transform.GetChild((int)ResultCharacterChild.RANK).
                 gameObject.SetActive(true);
             int rank = 1;
             for (int j = 0; j < score.Count; j++)
@@ -313,7 +326,7 @@ public class UIManager : MonoBehaviourPunCallbacks
                     rank++;
                 }
             }
-            resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.RANK).GetComponent<Text>().text
+            resultCharacters[i].transform.GetChild((int)ResultCharacterChild.RANK).GetComponent<Text>().text
                     = rank.ToString() + "位";
         }
     }
@@ -328,7 +341,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         resultPanel.SetActive(flg);
         for (int i = 0; i < 3; i++)
         {
-            resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.RANK).
+            resultCharacters[i].transform.GetChild((int)ResultCharacterChild.RANK).
                 gameObject.SetActive(false);
         }
     }
@@ -353,7 +366,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         int i = 0;
         foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
         {
-            resultCharacters.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text = player.NickName;
+            resultCharacters[i].transform.GetChild(0).GetComponent<Text>().text = player.NickName;
         }
     }
 
