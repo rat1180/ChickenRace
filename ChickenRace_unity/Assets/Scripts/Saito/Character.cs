@@ -6,7 +6,7 @@ using Photon.Pun;
 public class Character : MonoBehaviourPun, IPunObservable
 {
     public Vector3 targetPos;
-    [SerializeField] GameObject target;
+    public GameObject target;
     Vector3 savePos;
     Vector3 relativeVector;
     [SerializeField] float threshold; // アニメーション用閾値.
