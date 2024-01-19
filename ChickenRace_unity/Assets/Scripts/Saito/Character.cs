@@ -19,6 +19,7 @@ public class Character : MonoBehaviourPun, IPunObservable
     void FixedUpdate()
     {
         TargetMove();
+        myDestroy();
         IsTurn();
     }
 
