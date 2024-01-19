@@ -297,6 +297,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 580072940627472390, guid: 356441f7341ca914caa9a2cf4ac9cac5, type: 3}
+      propertyPath: sceneViewId
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 638628872632947973, guid: 356441f7341ca914caa9a2cf4ac9cac5, type: 3}
       propertyPath: m_Name
       value: Damage_ArrowShot (1)
@@ -601,6 +605,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 580072940627472390, guid: 356441f7341ca914caa9a2cf4ac9cac5, type: 3}
+      propertyPath: sceneViewId
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 638628872632947973, guid: 356441f7341ca914caa9a2cf4ac9cac5, type: 3}
       propertyPath: m_Name
       value: Damage_ArrowShot
