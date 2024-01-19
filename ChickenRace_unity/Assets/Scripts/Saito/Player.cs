@@ -53,6 +53,7 @@ public class Player : MonoBehaviour
             rb.isKinematic = false; // d—Í‚ÌŠJn.
         }
         PlayerTransform();
+        PlayerDeath();
     }
 
     private void OnCollisionStay2D(Collision2D collision)
