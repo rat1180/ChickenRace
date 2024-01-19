@@ -11,10 +11,7 @@ public class GridLineDraw : MonoBehaviour
     public Color color = Color.white; // 描画線の色
     public Vector2Int size = new Vector2Int(8, 8); // 縦線と横線の数
 
-    //[Header("グリッド位置調整用")]
-    //public Vector2 posRetouch = new Vector2(0.5f, 0.5f);
-
-    // 値が変更されたとき用に、元のInspectorの値を保持しておく
+    // 値が変更されたとき用に、元のInspectorの値を保持する入れ物
     private float originGridSize = 0;
     private Color originColor = Color.white;
     private Vector2Int originSize = new Vector2Int(0, 0);
@@ -26,8 +23,8 @@ public class GridLineDraw : MonoBehaviour
 
     void Start()
     {
-        // mapObj = GameManager.instance.GetMapManager();
-        mapObj = GameObject.Find("MapManager");
+        mapObj = GameManager.instance.GetMapManager();
+        //mapObj = GameObject.Find("MapManager"); // デバッグ用
         mapManager = mapObj.GetComponent<MapManager>();
         GetComponent<MeshFilter>().mesh = mesh = new Mesh();
         mesh = ReGrid(mesh);
