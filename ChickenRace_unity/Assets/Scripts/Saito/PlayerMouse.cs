@@ -217,7 +217,7 @@ public class PlayerMouse : MonoBehaviour
         mouseImage.GetComponent<SpriteRenderer>().color = saveColor;
 
         // 画像のサイズ変更.
-        mouseImage.transform.localScale = new Vector3(itemsize, itemsize, itemsize);
+        //mouseImage.transform.localScale = new Vector3(itemsize, itemsize, itemsize);
 
     }
 
