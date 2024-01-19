@@ -10,6 +10,7 @@ public class Character : MonoBehaviourPun, IPunObservable
     Vector3 savePos;
     Vector3 relativeVector;
     [SerializeField] float threshold; // アニメーション用閾値.
+    public bool isTurnFlg = true;
 
     void Start()
     {
@@ -77,6 +78,8 @@ public class Character : MonoBehaviourPun, IPunObservable
     /// </summary>
     public void IsTurn()
     {
+        if (!isTurnFlg) return;
+
         // 相対ベクター取得.
         relativeVector = transform.position - savePos;
 

@@ -137,6 +137,7 @@ public class PlayerMouse : MonoBehaviour
         mouseImage = "mouseImage".SafeInstantiate(transform.position, transform.rotation);
         saveColor = mouseImage.GetComponent<SpriteRenderer>().color;
         mouseImage.GetComponent<Character>().target = gameObject;
+        mouseImage.GetComponent<Character>().isTurnFlg = false;
     }
 
     /// <summary>
@@ -186,7 +187,7 @@ public class PlayerMouse : MonoBehaviour
     {
        
         gridPos = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
-
+        mouseImage.transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, saveAngle);
         if (itemId != error)
         {
             isInstalled = map.GetComponent<MapManager>().JudgeInstall(gridPos, itemId);
