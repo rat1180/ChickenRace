@@ -49,6 +49,10 @@ public class Obstacle_Door : Obstacle
                 }
             }
         }
+        //if (GameManager.instance.GetRaceEnd())
+        //{
+        //    Destoroy();
+        //}
     }
     protected override void ObjStart()
     {
@@ -71,4 +75,8 @@ public class Obstacle_Door : Obstacle
             cbc2d2.enabled = true;
         }
     }
+    //void Destoroy()
+    //{
+    //    Destroy(this.gameObject);
+    //}
 }

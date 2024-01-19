@@ -44,8 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523101eee2a954847959e8b1f6dcdacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugMode: 1
   objStatus:
-    InstalledList: 
-    AngleList: []
-    UsedGridList: []
-  obstacleObj: {fileID: 0}
+    childList: []
+    AngleList:
+      keyPairs: []
+    InstalledDic:
+      keyPairs: []
+    usedGridDic:
+      keyPairs: []
+  childTest: 0

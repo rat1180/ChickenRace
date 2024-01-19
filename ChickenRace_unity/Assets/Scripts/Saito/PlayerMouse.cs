@@ -31,14 +31,14 @@ public class PlayerMouse : MonoBehaviour
     {
         error = -1;
         MouseImageInstance();
-        //map = GameManager.instance.GetMapManager();
-        map = GameObject.Find("MapManager");
+        map = GameManager.instance.GetMapManager();
+        if(map == null) map = GameObject.Find("MapManager");
         itemId = user.GetComponent<User>().GetItemId();
     }
 
     void Start()
     {
-        Init();
+        //Init();
     }
 
     
@@ -210,6 +210,8 @@ public class PlayerMouse : MonoBehaviour
     /// </summary>
     public void MouseInit(float itemsize)
     {
+        Init();
+
         // ‰æ‘œ‚ÌF‚ğ–ß‚·.
         mouseImage.GetComponent<SpriteRenderer>().color = saveColor;
 

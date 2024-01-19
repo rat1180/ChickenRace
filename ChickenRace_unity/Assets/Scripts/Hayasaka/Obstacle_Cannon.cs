@@ -9,6 +9,14 @@ public class Obstacle_Cannon : Obstacle
     Quaternion look;
     [SerializeField]
     float pow;
+
+    void Update()
+    {
+        //if (GameManager.instance.GetRaceEnd())
+        //{
+        //    Destoroy();
+        //}
+    }
     /// <summary>
     /// èâä˙âª
     /// </summary>
@@ -25,5 +33,18 @@ public class Obstacle_Cannon : Obstacle
     {
         look = this.transform.rotation;
         other.GetComponent<Obstacle_ArrowShot>().BlowArrow(look, pow);
+    }
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Debug")
+        {
+            look = this.transform.rotation;
+
+            collision.rigidbody.AddForce(transform.up * (pow * 10),ForceMode2D.Impulse);
+        }
+    }
+    void Destoroy()
+    {
+        Destroy(this.gameObject);
     }
 }
