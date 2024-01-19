@@ -185,6 +185,7 @@ public class UIManager : MonoBehaviourPunCallbacks
                     = player.NickName;
                 //resultCharacters[i].transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text
                 //    = names[i];
+                i++;
             }
         }
 
