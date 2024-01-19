@@ -188,6 +188,7 @@ public class GameManager : MonoBehaviour
     {
         int index = gameProgress.user.GetIndex();
         if (index == -1) return false;
+        Debug.Log("index:" + index);
         //正常に持っているか確認
         if (gameProgress.dataSharingClass.ID[index] != 0)
         {
@@ -708,6 +709,8 @@ public class GameManager : MonoBehaviour
     {
         //進行待機
         yield return new WaitUntil(() => CheckKeys(InGameStatus.READY));
+
+        gameProgress.user.SetIndex(-1);
 
         //障害物への消滅指示を消す
         isRaceEnd = false;

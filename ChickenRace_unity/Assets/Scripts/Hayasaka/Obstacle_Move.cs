@@ -26,10 +26,10 @@ public class Obstacle_Move : Obstacle
             //MoveDiagonal();
             MoveRotate();
         }
-        //if (GameManager.instance.GetRaceEnd())
-        //{
-        //    Destoroy();
-        //}
+        if (GameManager.instance.CheckRaceEnd())
+        {
+            Destoroy();
+        }
     }
     void MoveBeside()
     {

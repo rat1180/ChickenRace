@@ -36,10 +36,10 @@ public class Obstacle_Paunch : Obstacle
                 ShotObj();
             }
         }
-        //if (GameManager.instance.GetRaceEnd())
-        //{
-        //    Destoroy();
-        //}
+        if (GameManager.instance.CheckRaceEnd())
+        {
+            Destoroy();
+        }
     }
     protected override void ObjStart()
     {

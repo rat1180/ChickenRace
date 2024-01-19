@@ -68,6 +68,7 @@ public class EffectManager : MonoBehaviour
         anim.SetTrigger("End");
         yield return new WaitForSeconds(0.5f);
         yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("None") ? true : false);
+        obj.SetActive(false);
     }
 
     public IEnumerator SelectEffect()

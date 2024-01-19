@@ -46,6 +46,7 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        PlayerDeath();
         if(isStart && !isGoal && !isDeath)
         {
             PlayerMove();
@@ -53,7 +54,6 @@ public class Player : MonoBehaviour
             rb.isKinematic = false; // èdóÕÇÃäJén.
         }
         PlayerTransform();
-        PlayerDeath();
     }
 
     private void OnCollisionStay2D(Collision2D collision)

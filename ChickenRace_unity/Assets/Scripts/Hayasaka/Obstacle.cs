@@ -36,10 +36,10 @@ public class Obstacle : MonoBehaviour
         {
             update();
         }
-        //if (GameManager.instance.GetRaceEnd())
-        //{
-        //    Destoroy();
-        //}
+        if (GameManager.instance.CheckRaceEnd())
+        {
+            Destoroy();
+        }
     }
     protected virtual void update()
     {
