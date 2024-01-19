@@ -66,7 +66,7 @@ public class Character : MonoBehaviourPun, IPunObservable
     /// </summary>
     private void myDestroy()
     {
-        if(target == null)
+        if(target == null && photonView.IsMine)
         {
             Destroy(gameObject);
         }

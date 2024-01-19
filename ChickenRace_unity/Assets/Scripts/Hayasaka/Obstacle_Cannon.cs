@@ -36,7 +36,7 @@ public class Obstacle_Cannon : Obstacle
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Debug")
+        if (collision.gameObject.tag == "Player")
         {
             look = this.transform.rotation;
 
