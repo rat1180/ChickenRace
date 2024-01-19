@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ResorceNames;
+using SoundName;
 
 public class ResourceManager : MonoBehaviour
 {
@@ -13,8 +14,8 @@ public class ResourceManager : MonoBehaviour
     //ロードしたオブジェクトのリスト(実体を持たない)
     public Dictionary<OBSTACLE_IMAGE_NAMES, Sprite> obstacle_images;
     public Dictionary<OBSTACLE_OBJECT, GameObject> obstacle_objects;
-    public Dictionary<SE_NAMES, AudioClip> se;
-    public Dictionary<BGM_NAMES, AudioClip> bgm;
+    public Dictionary<SECode, AudioClip> se;
+    public Dictionary<BGMCode, AudioClip> bgm;
 
     //画像読み込み用パス
     const string OBSTACLE_IMAGES = "Obstacles/";
@@ -100,10 +101,10 @@ public class ResourceManager : MonoBehaviour
     void LoadSE()
     {
         //初期化
-        se = new Dictionary<SE_NAMES, AudioClip>();
+        se = new Dictionary<SECode, AudioClip>();
 
         //名前分繰り返し
-        foreach (SE_NAMES name in Enum.GetValues(typeof(SE_NAMES)))
+        foreach (SECode name in Enum.GetValues(typeof(SECode)))
         {
             //生成対象を探索
             var se_obj = FolderObjectFinder.LoadSE(name.ToString());
@@ -118,10 +119,10 @@ public class ResourceManager : MonoBehaviour
     void LoadBGM()
     {
         //初期化
-        bgm = new Dictionary<BGM_NAMES, AudioClip>();
+        bgm = new Dictionary<BGMCode, AudioClip>();
 
         //名前分繰り返し
-        foreach (BGM_NAMES name in Enum.GetValues(typeof(BGM_NAMES)))
+        foreach (BGMCode name in Enum.GetValues(typeof(BGMCode)))
         {
             //生成対象を探索
             var bgm_obj = FolderObjectFinder.LoadBGM(name.ToString());
@@ -191,7 +192,7 @@ public class ResourceManager : MonoBehaviour
     /// <summary>
     /// SEを直接名前指定して読み込む.
     /// </summary>
-    public AudioClip GetSE(SE_NAMES name)
+    public AudioClip GetSE(SECode name)
     {
         if (se.ContainsKey(name))
         {
@@ -207,7 +208,7 @@ public class ResourceManager : MonoBehaviour
     /// <summary>
     /// SEを直接名前指定して読み込む.
     /// </summary>
-    public AudioClip GetBGM(BGM_NAMES name)
+    public AudioClip GetBGM(BGMCode name)
     {
         if (bgm.ContainsKey(name))
         {
@@ -250,14 +251,24 @@ namespace ResorceNames
     {
         Damage_Arrow = 1,
         Damage_Paunch,
+        Damage_DeathObj,
         Move_Cannon,
-        Move_Normal_Scaffold_Move,
-        Move_Normal_Scaffold_Rotate,
-        Move_Scaffold_Hole,
-        Move_Scaffold_Surprise,
-        Move_ZeroGravity,
+        //Move_Scaffold_Move,
+        Move_Scaffold_Rotate,
+        //Move_Scaffold_Hole,
+        //Move_Scaffold_Surprise,
+        //Move_ZeroGravity,
         Normal_Scaffold,
+        Normal_Scaffold_Four,
+        Normal_Scaffold_Hole2,
+        Normal_Scaffold_L,
+        //Normal_Scaffold_Square,
+        Normal_Scaffold_Stairs,
+        //Normal_Scaffold_Three,
+        //Normal_Scaffold_Two,
+        Destroy_Bom,
         Kanbaipop,//完売画像.
+        DefalutMouse,
         taihou,
         cutter,
         //blackhole
@@ -268,35 +279,31 @@ namespace ResorceNames
     /// ギミックなし：Normal
     /// ダメージギミック:Damage
     /// 動くギミック:Move_
+    /// 削除用ID:Destriy_
     /// </summary>
     public enum OBSTACLE_OBJECT
     {
         Damage_Arrow = 1,
         Damage_Paunch,
+        Damage_DeathObj,
         Move_Cannon,
-        Move_Normal_Scaffold_Move,
-        Move_Normal_Scaffold_Rotate,
-        Move_Scaffold_Hole,
-        Move_Scaffold_Surprise,
-        Move_ZeroGravity,
+        //Move_Scaffold_Move,
+        Move_Scaffold_Rotate,
+        //Move_Scaffold_Hole,
+        //Move_Scaffold_Surprise,
+        //Move_ZeroGravity,
         Normal_Scaffold,
         Normal_Scaffold_Four,
         Normal_Scaffold_Hole2,
         Normal_Scaffold_L,
-        Normal_Scaffold_Square,
+        //Normal_Scaffold_Square,
         Normal_Scaffold_Stairs,
-        Normal_Scaffold_Three,
-        Normal_Scaffold_Two,
+        //Normal_Scaffold_Three,
+        //Normal_Scaffold_Two,
+        Destroy_Bom,
+        Count
     }
 
-    public enum SE_NAMES { 
-    
-    }
-
-    public enum BGM_NAMES
-    {
-
-    }
 }
 
 //オブジェクト名と生成用フォルダを指定することで

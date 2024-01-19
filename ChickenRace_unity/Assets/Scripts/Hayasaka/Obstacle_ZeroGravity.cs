@@ -5,6 +5,15 @@ using UnityEngine.Events;
 
 public class Obstacle_ZeroGravity : MonoBehaviour
 {
+    [SerializeField]
+    GameObject parentObj;
+    void Update()
+    {
+        //if (GameManager.instance.GetRaceEnd())
+        //{
+        //    Destoroy();
+        //}
+    }
     void OnTriggerEnter2D(Collider2D other)
     {
         var orb2 = other.gameObject.GetComponent<Rigidbody2D>();
@@ -33,5 +42,9 @@ public class Obstacle_ZeroGravity : MonoBehaviour
         rb2.constraints = RigidbodyConstraints2D.FreezePosition;
         rb2.constraints = RigidbodyConstraints2D.None;
         yield break;
+    }
+    void Destoroy()
+    {
+        Destroy(parentObj.gameObject);
     }
 }

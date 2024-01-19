@@ -27,8 +27,9 @@ public class Obstacle_PaunchShot : MonoBehaviour
     {
         if (GameManager.instance.CheckObstacleMove())
         {
-            if (this.transform.position.x != pt.transform.position.x && this.transform.position.y != pt.transform.position.y)
+            if (this.transform.position.x != pt.transform.position.x || this.transform.position.y != pt.transform.position.y)
             {
+                Debug.Log("asass");
                 if (!isStopFlg)
                 {
                     Paunching();
@@ -40,6 +41,10 @@ public class Obstacle_PaunchShot : MonoBehaviour
                 rb.velocity = Vector3.zero;
                 StartCoroutine(DelayBack(waitTime));
             }
+        }
+        if (GameManager.instance.CheckRaceEnd())
+        {
+            Destoroy();
         }
     }
     //íºêiÇ≥ÇπÇÈ
@@ -69,7 +74,7 @@ public class Obstacle_PaunchShot : MonoBehaviour
         yield return new WaitForSeconds(wt);
         this.transform.position = Vector3.MoveTowards(transform.position, bt.transform.position, speed * Time.deltaTime);
         //ê∂ê¨à íuÇ‹Ç≈óàÇΩÇÁè¡ñ≈
-        if (this.transform.position.x == bt.transform.position.x || this.transform.position.y == bt.transform.position.y)
+        if (this.transform.position.x == bt.transform.position.x && this.transform.position.y == bt.transform.position.y)
         {
             Debug.Log("åù");
             rb.velocity = Vector3.zero;
@@ -86,4 +91,8 @@ public class Obstacle_PaunchShot : MonoBehaviour
     //{
     //    Destroy(this.gameObject);
     //}
+    void Destoroy()
+    {
+        Destroy(this.gameObject);
+    }
 }

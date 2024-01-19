@@ -23,8 +23,8 @@ public class GridLineDraw : MonoBehaviour
 
     void Start()
     {
-        mapObj = GameManager.instance.GetMapManager();
-        //mapObj = GameObject.Find("MapManager"); // デバッグ用
+         mapObj = GameManager.instance.GetMapManager();
+        if(mapObj ==null) mapObj = GameObject.Find("MapManager");
         mapManager = mapObj.GetComponent<MapManager>();
         GetComponent<MeshFilter>().mesh = mesh = new Mesh();
         mesh = ReGrid(mesh);

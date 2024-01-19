@@ -56,11 +56,14 @@ public class CharaAnimation : MonoBehaviour
             case Animations.WALLSLIDING:
                 animator.SetTrigger("WallSlidingTrigger");
                 break;
+            case Animations.DEATH:
+                animator.SetTrigger("DeathTrigger");
+                break;
             case Animations.DANCE:
 
                 break;
             case Animations.WIN:
-
+                animator.SetTrigger("WinTrigger");
                 break;
         }
     }

@@ -5,6 +5,13 @@ using UnityEngine.Events;
 
 public class Obstacle_Death : Obstacle
 {
+    void Update()
+    {
+        if (GameManager.instance.CheckRaceEnd())
+        {
+            Destoroy();
+        }
+    }
     /// <summary>
     /// èâä˙âª
     /// </summary>
@@ -22,10 +29,14 @@ public class Obstacle_Death : Obstacle
     }
     void OnTriggerEnter2D(Collider2D other)
     {
-        //Destroy(other.gameObject);
+        Destroy(other.gameObject);
     }
     void OnCollisionEnter2D(Collision2D other)
     {
-        //Destroy(other.gameObject);
+        Destroy(other.gameObject);
+    }
+    void Destoroy()
+    {
+        Destroy(this.gameObject);
     }
 }

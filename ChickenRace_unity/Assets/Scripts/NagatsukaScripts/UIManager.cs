@@ -14,20 +14,25 @@ public class UIManager : MonoBehaviourPunCallbacks
     {
         NAME,
         SCORE,
-        UPSCORE,
         RANK,
     }
 
     enum CanvasChild
     {
-        ImageObjects,
-        RaceCount,
-        LoaingImage
+        LoaingImage,
+        ResultPanel,
+        OsaraObject,
     }
+    enum UIManagerChild { 
+        ImageObjects,
+        CanvasUI,
+    }
+
     #endregion
 
     #region 定数値
     const int IMAGE_OBSTACLE_NUM = 4;//選択する障害物の画像の数.
+    const int MAX_PLAYERS = 3;
     #endregion
 
     private Vector2[] imagePosition =
@@ -38,9 +43,11 @@ public class UIManager : MonoBehaviourPunCallbacks
         new Vector2(5,-5)
     };
 
+    private GameObject osaraPanel;//選べテキストとお皿.
     private GameObject imageObjects;
     private GameObject resultPanel;
-    private GameObject resultCharacters;//リザルト画面のキャラクター(Name,Score,Rank表示)
+    //private GameObject resultCharacters;//リザルト画面のキャラクター(Name,Score,Rank表示)
+    private GameObject[] resultCharacters;
     private Text raceCountText;//第何レースかを表示するテキスト.
     private List<int> id;
 
@@ -58,11 +65,23 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        imageObjects = transform.Find("ImageObjects").gameObject;
-        resultPanel = transform.GetChild(0).transform.Find("ResultPanel").gameObject;
-        resultCharacters = resultPanel.transform.GetChild(0).gameObject;
+        imageObjects = transform.GetChild((int)UIManagerChild.ImageObjects).gameObject;
+        GameObject canvasUI = transform.GetChild((int)UIManagerChild.CanvasUI).gameObject;
+        
+        
+        loaingImage = canvasUI.transform.GetChild((int)CanvasChild.LoaingImage).gameObject;
+        resultPanel = canvasUI.transform.GetChild((int)CanvasChild.ResultPanel).gameObject;
+        osaraPanel = canvasUI.transform.GetChild((int)CanvasChild.OsaraObject).gameObject;
+
+        resultCharacters = new GameObject[3];
+        for(int i = 0; i < 3; i++)
+        {
+            resultCharacters[i] = resultPanel.transform.GetChild(0).gameObject.transform.GetChild(i).gameObject;
+        }
+        
         raceCountText= resultPanel.transform.GetChild(1).GetComponent<Text>();
-        loaingImage = transform.GetChild(0).transform.GetChild((int)CanvasChild.LoaingImage).gameObject;
+
+        
     }
 
     // Update is called once per frame
@@ -71,7 +90,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         if (Input.GetKeyDown(KeyCode.K))
         {
             //PushID(testID);
-            //StartCoroutine(Result(beScore, addscoreTest));
+            //StartCoroutine(Result(beScore,5));
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
@@ -99,7 +118,6 @@ public class UIManager : MonoBehaviourPunCallbacks
     {
         id = new List<int>();
         id = iD;
-        //imageObjects.SetActive(true);
 
         ChangeObstacleImage();
     }
@@ -110,14 +128,12 @@ public class UIManager : MonoBehaviourPunCallbacks
     /// </summary>
     public void ChangeObstacleImage()
     {
-        //for (int i = 0; i < imageObjects.transform.childCount; i++)
         for (int i = 0; i < IMAGE_OBSTACLE_NUM; i++)
         {
             if (imageObjects.transform.childCount != IMAGE_OBSTACLE_NUM)//4つの画像オブジェクトが生成されているかチェック.
             {
                 GameObject gameObject = Instantiate(imageObstacle, new Vector3(), Quaternion.identity, imageObjects.transform);
                 gameObject.transform.position = imagePosition[i];
-                //gameObject.GetComponent<RectTransform>().localPosition = imagePosition[i];
 
                 gameObject.GetComponent<SpriteRenderer>().sprite =
                 ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
@@ -146,10 +162,58 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     #region リザルト変更関連
 
-    public IEnumerator Result(List<int> beforeScore, List<int> addScore)
+    /// <summary>
+    /// 星に対応する
+    /// 引数に加算後スコアを指定、スコア分星をアクティブにする
+    /// </summary>
+    /// <param name="beforeScore"></param>
+    /// <param name="addScore"></param>
+    /// <returns></returns>
+    public IEnumerator Result(List<int> score,int raceCount)
     {
-        Debug.Log("GameManagerの916行目付近のバグ対策用、修正したら関数ごと消す");
-        return null;
+        ActiveResultPanel(true);
+        //ActiveCharacters(score.Count);
+        ActiveCharacters(PhotonNetwork.CountOfPlayers);
+        raceCountText.text = "第" + raceCount + "レース終了結果";
+        //Playerの数分ループして情報を入れる.
+        int i = 0;
+        //for (i = 0; i < score.Count; i++)
+        {
+            foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
+            {
+                resultCharacters[i].transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text 
+                    = player.NickName;
+                //resultCharacters[i].transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text
+                //    = names[i];
+            }
+        }
+
+        //星を表示する.
+        for (i = 0; i < score.Count; i++)
+        {
+           for(int j = 0; j < score[i]; j++)//スコア分子要素をアクティブにする.
+            {
+                //星を取得.
+                GameObject gameObject = resultCharacters[i].transform.GetChild((int)ResultCharacterChild.SCORE).transform.GetChild(j).gameObject;
+                if (!gameObject.activeSelf)//まだアクティブになっていなければアクティブに.
+                {
+                    gameObject.SetActive(true);
+                }
+                else//アクティブであればアニメーションを再生させない.
+                {
+                    gameObject.GetComponent<Animator>().enabled = false;
+                }
+                
+            }            
+        }
+        yield return new WaitForSeconds(2f);
+        ChangeRank(score);
+        yield return new WaitForSeconds(3f);
+        ActiveResultPanel(false);
+        //終了処理書くならココ
+        ActiveResultPanel(false);
+        Debug.Log("コルーチンしゅうりょう☆");
+        yield return new WaitForSeconds(0.1f);
     }
 
     /// <summary>
@@ -163,18 +227,18 @@ public class UIManager : MonoBehaviourPunCallbacks
         raceCountText.text = "第" + raceCount + "レース終了結果";
         //Playerの数分ループして情報を入れる.
         int i = 0;
-        for (i = 0; i < beforeScore.Count; i++)
-        {
-            //foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
-            {
-                //resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text = player.NickName;
-                resultCharacters.transform.GetChild(i).transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text
-                    = names[i];
-                resultCharacters.transform.GetChild(i).transform.GetChild((int)ResultCharacterChild.SCORE).GetComponent<Text>().text
+        //for (i = 0; i < beforeScore.Count; i++)
+        //{
+            foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
+        { 
+                resultCharacters[i].transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text 
+                = player.NickName;
+                //resultCharacters[i].transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text
+                //    = names[i];
+                resultCharacters[i].transform.GetChild((int)ResultCharacterChild.SCORE).GetComponent<Text>().text
                     = "SCORE:" + beforeScore[i].ToString();
-                resultCharacters.transform.GetChild(i).transform.GetChild((int)ResultCharacterChild.UPSCORE).GetComponent<Text>().text
-                    = "+" + addScore[i].ToString();
-            }
+                //resultCharacters.transform.GetChild(i).transform.GetChild((int)ResultCharacterChild.UPSCORE).GetComponent<Text>().text
+                //    = "+" + addScore[i].ToString();
         }
 
         //スコアのテキストを変更する(旧ChangeScoreText).
@@ -191,10 +255,10 @@ public class UIManager : MonoBehaviourPunCallbacks
                     score[i]++;  //引いた分+1する.
 
                     //スコアのテキストを変更する.
-                    resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.SCORE).GetComponent<Text>().text
-                            = "SCORE:" + score[i].ToString();
-                    resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.UPSCORE).GetComponent<Text>().text
-                    = "+" + adscore[i].ToString();
+                    //resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.SCORE).GetComponent<Text>().text
+                    //        = "SCORE:" + score[i].ToString();
+                    //resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.UPSCORE).GetComponent<Text>().text
+                    //= "+" + adscore[i].ToString();
                     if (adscore[i] <= 0)//加算するスコアが0になったらカウントを増やす.
                     {
                         cnt++;
@@ -233,11 +297,11 @@ public class UIManager : MonoBehaviourPunCallbacks
 
             if (i < cnt)
             {
-                resultCharacters.transform.GetChild(i).gameObject.SetActive(true);
+                resultCharacters[i].SetActive(true);
             }
             else
             {
-                resultCharacters.transform.GetChild(i).gameObject.SetActive(false);
+                resultCharacters[i].SetActive(false);
             }
         }
     }
@@ -251,6 +315,8 @@ public class UIManager : MonoBehaviourPunCallbacks
     {
         for (int i = 0; i < score.Count; i++)
         {
+            resultCharacters[i].transform.GetChild((int)ResultCharacterChild.RANK).
+                gameObject.SetActive(true);
             int rank = 1;
             for (int j = 0; j < score.Count; j++)
             {
@@ -260,7 +326,7 @@ public class UIManager : MonoBehaviourPunCallbacks
                     rank++;
                 }
             }
-            resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.RANK).GetComponent<Text>().text
+            resultCharacters[i].transform.GetChild((int)ResultCharacterChild.RANK).GetComponent<Text>().text
                     = rank.ToString() + "位";
         }
     }
@@ -273,6 +339,11 @@ public class UIManager : MonoBehaviourPunCallbacks
     private void ActiveResultPanel(bool flg)
     {
         resultPanel.SetActive(flg);
+        for (int i = 0; i < 3; i++)
+        {
+            resultCharacters[i].transform.GetChild((int)ResultCharacterChild.RANK).
+                gameObject.SetActive(false);
+        }
     }
 
     #endregion
@@ -295,7 +366,16 @@ public class UIManager : MonoBehaviourPunCallbacks
         int i = 0;
         foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
         {
-            resultCharacters.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text = player.NickName;
+            resultCharacters[i].transform.GetChild(0).GetComponent<Text>().text = player.NickName;
         }
+    }
+
+    /// <summary>
+    /// お皿と選べテキストの表示を切り換える関数
+    /// 引数にbool型を指定し、アクティブを切り換える.
+    /// </summary>
+    public void SwitchActiveOsara(bool flg)
+    {
+        osaraPanel.SetActive(flg);
     }
 }

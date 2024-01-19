@@ -22,5 +22,21 @@ public class Obstacle_Tracking : MonoBehaviour
     {
         this.transform.position = trackingTarget.transform.position;
     }
-    
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Player") collision.transform.parent = transform;
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            if (collision.transform.parent == transform)
+            {
+                collision.transform.parent = null;
+            }
+        }
+    }
+
 }

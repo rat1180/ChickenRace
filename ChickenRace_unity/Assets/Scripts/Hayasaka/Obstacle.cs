@@ -32,9 +32,13 @@ public class Obstacle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (GameManager.instance.CheckObstacleMove())
+        if (GameManager.instance.CheckObstacleMove())
         {
             update();
+        }
+        if (GameManager.instance.CheckRaceEnd())
+        {
+            Destoroy();
         }
     }
     protected virtual void update()
@@ -54,8 +58,8 @@ public class Obstacle : MonoBehaviour
     /// </summary>
     void Destoroy()
     {
-        this.gameObject.SetActive(false);
-        // Destroy(this.gameObject);
+        //this.gameObject.SetActive(false);
+        Destroy(this.gameObject);
     }
     /// <summary>
     /// ƒŠƒXƒgŽæ“¾

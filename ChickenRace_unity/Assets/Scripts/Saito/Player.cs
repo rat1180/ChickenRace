@@ -36,6 +36,7 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         nowHitDir = HitDirList.NONE;
         charaAnimation.nowAnimations = CharaAnimation.Animations.IDLE;
+        rb.isKinematic = true; // 重力の停止.
     }
 
     void Start()
@@ -45,13 +46,14 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        PlayerDeath();
         if(isStart && !isGoal && !isDeath)
         {
             PlayerMove();
             WallSliding();
+            rb.isKinematic = false; // 重力の開始.
         }
         PlayerTransform();
-        PlayerDeath();
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -144,7 +146,8 @@ public class Player : MonoBehaviour
     /// </summary>
     void OnGiveUp()
     {
-        PlayerDelete();
+        Debug.Log("死亡");
+        PlayerDeath();
     }
 
     /// <summary>
@@ -250,8 +253,9 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 自身を削除.
     /// </summary>
-    private void PlayerDelete()
+    public void PlayerDelete()
     {
+        Destroy(instanceObj);
         Destroy(gameObject);
     }
 
@@ -263,6 +267,7 @@ public class Player : MonoBehaviour
         if (isDeath)
         {
             charaAnimation.nowAnimations = CharaAnimation.Animations.DEATH;
+            GameManager.instance.DeadPlayer();
         }
     }
 }

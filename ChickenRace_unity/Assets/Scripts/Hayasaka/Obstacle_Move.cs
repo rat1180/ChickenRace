@@ -26,6 +26,10 @@ public class Obstacle_Move : Obstacle
             //MoveDiagonal();
             MoveRotate();
         }
+        if (GameManager.instance.CheckRaceEnd())
+        {
+            Destoroy();
+        }
     }
     void MoveBeside()
     {
@@ -47,5 +51,8 @@ public class Obstacle_Move : Obstacle
     {
        
     }
-    
+    void Destoroy()
+    {
+        Destroy(this.gameObject);
+    }
 }
