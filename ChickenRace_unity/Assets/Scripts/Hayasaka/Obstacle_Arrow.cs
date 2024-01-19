@@ -41,7 +41,7 @@ public class Obstacle_Arrow : Obstacle
         }
         if (GameManager.instance.CheckRaceEnd())
         {
-            Destoroy();
+            Destroy(gameObject);
         }
     }
     protected override void ObjStart()
