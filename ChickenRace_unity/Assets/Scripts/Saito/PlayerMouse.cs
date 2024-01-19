@@ -186,7 +186,7 @@ public class PlayerMouse : MonoBehaviour
     {
        
         gridPos = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
-
+        mouseImage.transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, saveAngle);
         if (itemId != error)
         {
             isInstalled = map.GetComponent<MapManager>().JudgeInstall(gridPos, itemId);
@@ -217,7 +217,7 @@ public class PlayerMouse : MonoBehaviour
         mouseImage.GetComponent<SpriteRenderer>().color = saveColor;
 
         // 画像のサイズ変更.
-        mouseImage.transform.localScale = new Vector3(itemsize, itemsize, itemsize);
+        //mouseImage.transform.localScale = new Vector3(itemsize, itemsize, itemsize);
 
     }
 
