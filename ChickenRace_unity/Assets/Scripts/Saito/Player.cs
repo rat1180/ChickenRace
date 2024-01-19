@@ -217,6 +217,7 @@ public class Player : MonoBehaviour
     {
         instanceObj = "CharAnimObj".SafeInstantiate(transform.position, transform.rotation);
         charaAnimation = instanceObj.GetComponent<CharaAnimation>();
+        instanceObj.GetComponent<Character>().target = this.gameObject;
     }
 
     /// <summary>
