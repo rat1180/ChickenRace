@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using PhotonMethods;
 using SoundName;
 
 namespace SoundName
@@ -25,12 +27,8 @@ namespace SoundName
 
     public enum BGMCode
     {
-        BGM_Title,
-        BGM_Mode,
-        BGM_Wait,
-        BGM_Ready,
-        BGM_Race,
-        BGM_END,
+        BGM_TITLE,
+        BGM_INGAME,
 
         BGM_PANIC
     }
@@ -38,18 +36,27 @@ namespace SoundName
     public enum SECode
     {
         None,  //âπÉNÉäÉAópnull
+        SE_Button_Move,
         SE_Click,
         SE_RoomIn,
         SE_OpenBox,
         SE_Select,
+        SE_Select_Timer,
         SE_Start,
         SE_Result,
+        SE_End,
+        SE_End_Effect,
+
+        SE_Damage,
+        SE_Jump,
+        SE_Arrow,
+        
     }
 }
 
 public class SoundManager : MonoBehaviour
 {
-    List<AudioClip> SoundList = new List<AudioClip>();
+    public GameObject SEClass;
 
     [SerializeField] BGMCode nowBGM;
     AudioSource audioSource;
@@ -73,7 +80,7 @@ public class SoundManager : MonoBehaviour
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        nowBGM = BGMCode.BGM_Title;
+        nowBGM = BGMCode.BGM_TITLE;
     }
 
     // Update is called once per frame
@@ -91,7 +98,8 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySE(SECode id)
     {
-        audioSource.PlayOneShot(ResourceManager.instance.GetSE(id));
+        var obj = SEClass.name.SafeInstantiate(new Vector3(0, 0), Quaternion.identity);
+        obj.GetComponent<SEClass>().PlaySE(id);
     }
 
     public void StopBGM()

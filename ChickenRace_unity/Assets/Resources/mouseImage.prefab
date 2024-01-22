@@ -101,6 +101,7 @@ MonoBehaviour:
   targetPos: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
   threshold: 0
+  isTurnFlg: 1
 --- !u!114 &4337425717175853623
 MonoBehaviour:
   m_ObjectHideFlags: 0

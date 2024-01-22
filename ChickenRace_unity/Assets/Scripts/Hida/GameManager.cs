@@ -131,8 +131,12 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-
-        instance = this;
+        if(instance == null) instance = this;
+        else
+        {
+            Destroy(instance);
+            instance = this;
+        }
     }
 
     // Update is called once per frame
@@ -965,20 +969,20 @@ public class GameManager : MonoBehaviour
     {
         DebugLog("リザルトフェーズ開始");
         var beforescore = gameProgress.dataSharingClass.score;
-        //進行待機
-        yield return new WaitUntil(() => CheckKeys(InGameStatus.READY));
 
         //順位の計算
         int rank = CheckRaceRank();
         PhotonNetwork.LocalPlayer.SetRankStatus(rank);
 
         //進行待機
-        yield return new WaitUntil(() => CheckKeys(InGameStatus.INGAME));
-
+        yield return new WaitUntil(() => CheckKeys(InGameStatus.READY));
 
         //スコアの計算
         var scorelist = ScoreCalculation();
         gameProgress.dataSharingClass.PushScore(gameProgress.userActorNumber, scorelist[gameProgress.userActorNumber]);
+
+        //進行待機
+        yield return new WaitUntil(() => CheckKeys(InGameStatus.INGAME));
 
         DebugLog("順位、スコアの反映演出");
         yield return StartCoroutine(gameProgress.uiManager.Result(gameProgress.dataSharingClass.score,raceCount));
@@ -1011,8 +1015,7 @@ public class GameManager : MonoBehaviour
     IEnumerator StateEND()
     {
         //終了演出
-        
-        yield return new WaitForSeconds(2.0f);
+        yield return StartCoroutine(gameProgress.effectManager.EndEffect());
 
         //ネットワークから切断
         PhotonNetwork.Disconnect();

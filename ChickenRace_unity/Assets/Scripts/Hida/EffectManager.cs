@@ -10,12 +10,14 @@ public class EffectManager : MonoBehaviour
         Start,
         StartEnd,
         Select,
+        End
     }
 
     enum AnimObject
     {
         StartEffect,
         SelectEffect,
+        EndEffect,
         Count
     }
 
@@ -89,5 +91,15 @@ public class EffectManager : MonoBehaviour
         Instantiate(testeffect, obj.transform.GetChild(1).position, Quaternion.identity);
 
         obj.SetActive(false);
+    }
+
+    public IEnumerator EndEffect()
+    {
+        var obj = EffectObject[(int)AnimObject.EndEffect];
+        obj.SetActive(true);
+
+        obj.transform.GetChild(1).gameObject.SetActive(true);
+        //âπçƒê∂
+        yield return new WaitForSeconds(3);
     }
 }

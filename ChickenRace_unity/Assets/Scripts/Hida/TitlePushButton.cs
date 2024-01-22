@@ -14,7 +14,7 @@ public class TitlePushButton : MonoBehaviour
     void Start()
     {
         isSceanMove = false;
-        SoundManager.instance.PlayBGM(SoundName.BGMCode.BGM_Title);
+        SoundManager.instance.PlayBGM(SoundName.BGMCode.BGM_TITLE);
     }
 
     // Update is called once per frame
