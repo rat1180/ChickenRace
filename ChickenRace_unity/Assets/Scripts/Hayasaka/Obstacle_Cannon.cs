@@ -35,7 +35,7 @@ public class Obstacle_Cannon : Obstacle
         {
             look = this.transform.rotation;
 
-            other.GetComponent<Rigidbody2D>().AddForce(transform.up * (pow * 30), ForceMode2D.Impulse);
+            other.GetComponent<Rigidbody2D>().AddForce(transform.up * (pow * 15), ForceMode2D.Impulse);
             return;
         }
 

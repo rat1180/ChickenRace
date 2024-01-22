@@ -69,6 +69,8 @@ public class SoundManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(this);
+
+            audioSource = GetComponent<AudioSource>();
         }
         else
         {
@@ -79,7 +81,6 @@ public class SoundManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
         nowBGM = BGMCode.BGM_TITLE;
     }
 
@@ -100,6 +101,12 @@ public class SoundManager : MonoBehaviour
     {
         var obj = SEClass.name.SafeInstantiate(new Vector3(0, 0), Quaternion.identity);
         obj.GetComponent<SEClass>().PlaySE(id);
+    }
+
+    public void SimplePlaySE(SECode id)
+    {
+        var obj = SEClass.name.SafeInstantiate(new Vector3(0, 0), Quaternion.identity);
+        obj.GetComponent<SEClass>().SimplePlaySE(id);
     }
 
     public void StopBGM()

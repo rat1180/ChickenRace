@@ -175,6 +175,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         //ActiveCharacters(score.Count);
         ActiveCharacters(PhotonNetwork.CurrentRoom.PlayerCount);
         raceCountText.text = "第" + raceCount + "レース終了結果";
+        SoundManager.instance.SimplePlaySE(SoundName.SECode.SE_Result);
         //Playerの数分ループして情報を入れる.
         int i = 0;
         //for (i = 0; i < score.Count; i++)

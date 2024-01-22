@@ -25,6 +25,12 @@ public class SEClass : MonoBehaviourPun
         photonView.RPC("PlaySERPC", RpcTarget.All, (int)secode);
     }
 
+    public void SimplePlaySE(SoundName.SECode secode)
+    {
+        seCode = (SoundName.SECode)secode;
+        StartCoroutine(SECoroutine());
+    }
+
     [PunRPC]
     void PlaySERPC(int secode)
     {
