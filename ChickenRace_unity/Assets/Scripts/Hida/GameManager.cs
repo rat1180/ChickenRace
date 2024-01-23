@@ -1035,6 +1035,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitUntil(() => CheckKeys(InGameStatus.INGAME));
 
         //I—¹‰‰o
+        gameProgress.uiManager.EndGame(gameProgress.dataSharingClass.score);
         yield return StartCoroutine(gameProgress.effectManager.EndEffect());
 
         yield return new WaitUntil(() => CheckKeys(InGameStatus.END));

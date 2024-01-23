@@ -12,8 +12,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 {
     #region おまかせName配列
     private static readonly string[] OMAKASE_NAMES = new string[] { "マイク", "キャシー","ジョニー","キャン" ,"キャント" ,"チャン" ,
-        "みかん",
-        "ねずみ","ごりら","さかな","ちんあなご","いぬ","いっぬ","てつこ","まさよし"};
+        "ちょこ","ミント","トニー","ジェシカ","ジェシー","キャサリン", "みかん","りんご","きのこ",
+        "ねずみ","ごりら","さかな","ちんあなご","いぬ","いっぬ","ねこ","てつこ","まさよし","たかし","きょうこ","なおみ"};
     #endregion
 
     const int OFFLINE = 8;
