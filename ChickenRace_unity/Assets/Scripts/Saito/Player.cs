@@ -147,6 +147,7 @@ public class Player : MonoBehaviour
     void OnGiveUp()
     {
         Debug.Log("Ž€–S");
+        isDeath = true;
         PlayerDeath();
     }
 
