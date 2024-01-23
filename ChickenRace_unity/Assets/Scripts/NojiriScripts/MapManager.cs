@@ -365,6 +365,7 @@ public class MapManager : MonoBehaviour
         if ((OBSTACLE_OBJECT)id == OBSTACLE_OBJECT.Destroy_Bom)
         {
             DeleteObject(gridPos);
+            isInstall = true;
             return;
         }
 
