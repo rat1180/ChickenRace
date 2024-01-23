@@ -125,12 +125,13 @@ public class PlayerMouse : MonoBehaviour
 
         if (itemId != error)
         {
-            if (GameManager.instance.CheckItem(itemId)) { 
-            index = itemId; // itemId‚ğŠÖ”‚É‚·‚é.
-            user.GetComponent<User>().SetIndex(index);
-            SoundManager.instance.PlaySE(SoundName.SECode.SE_Select);
-            GameManager.instance.SelectEffect(gameObject.transform.position);
-
+            if (GameManager.instance.CheckItem(itemId))
+            {
+                index = itemId; // itemId‚ğŠÖ”‚É‚·‚é.
+                user.GetComponent<User>().SetIndex(index);
+                SoundManager.instance.PlaySE(SoundName.SECode.SE_Select);
+                GameManager.instance.SelectEffect(gameObject.transform.position);
+            }
         }
     }
 
