@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using PhotonMethods;
 
 /*
   タイトルから移動する用のスクリプト
@@ -29,6 +30,7 @@ public class TitlePushButton : MonoBehaviour
 
     public void PushButton()
     {
+        Photon.Pun.PhotonNetwork.LocalPlayer.SetCharColorStatus(Random.Range(0, 3));
         SceneManager.LoadScene("Assets/Scenes/NagatsukaScenes/Lobby.unity");
     }
 }
