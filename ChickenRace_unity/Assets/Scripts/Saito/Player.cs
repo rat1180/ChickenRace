@@ -138,6 +138,7 @@ public class Player : MonoBehaviour
                     rb.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
                     break;
             }
+            SoundManager.instance.PlaySE(SoundName.SECode.SE_Jump);
         }
     }
 
@@ -269,6 +270,7 @@ public class Player : MonoBehaviour
         if (isDeath)
         {
             charaAnimation.nowAnimations = CharaAnimation.Animations.DEATH;
+            SoundManager.instance.PlaySE(SoundName.SECode.SE_Damage);
             GameManager.instance.DeadPlayer();
         }
     }

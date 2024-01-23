@@ -59,6 +59,7 @@ public class Obstacle_Arrow : Obstacle
         myRotation = this.transform.localEulerAngles.z;
         var ars = "Obstacle/Damage_ArrowShot".SafeInstantiate(arrowChild.transform.position, Quaternion.identity);
         ars.GetComponent<Obstacle_ArrowShot>().ArrowShot(myRotation);
+        SoundManager.instance.SimplePlaySE(SoundName.SECode.SE_Arrow);
     }
     
 }

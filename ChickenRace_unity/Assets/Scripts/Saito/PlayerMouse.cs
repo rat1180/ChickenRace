@@ -108,6 +108,8 @@ public class PlayerMouse : MonoBehaviour
 
             PlantPhase();
             ImageDelete();
+            SoundManager.instance.PlaySE(SoundName.SECode.SE_Select);
+            GameManager.instance.SelectEffect(gameObject.transform.position);
         }
         else
         {
@@ -125,6 +127,8 @@ public class PlayerMouse : MonoBehaviour
         {
             index = itemId; // itemIdÇä÷êîÇ…Ç∑ÇÈ.
             user.GetComponent<User>().SetIndex(index);
+            SoundManager.instance.PlaySE(SoundName.SECode.SE_Select);
+            GameManager.instance.SelectEffect(gameObject.transform.position);
         }
     }
 

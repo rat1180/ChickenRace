@@ -250,7 +250,7 @@ namespace ResorceNames
     public enum OBSTACLE_IMAGE_NAMES
     {
         Damage_Arrow = 1,
-        Damage_Paunch,
+        //Damage_Paunch,
         Damage_DeathObj,
         Move_Cannon,
         //Move_Scaffold_Move,
@@ -284,7 +284,7 @@ namespace ResorceNames
     public enum OBSTACLE_OBJECT
     {
         Damage_Arrow = 1,
-        Damage_Paunch,
+        //Damage_Paunch,
         Damage_DeathObj,
         Move_Cannon,
         //Move_Scaffold_Move,
