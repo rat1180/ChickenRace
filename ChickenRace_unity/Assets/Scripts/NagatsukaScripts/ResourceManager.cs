@@ -341,7 +341,7 @@ namespace ResorceNames
 
     public enum CHARCTER_COLOR
     {
-        Hanberger,
+        Hanberger=1,
         Cake,
         Potate,
     }
