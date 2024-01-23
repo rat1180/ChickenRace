@@ -56,6 +56,7 @@ public class ResourceManager : MonoBehaviour
         LoadObstacleObject();
         LoadSE();
         LoadBGM();
+        LoadCharcterImages();
     }
 
     #region ÉçÅ[Éhä÷êî
