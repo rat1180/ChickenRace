@@ -7,11 +7,12 @@ public class MenuManager : MonoBehaviour
 {
     Gamepad gamepad;
     [SerializeField] Vector2 inputControl;
+    ControlButton controlButton;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        controlButton = GetComponent<ControlButton>();
     }
 
     // Update is called once per frame
@@ -28,6 +29,8 @@ public class MenuManager : MonoBehaviour
     {
         var velocity = value.Get<Vector2>();
         inputControl = new Vector3(velocity.x, velocity.y, 0);
+        if (inputControl.magnitude < 0.3f) return;
+        controlButton.ButtonMove(inputControl);
     }
 
     /// <summary>
@@ -35,6 +38,6 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     void OnCircleButtonPush()
     {
-        
+        controlButton.ButtonClick();
     }
 }
