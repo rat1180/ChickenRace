@@ -16,6 +16,7 @@ public class ResourceManager : MonoBehaviour
     public Dictionary<OBSTACLE_OBJECT, GameObject> obstacle_objects;
     public Dictionary<SECode, AudioClip> se;
     public Dictionary<BGMCode, AudioClip> bgm;
+    public Dictionary<CHARCTER_COLOR, Sprite> charcter_images;
 
     //画像読み込み用パス
     const string OBSTACLE_IMAGES = "Obstacles/";
@@ -131,6 +132,21 @@ public class ResourceManager : MonoBehaviour
         }
     }
 
+    void LoadCharcterImages()
+    {
+        //初期化
+        charcter_images = new Dictionary<CHARCTER_COLOR, Sprite>();
+
+        //名前分繰り返し
+        foreach (CHARCTER_COLOR name in Enum.GetValues(typeof(CHARCTER_COLOR)))
+        {
+            //生成対象を探索
+            var prefabobj = FolderObjectFinder.LoadCharcterImages(OBSTACLE_IMAGES + name.ToString());
+
+            charcter_images.Add(name, prefabobj);
+        }
+    }
+
     #endregion
 
     #region ゲット関数
@@ -169,6 +185,24 @@ public class ResourceManager : MonoBehaviour
             }
         }
         Debug.LogWarning("リソース取得エラー：入力されたOBSTACLE_IMAGE_NAMESがリストにありません");
+        return null;//みつからなかったらnullを返す.
+    }
+
+    public Sprite GetCharcterImage(int id)
+    {
+
+        //IDと一致するものを検索する
+        foreach (CHARCTER_COLOR name in Enum.GetValues(typeof(CHARCTER_COLOR)))
+        {
+            if ((int)name == id)//IDが一致.
+            {
+                if (charcter_images.ContainsKey(name))
+                {
+                    return charcter_images[name];//一致したものが見つかったら関数を抜ける.
+                }
+            }
+        }
+        Debug.LogWarning("リソース取得エラー：入力されたCHARCTER_COLORがリストにありません");
         return null;//みつからなかったらnullを返す.
     }
 
@@ -304,6 +338,13 @@ namespace ResorceNames
         Count
     }
 
+    public enum CHARCTER_COLOR
+    {
+        Hanberger,
+        Cake,
+        Potate,
+    }
+
 }
 
 //オブジェクト名と生成用フォルダを指定することで
@@ -321,6 +362,9 @@ public static class FolderObjectFinder
 
     //音素材フォルダへのパス.
     const string SOUNDS_PASS = "Sounds/";
+
+    //キャラ素材フォルダへのパス
+    const string CHAR_COLOR_PASS = "Charcters/";
 
     /// <summary>
     /// 生成用フォルダからオブジェクトを探し、返す。
@@ -377,6 +421,21 @@ public static class FolderObjectFinder
         }
     }
 
+    public static Sprite LoadCharcterImages(string objectname)
+    {
+        var obj = Resources.Load<Sprite>(CHAR_COLOR_PASS + objectname);
+
+        //Debug.Log(IMAGES_FOLDER + objectname);
+
+        if (obj != null) return obj;
+        else
+        {
+            Debug.LogError("リソースファイルに\"" + objectname + "\"が見つかりませんでした");
+            //返した先でエラーが起こらないように中身が空のオブジェクトを返す
+            return null;
+        }
+    }
+
     /// <summary>
     /// SE読み込み
     /// </summary>
@@ -408,6 +467,7 @@ public static class FolderObjectFinder
             return null;
         }
     }
+
 
     /// <summary>
     /// 種類を問わず、名前指定で探索する
