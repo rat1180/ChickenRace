@@ -131,8 +131,12 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-
-        instance = this;
+        if(instance == null) instance = this;
+        else
+        {
+            Destroy(instance);
+            instance = this;
+        }
     }
 
     // Update is called once per frame
@@ -466,6 +470,11 @@ public class GameManager : MonoBehaviour
         return isRaceEnd;
     }
 
+    public void SelectEffect(Vector2 pos)
+    {
+        gameProgress.effectManager.PopSelectEffect(pos);
+    }
+
     #endregion
 
     #region デバッグ用
@@ -684,6 +693,7 @@ public class GameManager : MonoBehaviour
     IEnumerator StateSTART()
     {
         //ゲーム開始前に行う処理・演出を行う
+        SoundManager.instance.PlayBGM(SoundName.BGMCode.BGM_INGAME);
         DebugLog("スタート前表示");
         //UIManagerの演出終了によって終了呼び出し
         while (!isFazeEnd)
@@ -732,7 +742,7 @@ public class GameManager : MonoBehaviour
 
             for (int i = 0; i < 3; i++)
             {
-                int id = Random.Range(1, (int)OBSTACLE_OBJECT.Count -1);
+                int id = Random.Range(1, (int)OBSTACLE_OBJECT.Count);
                 //障害物追加
                 gameProgress.dataSharingClass.PushID(id);
             }
@@ -926,6 +936,7 @@ public class GameManager : MonoBehaviour
         //進行待機
         yield return new WaitUntil(() => CheckKeys(InGameStatus.INGAME));
         //スタート演出
+        SoundManager.instance.PlaySE(SoundName.SECode.SE_Start);
 
         //キャラの操作のロックを解除
         gameProgress.user.PlayerStart(true);
@@ -965,20 +976,20 @@ public class GameManager : MonoBehaviour
     {
         DebugLog("リザルトフェーズ開始");
         var beforescore = gameProgress.dataSharingClass.score;
-        //進行待機
-        yield return new WaitUntil(() => CheckKeys(InGameStatus.READY));
 
         //順位の計算
         int rank = CheckRaceRank();
         PhotonNetwork.LocalPlayer.SetRankStatus(rank);
 
         //進行待機
-        yield return new WaitUntil(() => CheckKeys(InGameStatus.INGAME));
-
+        yield return new WaitUntil(() => CheckKeys(InGameStatus.READY));
 
         //スコアの計算
         var scorelist = ScoreCalculation();
         gameProgress.dataSharingClass.PushScore(gameProgress.userActorNumber, scorelist[gameProgress.userActorNumber]);
+
+        //進行待機
+        yield return new WaitUntil(() => CheckKeys(InGameStatus.INGAME));
 
         DebugLog("順位、スコアの反映演出");
         yield return StartCoroutine(gameProgress.uiManager.Result(gameProgress.dataSharingClass.score,raceCount));
@@ -1011,8 +1022,7 @@ public class GameManager : MonoBehaviour
     IEnumerator StateEND()
     {
         //終了演出
-        
-        yield return new WaitForSeconds(2.0f);
+        yield return StartCoroutine(gameProgress.effectManager.EndEffect());
 
         //ネットワークから切断
         PhotonNetwork.Disconnect();
