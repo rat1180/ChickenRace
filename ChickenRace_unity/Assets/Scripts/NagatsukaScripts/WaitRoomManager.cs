@@ -19,6 +19,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
 
     [SerializeField, Tooltip("ChatGroupをそのまま入れる")] GameObject chatGroup;
     [SerializeField, Tooltip("RoomInformationをそのまま入れる")] GameObject roomInformation;
+    [SerializeField, Tooltip("playersImageをそのまま入れる")] GameObject playersImage;
 
     #region 色定数
     const string RED16 = "#FF0000";
@@ -42,9 +43,18 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     /// </summary>
     private enum RoomInformations
     {
+        RoomNameBack,
         RoomNameText,//ルーム名を表示するテキスト.
-        NowPlayerCount,//現在ルームにいる人数を表示.
+        PlayerNameBack,
         PlayerNameText,//ルームにいる人の名前を表示.
+    }
+
+   private enum PlayerObjectChild
+    {
+        Name,
+        AnimArm,
+        Body,
+        AnimLeg,
     }
 
     private bool isInRoom;       //ルーム内で接続できているか
@@ -54,15 +64,12 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
     //ルームのカスタムプロパティを設定する為の宣言.
     ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
 
-    public GameObject player;
-
     #region Unityイベント(Start・Update)
     // Start is called before the first frame update
     void Start()
     {
-            PhotonNetwork.AutomaticallySyncScene = true;//ホストとシーンを同期する.
-            TryRoomJoin();
-
+        PhotonNetwork.AutomaticallySyncScene = true;//ホストとシーンを同期する.
+        TryRoomJoin();
         
         isInRoom = false;
         isStart = false;
@@ -131,8 +138,6 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
 
     #endregion
 
-
-
     #region データ共有クラス関連
 
     /// <summary>
@@ -144,15 +149,30 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         Debug.Log("情報表示");
         //ルームの名前を表示する.
         roomInformation.transform.GetChild((int)RoomInformations.RoomNameText).GetComponent<Text>().text = 
-            "RoomName:" + ConectServer.RoomProperties.RoomName.ToString();
+           ConectServer.RoomProperties.RoomName.ToString();
+        //roomInformation.transform.GetChild((int)RoomInformations.RoomNameText).GetComponent<Text>().text =
+
         //ルームにいるプレイヤーの数を表示する.
-        roomInformation.transform.GetChild((int)RoomInformations.NowPlayerCount).GetComponent<Text>().text =
-            "プレイヤーの数:" + PhotonNetwork.PlayerList.Length;
-        roomInformation.transform.GetChild((int)RoomInformations.PlayerNameText).GetComponent<Text>().text = "";//ループ前に空にする.
+        roomInformation.transform.GetChild((int)RoomInformations.PlayerNameText).GetComponent<Text>().text = "";
+        roomInformation.transform.GetChild((int)RoomInformations.PlayerNameText).GetComponent<Text>().text = "参加プレイヤー\n";
+        int i = 0;
         foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
         {
-            roomInformation.transform.GetChild((int)RoomInformations.PlayerNameText).GetComponent<Text>().text +=
+            playersImage.transform.GetChild(i).gameObject.SetActive(true);
+            if (player.IsMasterClient)
+            {
+                roomInformation.transform.GetChild((int)RoomInformations.PlayerNameText).GetComponent<Text>().text +=
+                                player.NickName + ":☆ホスト\n";
+                playersImage.transform.GetChild(i).transform.GetChild(0).GetComponent<Text>().text =
+                                player.NickName + ":☆ホスト";
+            }
+            else
+            {
+                roomInformation.transform.GetChild((int)RoomInformations.PlayerNameText).GetComponent<Text>().text +=
                                 player.NickName + "\n";
+                playersImage.transform.GetChild(i).transform.GetChild(0).GetComponent<Text>().text =
+                                player.NickName;
+            } 
         }
     }
     #endregion
@@ -227,11 +247,6 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         PhotonNetwork.AutomaticallySyncScene = true;
         //Debug.Log("OnJoin");
 
-        //カスタムプロパティの設定(GAMESTATUS).
-        // GAMESTATUS status = GAMESTATUS.NONE;
-
-        //customProperties["GameStatus"] = status;
-
         string message = PhotonNetwork.NickName + "が入室しました";
         photonView.RPC(nameof(SendChat), RpcTarget.All, message,YELLOW16);
 
@@ -273,25 +288,16 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 sceanMoveButton.interactable = true;
                 sceanMoveButton.transform.GetChild(0).gameObject.GetComponent<Text>().text
-                = "ゲームヲ始メル(" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + ")";
-                messageText.text = "ボタンを押すとゲームが始まります";
+                = "ゲームスタート(" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + ")";
+                messageText.text = "〇ボタンで開始します";
             }
             else
             {
                 sceanMoveButton.interactable = false;
                 sceanMoveButton.transform.GetChild(0).gameObject.GetComponent<Text>().text
-                = "開始ヲ待ッテル(" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + ")";
+                = "開始を待っています(" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + ")";
                 messageText.text = "ホストの開始をまっています...";
             }
-            if (!createPlayerFlg)//Playerを生成していなければ生成する.
-            {
-               // Instantiate(player, Vector3.zero, Quaternion.identity);//Playerを生成する.
-                createPlayerFlg = true;
-            }
-            //SceanMoveButton.transform.GetChild(0).gameObject.GetComponent<Text>().text
-            //= "ゲームを始メル(" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + ")";
-
-            //メンバリストを表示
         }
     }
 
