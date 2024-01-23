@@ -74,8 +74,13 @@ public class Player : MonoBehaviour
         }
         else if(collision.gameObject.tag == "Damage")
         {
-            // プレイヤー死亡処理.
-            isDeath = true;
+            if (!isDeath)
+            {
+
+                SoundManager.instance.PlaySE(SoundName.SECode.SE_Damage);
+                // プレイヤー死亡処理.
+                isDeath = true;
+            }
         }
     }
 
@@ -148,6 +153,7 @@ public class Player : MonoBehaviour
     void OnGiveUp()
     {
         Debug.Log("死亡");
+        SoundManager.instance.PlaySE(SoundName.SECode.SE_Damage);
         PlayerDeath();
     }
 
@@ -269,7 +275,6 @@ public class Player : MonoBehaviour
         if (isDeath)
         {
             charaAnimation.nowAnimations = CharaAnimation.Animations.DEATH;
-            SoundManager.instance.PlaySE(SoundName.SECode.SE_Damage);
             GameManager.instance.DeadPlayer();
         }
     }
