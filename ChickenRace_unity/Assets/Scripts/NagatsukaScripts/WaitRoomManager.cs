@@ -163,15 +163,15 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 roomInformation.transform.GetChild((int)RoomInformations.PlayerNameText).GetComponent<Text>().text +=
                                 player.NickName + ":☆ホスト\n";
-                playersImage.transform.GetChild(i).transform.GetChild(0).GetComponent<Text>().text +=
-                                player.NickName + ":☆ホスト\n";
+                playersImage.transform.GetChild(i).transform.GetChild(0).GetComponent<Text>().text =
+                                player.NickName + ":☆ホスト";
             }
             else
             {
                 roomInformation.transform.GetChild((int)RoomInformations.PlayerNameText).GetComponent<Text>().text +=
                                 player.NickName + "\n";
-                playersImage.transform.GetChild(i).transform.GetChild(0).GetComponent<Text>().text +=
-                                player.NickName + "\n";
+                playersImage.transform.GetChild(i).transform.GetChild(0).GetComponent<Text>().text =
+                                player.NickName;
             } 
         }
     }
