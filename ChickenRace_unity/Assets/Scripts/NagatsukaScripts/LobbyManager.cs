@@ -12,9 +12,12 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 {
     #region おまかせName配列
     private static readonly string[] OMAKASE_NAMES = new string[] { "マイク", "キャシー","ジョニー","キャン" ,"キャント" ,"チャン" ,
-        "ちょこ","ミント","トニー","ジェシカ","ジェシー","キャサリン", "みかん","りんご","きのこ",
+        "ちょこ","ミント","トニー","ジェシカ","ジェシー","キャサリン", "ゴリアテ","カチーナ", "みかん","りんご","きのこ",
         "ねずみ","ごりら","さかな","ちんあなご","いぬ","いっぬ","ねこ","てつこ","まさよし","たかし","きょうこ","なおみ"};
     #endregion
+
+
+    private string[] roomName = { "〇の部屋", "△の部屋", "□の部屋", "∞の部屋", "はあとのへや", "VIPRoom", "徹子の部屋", "オフライン部屋" };
 
     const int OFFLINE = 8;
 
@@ -53,18 +56,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         connectRoomButton.interactable = false;                          //他のルームのボタンを押下不可にする.
         if (roomNameDropdown.value == OFFLINE)
         {
-            ConectServer.RoomProperties.offline = true; //入室するルームの名前を設定.
-            ConectServer.RoomProperties.RoomName = roomNameDropdown.value.ToString();
-            PhotonNetwork.NickName = inputNickName.text;
-            SceneManager.LoadScene(SceneNames.WaitRoom.ToString());                       //ゲーム待機シーンに移動.
+            ConectServer.RoomProperties.offline = true; //オフラインモード設定.                      
         }
-        else
-        {
-            ConectServer.RoomProperties.RoomName = roomNameDropdown.value.ToString(); //入室するルームの名前を設定.
-            PhotonNetwork.NickName = inputNickName.text;
-            SceneManager.LoadScene(SceneNames.WaitRoom.ToString());                       //ゲーム待機シーンに移動.
-        }
-
+        ConectServer.RoomProperties.RoomName = roomNameDropdown.value.ToString(); //入室するルームの名前を設定.
+        PhotonNetwork.NickName = inputNickName.text;
+        SceneManager.LoadScene(SceneNames.WaitRoom.ToString());//ゲーム待機シーンに移動.
     }
 
     public void SoloMode()
@@ -86,8 +82,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         {
             yield return null;
         }
-        //SceneManager.LoadScene(SceanNames.STARTTITLE.ToString());
-
     }
 
     #region ニックネームを設定
