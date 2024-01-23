@@ -1028,7 +1028,7 @@ public class GameManager : MonoBehaviour
 
         if (gameProgress.dataSharingClass.score[gameProgress.userActorNumber] >= GAME_END_SCORE)
         {
-            gameProgress.user.GeneratePlayer();
+            //gameProgress.user.GeneratePlayer();
             //gameProgress.user.StartPlayerPosition();
         }
 
