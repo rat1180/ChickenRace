@@ -29,11 +29,18 @@ public class Obstacle_Death : Obstacle
     }
     void OnTriggerEnter2D(Collider2D other)
     {
-        Destroy(gameObject);
+        if(other.tag == "Player")
+        {
+            Destroy(gameObject);
+        }
+       
     }
     void OnCollisionEnter2D(Collision2D other)
     {
-        Destroy(gameObject);
+        if (other.gameObject.tag == "Player")
+        {
+            Destroy(gameObject);
+        }
     }
     void Destoroy()
     {
