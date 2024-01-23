@@ -352,6 +352,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         {
             for (int j = 0; j < score[i]; j++)///星を再表示
             {
+                GameObject gameObject = resultCharacters[i].transform.GetChild((int)ResultCharacterChild.SCORE).transform.GetChild(j).gameObject;
                 gameObject.SetActive(true);
                 gameObject.GetComponent<Animator>().enabled = true;//アニメーションを再生成.
             }
