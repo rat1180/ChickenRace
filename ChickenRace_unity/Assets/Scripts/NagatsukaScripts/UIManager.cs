@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviourPunCallbacks
         NAME,
         SCORE,
         RANK,
+        Spotlight,
     }
 
     enum CanvasChild
@@ -229,18 +230,12 @@ public class UIManager : MonoBehaviourPunCallbacks
         raceCountText.text = "第" + raceCount + "レース終了結果";
         //Playerの数分ループして情報を入れる.
         int i = 0;
-        //for (i = 0; i < beforeScore.Count; i++)
-        //{
-            foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
+        foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
         { 
                 resultCharacters[i].transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text 
                 = player.NickName;
-                //resultCharacters[i].transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text
-                //    = names[i];
                 resultCharacters[i].transform.GetChild((int)ResultCharacterChild.SCORE).GetComponent<Text>().text
                     = "SCORE:" + beforeScore[i].ToString();
-                //resultCharacters.transform.GetChild(i).transform.GetChild((int)ResultCharacterChild.UPSCORE).GetComponent<Text>().text
-                //    = "+" + addScore[i].ToString();
         }
 
         //スコアのテキストを変更する(旧ChangeScoreText).
@@ -255,12 +250,6 @@ public class UIManager : MonoBehaviourPunCallbacks
                 {
                     adscore[i]--;//加算した分-1する.
                     score[i]++;  //引いた分+1する.
-
-                    //スコアのテキストを変更する.
-                    //resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.SCORE).GetComponent<Text>().text
-                    //        = "SCORE:" + score[i].ToString();
-                    //resultCharacters.transform.GetChild(i).gameObject.transform.GetChild((int)ResultCharacterChild.UPSCORE).GetComponent<Text>().text
-                    //= "+" + adscore[i].ToString();
                     if (adscore[i] <= 0)//加算するスコアが0になったらカウントを増やす.
                     {
                         cnt++;
@@ -349,6 +338,40 @@ public class UIManager : MonoBehaviourPunCallbacks
     }
 
     #endregion
+
+    /// <summary>
+    /// ゲーム終了時(スコアが3になった人が出たら)リザルトを再利用して結果表示する.
+    /// 引数に最終スコアリストを指定.
+    /// </summary>
+    public void EndGame(List<int> score)
+    {
+        int cnt = 0;//勝利人数カウント用.
+        string name = "";//勝利した人の名前を入れる.
+        resultPanel.SetActive(true);
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < score[i]; j++)///星を再表示
+            {
+                gameObject.SetActive(true);
+                gameObject.GetComponent<Animator>().enabled = true;//アニメーションを再生成.
+            }
+            if (score[i] >= 3)//スコアが3以上の人はスポットライトを当てる.
+            {
+                resultCharacters[i].transform.GetChild((int)ResultCharacterChild.Spotlight).
+                gameObject.SetActive(true);
+                cnt++;
+                name = resultCharacters[i].transform.GetChild((int)ResultCharacterChild.NAME).GetComponent<Text>().text;
+            }
+        }
+        if (cnt == 1)//1人だけ勝利だった場合、名前を表示.
+        {
+            raceCountText.text = name + "の勝利！！";
+        }
+        else
+        {
+            raceCountText.text = cnt + "人の勝利！！";
+        }
+    }
 
     /// <summary>
     /// 通信中アニメ―ションの表示・非表示を行う関数
