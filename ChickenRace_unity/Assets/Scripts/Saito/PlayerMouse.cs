@@ -123,7 +123,7 @@ public class PlayerMouse : MonoBehaviour
             ImageDelete();
         }
 
-        if (itemId != error)
+        if (itemId != error && itemId != (int)ResorceNames.OBSTACLE_IMAGE_NAMES.Kanbaipop)
         {
             index = itemId; // itemIdÇä÷êîÇ…Ç∑ÇÈ.
             user.GetComponent<User>().SetIndex(index);
