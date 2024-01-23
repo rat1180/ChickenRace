@@ -266,7 +266,7 @@ namespace ResorceNames
         Normal_Scaffold_Stairs,
         //Normal_Scaffold_Three,
         //Normal_Scaffold_Two,
-        Destroy_Bom,
+        //Destroy_Bom,
         Kanbaipop,//Š®”„‰æ‘œ.
         DefalutMouse,
         taihou,
@@ -300,7 +300,7 @@ namespace ResorceNames
         Normal_Scaffold_Stairs,
         //Normal_Scaffold_Three,
         //Normal_Scaffold_Two,
-        Destroy_Bom,
+        //Destroy_Bom,
         Count
     }
 
