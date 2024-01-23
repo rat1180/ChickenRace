@@ -480,7 +480,7 @@ public class GameManager : MonoBehaviour
 
     public bool CheckItem(int index)
     {
-        if(gameProgress.dataSharingClass.ID[index] == -1)
+        if(gameProgress.dataSharingClass.ID[index] != -1)
         {
             return true;
         }
