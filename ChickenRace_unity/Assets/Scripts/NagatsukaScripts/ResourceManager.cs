@@ -249,6 +249,7 @@ namespace ResorceNames
 { 
     public enum OBSTACLE_IMAGE_NAMES
     {
+        Kanbaipop = -1,//Š®”„‰æ‘œ.
         Damage_Arrow = 1,
         //Damage_Paunch,
         Damage_DeathObj,
@@ -267,7 +268,6 @@ namespace ResorceNames
         //Normal_Scaffold_Three,
         //Normal_Scaffold_Two,
         //Destroy_Bom,
-        Kanbaipop,//Š®”„‰æ‘œ.
         DefalutMouse,
         taihou,
         cutter,

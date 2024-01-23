@@ -271,12 +271,12 @@ public class MapManager : MonoBehaviour
         }
         else
         {
-            //飛田追加:消去オブジェクトの時の例外処理
-            if ((OBSTACLE_OBJECT)id == OBSTACLE_OBJECT.Destroy_Bom)
-            {
-                return !JudgeInstallCenter(installPos);
-            }
-            else
+            ////飛田追加:消去オブジェクトの時の例外処理
+            //if ((OBSTACLE_OBJECT)id == OBSTACLE_OBJECT.Destroy_Bom)
+            //{
+            //    return !JudgeInstallCenter(installPos);
+            //}
+            //else
             {
 
                 // CollisionListを取得
@@ -362,12 +362,12 @@ public class MapManager : MonoBehaviour
         }
 
         //飛田追加:消去オブジェクトの時の例外処理
-        if ((OBSTACLE_OBJECT)id == OBSTACLE_OBJECT.Destroy_Bom)
-        {
-            DeleteObject(gridPos);
-            isInstall = true;
-            return;
-        }
+        //if ((OBSTACLE_OBJECT)id == OBSTACLE_OBJECT.Destroy_Bom)
+        //{
+        //    DeleteObject(gridPos);
+        //    isInstall = true;
+        //    return;
+        //}
 
         // 障害物生成
         SpawnObstacle(id, angle, gridPos);
