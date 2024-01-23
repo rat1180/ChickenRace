@@ -123,12 +123,14 @@ public class PlayerMouse : MonoBehaviour
             ImageDelete();
         }
 
-        if (itemId != error || !GameManager.instance.CheckItem(itemId))
+        if (itemId != error)
         {
+            if (GameManager.instance.CheckItem(itemId)) { 
             index = itemId; // itemIdÇä÷êîÇ…Ç∑ÇÈ.
             user.GetComponent<User>().SetIndex(index);
             SoundManager.instance.PlaySE(SoundName.SECode.SE_Select);
             GameManager.instance.SelectEffect(gameObject.transform.position);
+
         }
     }
 
