@@ -93,7 +93,10 @@ public class Player : MonoBehaviour
 
                 System.Action waitAction = () =>
                 {
-                    gamepad.SetMotorSpeeds(0, 0);
+                    if(gamepad != null)
+                    {
+                        gamepad.SetMotorSpeeds(0, 0);
+                    }
                     
                     // プレイヤー死亡処理.
                     isDeath = true;
@@ -101,7 +104,11 @@ public class Player : MonoBehaviour
 
                 if (isCoroutine == false)
                 {
-                    gamepad.SetMotorSpeeds(1.0f, 1.0f);
+                    if(gamepad != null)
+                    {
+                        gamepad.SetMotorSpeeds(1.0f, 1.0f);
+                    }
+                    
                     charaAnimation.nowAnimations = CharaAnimation.Animations.DEATH;
                     // 指定した秒数の後にwaitActionを実行.
                     StartCoroutine(WaitTime(2.0f, waitAction));
@@ -207,7 +214,11 @@ public class Player : MonoBehaviour
 
         System.Action waitAction = () =>
         {
-            gamepad.SetMotorSpeeds(0, 0);
+            if(gamepad != null)
+            {
+                gamepad.SetMotorSpeeds(0, 0);
+            }
+            
             
             // プレイヤー死亡処理.
             isDeath = true;
