@@ -172,7 +172,8 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
                                 player.NickName + "\n";
                 playersImage.transform.GetChild(i).transform.GetChild(0).GetComponent<Text>().text =
                                 player.NickName;
-            } 
+            }
+            i++;
         }
     }
     #endregion
