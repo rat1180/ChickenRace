@@ -103,7 +103,7 @@ public class EffectManager : MonoBehaviour
         var obj = EffectObject[(int)AnimObject.EndEffect];
         obj.SetActive(true);
 
-        obj.transform.GetChild(0).gameObject.SetActive(true);
+        //obj.transform.GetChild(0).gameObject.SetActive(true);
         //âπçƒê∂
         SoundManager.instance.SimplePlaySE(SoundName.SECode.SE_End_Effect);
         SoundManager.instance.SimplePlaySE(SoundName.SECode.SE_End);

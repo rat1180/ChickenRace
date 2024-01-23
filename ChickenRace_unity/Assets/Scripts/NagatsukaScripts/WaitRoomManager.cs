@@ -150,9 +150,10 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
         //ルームの名前を表示する.
         roomInformation.transform.GetChild((int)RoomInformations.RoomNameText).GetComponent<Text>().text = 
            ConectServer.RoomProperties.RoomName.ToString();
-       //roomInformation.transform.GetChild((int)RoomInformations.RoomNameText).GetComponent<Text>().text =
-            
+        //roomInformation.transform.GetChild((int)RoomInformations.RoomNameText).GetComponent<Text>().text =
+
         //ルームにいるプレイヤーの数を表示する.
+        roomInformation.transform.GetChild((int)RoomInformations.PlayerNameText).GetComponent<Text>().text = "";
         roomInformation.transform.GetChild((int)RoomInformations.PlayerNameText).GetComponent<Text>().text = "参加プレイヤー\n";
         int i = 0;
         foreach (var player in PhotonNetwork.PlayerList)//プレイヤーの名前を取得.
@@ -170,7 +171,7 @@ public class WaitRoomManager : MonoBehaviourPunCallbacks, IPunObservable
                 roomInformation.transform.GetChild((int)RoomInformations.PlayerNameText).GetComponent<Text>().text +=
                                 player.NickName + "\n";
                 playersImage.transform.GetChild(i).transform.GetChild(0).GetComponent<Text>().text +=
-                                player.NickName + ":☆ホスト\n";
+                                player.NickName + "\n";
             } 
         }
     }
