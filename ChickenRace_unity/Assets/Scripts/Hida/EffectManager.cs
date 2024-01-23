@@ -107,7 +107,7 @@ public class EffectManager : MonoBehaviour
         //âπçƒê∂
         SoundManager.instance.SimplePlaySE(SoundName.SECode.SE_End_Effect);
         SoundManager.instance.SimplePlaySE(SoundName.SECode.SE_End);
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(5);
     }
 
     /// <summary>
