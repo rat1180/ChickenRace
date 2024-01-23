@@ -42,6 +42,11 @@ public class Player : MonoBehaviour
         rb.isKinematic = true; // 重力の停止.
     }
 
+    private void OnDisable()
+    {
+        
+    }
+
     void Start()
     {
         Init();
@@ -52,6 +57,7 @@ public class Player : MonoBehaviour
         if (gamepad == null)
         {
             gamepad = Gamepad.current; // ゲームパッドの取得.
+            
         }
         PlayerDeath();
         if(isStart && !isGoal && !isDeath)
@@ -83,10 +89,25 @@ public class Player : MonoBehaviour
         {
             if (!isDeath)
             {
-
                 SoundManager.instance.PlaySE(SoundName.SECode.SE_Damage);
-                // プレイヤー死亡処理.
-                isDeath = true;
+
+                System.Action waitAction = () =>
+                {
+                    gamepad.SetMotorSpeeds(0, 0);
+                    
+                    // プレイヤー死亡処理.
+                    isDeath = true;
+                };
+
+                if (isCoroutine == false)
+                {
+                    gamepad.SetMotorSpeeds(1.0f, 1.0f);
+                    charaAnimation.nowAnimations = CharaAnimation.Animations.DEATH;
+                    // 指定した秒数の後にwaitActionを実行.
+                    StartCoroutine(WaitTime(2.0f, waitAction));
+                    isCoroutine = true;
+                }
+               
             }
         }
     }
@@ -175,6 +196,24 @@ public class Player : MonoBehaviour
     {
         Debug.Log("死亡");
         SoundManager.instance.PlaySE(SoundName.SECode.SE_Damage);
+
+        System.Action waitAction = () =>
+        {
+            gamepad.SetMotorSpeeds(0, 0);
+            
+            // プレイヤー死亡処理.
+            isDeath = true;
+        };
+
+        if (isCoroutine == false)
+        {
+            gamepad.SetMotorSpeeds(1.0f, 1.0f);
+            charaAnimation.nowAnimations = CharaAnimation.Animations.DEATH;
+            // 指定した秒数の後にwaitActionを実行.
+            StartCoroutine(WaitTime(2.0f, waitAction));
+            isCoroutine = true;
+        }
+
         PlayerDeath();
     }
 
@@ -295,9 +334,7 @@ public class Player : MonoBehaviour
     {
         if (isDeath)
         {
-            charaAnimation.nowAnimations = CharaAnimation.Animations.DEATH;
             GameManager.instance.DeadPlayer();
-            
         }
     }
 
@@ -310,6 +347,7 @@ public class Player : MonoBehaviour
     IEnumerator WaitTime(float time, System.Action action)
     {
         yield return new WaitForSeconds(time);
+        Debug.Log("コルーチン呼ぶ");
         action.Invoke();
         isCoroutine = false;
     }
