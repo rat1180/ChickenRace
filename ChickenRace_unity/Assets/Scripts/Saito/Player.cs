@@ -81,20 +81,12 @@ public class Player : MonoBehaviour
         }
         else if(collision.gameObject.tag == "Damage")
         {
-            // プレイヤー死亡処理.
-            isDeath = true;
-
-            System.Action waitAction = () =>
+            if (!isDeath)
             {
-                gamepad.SetMotorSpeeds(0, 0);
-            };
 
-            if (isCoroutine == false)
-            {
-                gamepad.SetMotorSpeeds(1.0f, 1.0f);
-                // 指定した秒数の後にwaitActionを実行.
-                StartCoroutine(WaitTime(1.0f, waitAction));
-                isCoroutine = true;
+                SoundManager.instance.PlaySE(SoundName.SECode.SE_Damage);
+                // プレイヤー死亡処理.
+                isDeath = true;
             }
         }
     }
@@ -182,7 +174,7 @@ public class Player : MonoBehaviour
     void OnGiveUp()
     {
         Debug.Log("死亡");
-        isDeath = true;
+        SoundManager.instance.PlaySE(SoundName.SECode.SE_Damage);
         PlayerDeath();
     }
 
@@ -304,7 +296,6 @@ public class Player : MonoBehaviour
         if (isDeath)
         {
             charaAnimation.nowAnimations = CharaAnimation.Animations.DEATH;
-            SoundManager.instance.PlaySE(SoundName.SECode.SE_Damage);
             GameManager.instance.DeadPlayer();
             
         }

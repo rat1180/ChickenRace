@@ -69,6 +69,7 @@ public class GameManager : MonoBehaviour
         User,
         MapManager,
         StartPoint,
+        EndPoint,
         EffectManager,
     }
 
@@ -84,6 +85,7 @@ public class GameManager : MonoBehaviour
                                                                                                              { ProgressName.User,"User" },
                                                                                                              { ProgressName.MapManager,"MapManager" },
                                                                                                              { ProgressName.StartPoint,"StartPoint" },
+                                                                                                             { ProgressName.EndPoint,"EndPoint" },
                                                                                                              { ProgressName.EffectManager,"EffectManager"} };
 
     /// <summary>
@@ -98,6 +100,7 @@ public class GameManager : MonoBehaviour
         public User user;
         public int userActorNumber;
         public Vector2 startPoint;
+        public Vector2 endPoint;
         public EffectManager effectManager;
     }
 
@@ -1021,8 +1024,20 @@ public class GameManager : MonoBehaviour
 
     IEnumerator StateEND()
     {
+        yield return new WaitUntil(() => CheckKeys(InGameStatus.READY));
+
+        if (gameProgress.dataSharingClass.score[gameProgress.userActorNumber] >= GAME_END_SCORE)
+        {
+            gameProgress.user.GeneratePlayer();
+            //gameProgress.user.StartPlayerPosition();
+        }
+
+        yield return new WaitUntil(() => CheckKeys(InGameStatus.INGAME));
+
         //終了演出
         yield return StartCoroutine(gameProgress.effectManager.EndEffect());
+
+        yield return new WaitUntil(() => CheckKeys(InGameStatus.END));
 
         //ネットワークから切断
         PhotonNetwork.Disconnect();
