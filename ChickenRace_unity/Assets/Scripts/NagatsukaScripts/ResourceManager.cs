@@ -142,7 +142,7 @@ public class ResourceManager : MonoBehaviour
         foreach (CHARCTER_COLOR name in Enum.GetValues(typeof(CHARCTER_COLOR)))
         {
             //ê∂ê¨ëŒè€ÇíTçı
-            var prefabobj = FolderObjectFinder.LoadCharcterImages(OBSTACLE_IMAGES + name.ToString());
+            var prefabobj = FolderObjectFinder.LoadCharcterImages(name.ToString());
 
             charcter_images.Add(name, prefabobj);
         }
