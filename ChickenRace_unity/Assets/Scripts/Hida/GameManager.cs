@@ -478,6 +478,15 @@ public class GameManager : MonoBehaviour
         gameProgress.effectManager.PopSelectEffect(pos);
     }
 
+    public bool CheckItem(int index)
+    {
+        if(gameProgress.dataSharingClass.ID[index] == -1)
+        {
+            return true;
+        }
+        return false;
+    }
+
     #endregion
 
     #region デバッグ用
