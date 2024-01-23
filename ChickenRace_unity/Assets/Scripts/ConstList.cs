@@ -35,5 +35,6 @@ namespace ConstList
     {
         Lobby,
         WaitRoom,
+        WaitRoomCP,
     }
 }

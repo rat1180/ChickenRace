@@ -60,7 +60,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         }
         ConectServer.RoomProperties.RoomName = roomNameDropdown.value.ToString(); //入室するルームの名前を設定.
         PhotonNetwork.NickName = inputNickName.text;
-        SceneManager.LoadScene(SceneNames.WaitRoom.ToString());//ゲーム待機シーンに移動.
+        SceneManager.LoadScene(SceneNames.WaitRoomCP.ToString());//ゲーム待機シーンに移動.
     }
 
     public void SoloMode()

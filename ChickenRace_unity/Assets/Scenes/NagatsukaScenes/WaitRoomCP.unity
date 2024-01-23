@@ -3573,7 +3573,7 @@ MonoBehaviour:
   sceanMoveButton: {fileID: 1680006325}
   chatGroup: {fileID: 1815832718}
   roomInformation: {fileID: 889178361}
-  playersImage: {fileID: 0}
+  playersImage: {fileID: 493362044}
 --- !u!114 &1736406398
 MonoBehaviour:
   m_ObjectHideFlags: 0
