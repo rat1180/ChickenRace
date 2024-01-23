@@ -1028,13 +1028,14 @@ public class GameManager : MonoBehaviour
 
         if (gameProgress.dataSharingClass.score[gameProgress.userActorNumber] >= GAME_END_SCORE)
         {
-            gameProgress.user.GeneratePlayer();
+            //gameProgress.user.GeneratePlayer();
             //gameProgress.user.StartPlayerPosition();
         }
 
         yield return new WaitUntil(() => CheckKeys(InGameStatus.INGAME));
 
         //I—¹‰‰o
+        gameProgress.uiManager.EndGame(gameProgress.dataSharingClass.score);
         yield return StartCoroutine(gameProgress.effectManager.EndEffect());
 
         yield return new WaitUntil(() => CheckKeys(InGameStatus.END));
