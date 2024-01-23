@@ -323,7 +323,7 @@ public class Player : MonoBehaviour
     /// </summary>
     public void PlayerDelete()
     {
-        Destroy(instanceObj);
+        instanceObj.GetComponent<Character>().myDestroy();
         Destroy(gameObject);
     }
 

@@ -11,10 +11,13 @@ public class Character : MonoBehaviourPun, IPunObservable
     Vector3 relativeVector;
     [SerializeField] float threshold; // アニメーション用閾値.
     public bool isTurnFlg = true;
+    bool isDestroy;
+    CharaAnimation.Animations nowAnim;
 
     void Start()
     {
         savePos = transform.position;
+        isDestroy = false;
     }
 
     void FixedUpdate()
@@ -65,12 +68,29 @@ public class Character : MonoBehaviourPun, IPunObservable
     /// <summary>
     /// 自身を削除.
     /// </summary>
-    private void myDestroy()
+    public void myDestroy()
     {
-        if(target == null && photonView.IsMine)
+        if((target == null && photonView.IsMine) || isDestroy)
         {
             Destroy(gameObject);
         }
+    }
+
+    [PunRPC]
+    void DestroyRPC()
+    {
+        isDestroy = true;
+    }
+
+    public void SetAnim(CharaAnimation.Animations code)
+    {
+        photonView.RPC("SetAnimRPC", RpcTarget.Others, (int)code);
+    }
+
+    [PunRPC]
+    void SetAnimRPC(int code)
+    {
+        GetComponent<CharaAnimation>().nowAnimations = (CharaAnimation.Animations)code;
     }
 
     /// <summary>
