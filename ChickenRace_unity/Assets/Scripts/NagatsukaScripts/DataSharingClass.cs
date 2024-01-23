@@ -67,7 +67,7 @@ public class DataSharingClass : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void ResetIDRPC(int index)
     {
-        ID[index] = 0;
+        ID[index] = -1;
     }
 
     /// <summary>

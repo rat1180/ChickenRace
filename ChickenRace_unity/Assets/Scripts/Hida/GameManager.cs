@@ -939,7 +939,7 @@ public class GameManager : MonoBehaviour
         //進行待機
         yield return new WaitUntil(() => CheckKeys(InGameStatus.INGAME));
         //スタート演出
-        SoundManager.instance.PlaySE(SoundName.SECode.SE_Start);
+        SoundManager.instance.SimplePlaySE(SoundName.SECode.SE_Start);
 
         //キャラの操作のロックを解除
         gameProgress.user.PlayerStart(true);

@@ -208,7 +208,7 @@ public class PlayerMouse : MonoBehaviour
 
     public void ImageDelete()
     {
-        Destroy(mouseImage);
+        mouseImage.GetComponent<Character>().myDestroy();
     }
 
     /// <summary>
