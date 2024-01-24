@@ -528,6 +528,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void GameLoop()
     {
+        if (Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
         //フェーズ中
         if (stateCoroutine != null) return;
 
@@ -1054,7 +1055,7 @@ public class GameManager : MonoBehaviour
         PhotonNetwork.Disconnect();
 
         //タイトルに移動
-        SceneManager.LoadScene(SceneNames.Lobby.ToString());
+        SceneManager.LoadScene(SceneNames.Title.ToString());
     }
 
     #endregion
