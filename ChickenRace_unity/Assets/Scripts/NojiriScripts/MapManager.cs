@@ -11,6 +11,8 @@ using Dictionary;
 [System.Serializable]
 public class ObjectStatus
 {
+    [Header("テスト用リスト")]
+    public List<Vector2Int> childList; // テスト用
     [Header("オブジェクト設置方向")]
     public Dictionary_Unity<int, float> AngleList;        // <Key：設置順番, Value：設置向き情報>
     [Header("設置済みIDリスト")]
@@ -21,7 +23,7 @@ public class ObjectStatus
 
 public class MapManager : MonoBehaviour
 {
-    [System.NonSerialized] public float itemSize;    // アイテムサイズ変更用
+    /*[System.NonSerialized] */public float itemSize;    // アイテムサイズ変更用
     public bool debugMode = false;                   // デバッグモードフラグ
 
     [SerializeField] private ObjectStatus objStatus; // 障害物用の構造体情報
@@ -30,15 +32,18 @@ public class MapManager : MonoBehaviour
     private GameObject imageObj;          // 画像生成用オブジェクト取得
     private GameObject panelObj;          // グリッド表示用パネル
     private List<Vector2Int> childList;   // 障害物の子オブジェクトリスト
+    private Vector2 panelSize;            // パネルサイズ変更用
     private int installNum;               // 置かれた順番
     private bool isRunning = false;       // コルーチン実行判定フラグ
-    private bool isInstall = true;        // 設置フラグ true：設置不可　false：設置可能
+    private bool isInstall = true;       // 設置フラグ true：設置不可　false：設置可能
+
+    // テスト用
+    [SerializeField] private bool childTest = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        // 初期化
-        MapInit();
+        MapInit(); // 初期化
     }
 
     // Update is called once per frame
@@ -72,12 +77,22 @@ public class MapManager : MonoBehaviour
         objStatus.AngleList = new Dictionary_Unity<int, float>();
         objStatus.InstalledDic = new Dictionary_Unity<int, int>();
         objStatus.usedGridDic = new Dictionary_Unity<Vector2Int, int>();
+        objStatus.childList = new List<Vector2Int>();     // テスト
         installNum = 0;
+
+        // テスト用
+        //if (debugMode)
+        //{
+        //    // CollisionList情報テスト用
+        //    objStatus.childList.Add(new Vector2Int(0, 1));
+        //    objStatus.childList.Add(new Vector2Int(-1, 0));
+        //}
 
         // グリッドとパネルの情報を取得
         gridObj = Instantiate((GameObject)Resources.Load("GridObject"));
         imageObj = (GameObject)Resources.Load("ImageObject");
         panelObj = GameObject.Find("CanvasUI/GridPanel");
+        panelSize = panelObj.transform.GetComponent<RectTransform>().sizeDelta;
 
         itemSize = gridObj.GetComponent<GridLineDraw>().gridSize;
 
@@ -99,7 +114,6 @@ public class MapManager : MonoBehaviour
             コルーチン実行時
             ・設置判定　　　：JudgeInstall()
             ・障害物生成　　：GenerateMapObject()、SpawnObstacle()
-            ・障害物削除　　：DeleteObject()、RemoveObstacle()
             ・コルーチン終了：CreativeModeEnd()
 
             コルーチン未実行時
@@ -142,17 +156,18 @@ public class MapManager : MonoBehaviour
     }
 
     /// <summary>
-    /// クリエイティブモード中のみ、障害物の静止画を表示
+    /// クリエイトモード中のみ、障害物の静止画を表示
     /// </summary>
     private void GenerateImage()
     {
         // 設置済みIDの最大値を取得
         //var idMax = objStatus.InstalledDic.VelueMax();
-        var idMax = 50;
 
         // 画像生成
-        for (int i = 0; i <= idMax; i++)
+        for (int i = 0; i < 30 /* <= idMax*/; i++)
         {
+            //var image = (GameObject)Resources.Load("shiitake");
+
             // iと等しい設置済みid情報があるとき
             if (objStatus.InstalledDic.ContainValue(i))
             {
@@ -249,16 +264,25 @@ public class MapManager : MonoBehaviour
     /// <returns></returns>
     public bool JudgeInstall(Vector2Int installPos, int id)
     {
-        // 消去オブジェクトの時の例外処理
-        if ((OBSTACLE_OBJECT)id == OBSTACLE_OBJECT.Destroy_Bom)
+        if (childTest)
         {
-            return !JudgeInstallCenter(installPos);
+            // idに対応したリストを取得(仮)
+            childList = objStatus.childList;
         }
         else
         {
-            // CollisionListを取得
-            var obj = ResourceManager.instance.GetObstacleObject((OBSTACLE_OBJECT)id);
-            childList = obj.GetComponent<Obstacle>().GetCollisionList();
+            ////飛田追加:消去オブジェクトの時の例外処理
+            //if ((OBSTACLE_OBJECT)id == OBSTACLE_OBJECT.Destroy_Bom)
+            //{
+            //    return !JudgeInstallCenter(installPos);
+            //}
+            //else
+            {
+
+                // CollisionListを取得
+                var obj = ResourceManager.instance.GetObstacleObject((OBSTACLE_OBJECT)id);
+                childList = obj.GetComponent<Obstacle>().GetCollisionList();
+            }
         }
 
         // 設置位置が一つのとき
@@ -278,6 +302,12 @@ public class MapManager : MonoBehaviour
                 return false;
             }
         }
+    }
+
+    // 消す予定
+    public bool JudgeInstall(Vector2Int installPos)
+    {
+        return true;
     }
 
     /// <summary>
@@ -331,13 +361,13 @@ public class MapManager : MonoBehaviour
             return;
         }
 
-        // 消去オブジェクトの時の例外処理
-        if ((OBSTACLE_OBJECT)id == OBSTACLE_OBJECT.Destroy_Bom)
-        {
-            DeleteObject(gridPos);
-            isInstall = true;
-            return;
-        }
+        //飛田追加:消去オブジェクトの時の例外処理
+        //if ((OBSTACLE_OBJECT)id == OBSTACLE_OBJECT.Destroy_Bom)
+        //{
+        //    DeleteObject(gridPos);
+        //    isInstall = true;
+        //    return;
+        //}
 
         // 障害物生成
         SpawnObstacle(id, angle, gridPos);
@@ -470,6 +500,7 @@ public class MapManager : MonoBehaviour
             return;
         }
 
+
         // 再生成
         for (int i = 0; i < installNum; i++)
         {
@@ -492,12 +523,19 @@ public class MapManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 設置状態フラグ参照メソッド
+    /// フラグ参照メソッド
     /// </summary>
     /// <returns>設置フラグ　true:設置不可　false:設置可能</returns>
     public bool IsInstallReference()
     {
         return isInstall;
     }
+
+    // テスト
+    //public void GetGridSize(Vector2 gridSize)
+    //{
+    //    // サイズ変わらん
+    //    panelSize = gridSize;
+    //}
     #endregion
 }

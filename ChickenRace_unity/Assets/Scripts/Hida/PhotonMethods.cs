@@ -52,6 +52,7 @@ namespace PhotonMethods
         private const string GameReadyStatusKey = "GRs";
         private const string GameInGameStatusKey = "GIGs";
         private const string GameEndStatusKey = "GEs";
+        private const string CharColorKey = "Cs";
 
         private static readonly ExitGames.Client.Photon.Hashtable propsToSet = new ExitGames.Client.Photon.Hashtable();
 
@@ -112,6 +113,18 @@ namespace PhotonMethods
         public static void SetRankStatus(this Photon.Realtime.Player player, int status)
         {
             propsToSet[RankStatusKey] = status;
+            player.SetCustomProperties(propsToSet);
+            propsToSet.Clear();
+        }
+
+        public static int GetCharColorStatus(this Photon.Realtime.Player player)
+        {
+            return (player.CustomProperties[CharColorKey] is int status) ? status : 0;
+        }
+
+        public static void SetCharColorStatus(this Photon.Realtime.Player player, int status)
+        {
+            propsToSet[CharColorKey] = status;
             player.SetCustomProperties(propsToSet);
             propsToSet.Clear();
         }

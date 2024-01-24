@@ -50,7 +50,9 @@ namespace SoundName
         SE_Damage,
         SE_Jump,
         SE_Arrow,
-        
+
+        SE_Goal_Voice,
+        SE_Goal,
     }
 }
 

@@ -125,10 +125,13 @@ public class PlayerMouse : MonoBehaviour
 
         if (itemId != error)
         {
-            index = itemId; // itemId‚ğŠÖ”‚É‚·‚é.
-            user.GetComponent<User>().SetIndex(index);
-            SoundManager.instance.PlaySE(SoundName.SECode.SE_Select);
-            GameManager.instance.SelectEffect(gameObject.transform.position);
+            if (GameManager.instance.CheckItem(itemId))
+            {
+                index = itemId; // itemId‚ğŠÖ”‚É‚·‚é.
+                user.GetComponent<User>().SetIndex(index);
+                SoundManager.instance.PlaySE(SoundName.SECode.SE_Select);
+                GameManager.instance.SelectEffect(gameObject.transform.position);
+            }
         }
     }
 
@@ -208,7 +211,7 @@ public class PlayerMouse : MonoBehaviour
 
     public void ImageDelete()
     {
-        Destroy(mouseImage);
+        mouseImage.GetComponent<Character>().myDestroy();
     }
 
     /// <summary>

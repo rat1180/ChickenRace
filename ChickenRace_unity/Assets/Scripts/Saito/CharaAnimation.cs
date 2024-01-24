@@ -66,5 +66,12 @@ public class CharaAnimation : MonoBehaviour
                 animator.SetTrigger("WinTrigger");
                 break;
         }
+
+        var charcter = GetComponent<Character>();
+        if (charcter == null) return;
+        if (charcter.photonView.IsMine)
+        {
+            charcter.SetAnim(nowAnimations);
+        }
     }
 }

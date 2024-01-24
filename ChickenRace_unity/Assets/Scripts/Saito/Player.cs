@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
 { 
     Rigidbody2D rb;
     [SerializeField] CharaAnimation charaAnimation;
+    Gamepad gamepad;
 
     [SerializeField] Vector3 moveVector;
     [SerializeField] bool isMove;           // 動いているかどうか.
@@ -27,6 +28,7 @@ public class Player : MonoBehaviour
     [SerializeField] bool isGoal;            // プレイヤーがゴールしたかの判定.
     [SerializeField] bool isDeath;           // プレイヤーが死亡したかの判定.
     [SerializeField] float time;
+    [SerializeField] bool isCoroutine;
 
     /// <summary>
     /// 初期化用関数.
@@ -34,9 +36,15 @@ public class Player : MonoBehaviour
     private void Init()
     {
         rb = GetComponent<Rigidbody2D>();
+        
         nowHitDir = HitDirList.NONE;
         charaAnimation.nowAnimations = CharaAnimation.Animations.IDLE;
         rb.isKinematic = true; // 重力の停止.
+    }
+
+    private void OnDisable()
+    {
+        
     }
 
     void Start()
@@ -46,6 +54,11 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (gamepad == null)
+        {
+            gamepad = Gamepad.current; // ゲームパッドの取得.
+            
+        }
         PlayerDeath();
         if(isStart && !isGoal && !isDeath)
         {
@@ -70,16 +83,43 @@ public class Player : MonoBehaviour
     {
         if(collision.gameObject.tag == "Goal")
         {
-            isGoal = true;
+            if (!isGoal)
+            {
+                isGoal = true;
+                SoundManager.instance.PlaySE(SoundName.SECode.SE_Goal_Voice);
+                SoundManager.instance.PlaySE(SoundName.SECode.SE_Goal);
+            }
         }
         else if(collision.gameObject.tag == "Damage")
         {
             if (!isDeath)
             {
-
                 SoundManager.instance.PlaySE(SoundName.SECode.SE_Damage);
-                // プレイヤー死亡処理.
-                isDeath = true;
+
+                System.Action waitAction = () =>
+                {
+                    if(gamepad != null)
+                    {
+                        gamepad.SetMotorSpeeds(0, 0);
+                    }
+                    
+                    // プレイヤー死亡処理.
+                    isDeath = true;
+                };
+
+                if (isCoroutine == false)
+                {
+                    if(gamepad != null)
+                    {
+                        gamepad.SetMotorSpeeds(1.0f, 1.0f);
+                    }
+                    
+                    charaAnimation.nowAnimations = CharaAnimation.Animations.DEATH;
+                    // 指定した秒数の後にwaitActionを実行.
+                    StartCoroutine(WaitTime(2.0f, waitAction));
+                    isCoroutine = true;
+                }
+               
             }
         }
     }
@@ -127,6 +167,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void OnJump()
     {
+        
         // 既に空中にいるときはジャンプアニメーションを再生させない.
         if(nowHitDir != HitDirList.NONE)
         {
@@ -144,6 +185,27 @@ public class Player : MonoBehaviour
                     break;
             }
             SoundManager.instance.PlaySE(SoundName.SECode.SE_Jump);
+
+            System.Action waitAction = () =>
+            {
+                if(gamepad != null)
+                {
+                    gamepad.SetMotorSpeeds(0, 0);
+                }
+                
+            };
+
+            if (isCoroutine == false)
+            {
+                if(gamepad != null)
+                {
+                    gamepad.SetMotorSpeeds(0.1f, 0.1f);
+                }
+                
+                // 指定した秒数の後にwaitActionを実行.
+                StartCoroutine(WaitTime(0.1f, waitAction));
+                isCoroutine = true;
+            }
         }
     }
 
@@ -154,6 +216,32 @@ public class Player : MonoBehaviour
     {
         Debug.Log("死亡");
         SoundManager.instance.PlaySE(SoundName.SECode.SE_Damage);
+
+        System.Action waitAction = () =>
+        {
+            if(gamepad != null)
+            {
+                gamepad.SetMotorSpeeds(0, 0);
+            }
+            
+            
+            // プレイヤー死亡処理.
+            isDeath = true;
+        };
+
+        if (isCoroutine == false)
+        {
+            if(gamepad != null)
+            {
+                gamepad.SetMotorSpeeds(1.0f, 1.0f);
+            }
+            
+            charaAnimation.nowAnimations = CharaAnimation.Animations.DEATH;
+            // 指定した秒数の後にwaitActionを実行.
+            StartCoroutine(WaitTime(2.0f, waitAction));
+            isCoroutine = true;
+        }
+
         PlayerDeath();
     }
 
@@ -263,7 +351,7 @@ public class Player : MonoBehaviour
     /// </summary>
     public void PlayerDelete()
     {
-        Destroy(instanceObj);
+        instanceObj.GetComponent<Character>().myDestroy();
         Destroy(gameObject);
     }
 
@@ -274,8 +362,21 @@ public class Player : MonoBehaviour
     {
         if (isDeath)
         {
-            charaAnimation.nowAnimations = CharaAnimation.Animations.DEATH;
             GameManager.instance.DeadPlayer();
         }
+    }
+
+    /// <summary>
+    /// 指定した秒数待つ処理.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="action"></param>
+    /// <returns></returns>
+    IEnumerator WaitTime(float time, System.Action action)
+    {
+        yield return new WaitForSeconds(time);
+        Debug.Log("コルーチン呼ぶ");
+        action.Invoke();
+        isCoroutine = false;
     }
 }

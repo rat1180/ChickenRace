@@ -142,8 +142,16 @@ public class UIManager : MonoBehaviourPunCallbacks
             }
             else//4つ生成していたらID情報のみを変更する.
             {
-                imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite = 
+                if(imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>().id == -1)
+                {
+                    imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =
+                ResourceManager.instance.GetObstacleImage(OBSTACLE_IMAGE_NAMES.Kanbaipop);//画像を変更.
+                }
+                else
+                {
+                    imageObjects.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite =
                 ResourceManager.instance.GetObstacleImage(id[i]);//画像を変更.
+                }
 
                 //コンポーネントが存在すればそのままIDを代入する
                 imageObjects.transform.GetChild(i).gameObject.GetComponent<ObstacleImage>().id = i;
@@ -158,7 +166,7 @@ public class UIManager : MonoBehaviourPunCallbacks
     {
         imageObjects.transform.GetChild(index).GetComponent<Image>().sprite =
             ResourceManager.instance.GetObstacleImage(OBSTACLE_IMAGE_NAMES.Kanbaipop);//完売画像に変更.
-        imageObjects.transform.GetChild(index).GetComponent<ObstacleImage>().id = 0;
+        imageObjects.transform.GetChild(index).GetComponent<ObstacleImage>().id = -1;
     }
 
     #region リザルト変更関連
