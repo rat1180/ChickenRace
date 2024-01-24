@@ -33,6 +33,7 @@ namespace ConstList
     /// </summary>
     public enum SceneNames
     {
+        Title,
         Lobby,
         WaitRoom,
         WaitRoomCP,

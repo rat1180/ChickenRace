@@ -480,6 +480,7 @@ public class GameManager : MonoBehaviour
 
     public bool CheckItem(int index)
     {
+        if (index == -1) return false;
         if(gameProgress.dataSharingClass.ID[index] != -1)
         {
             return true;
@@ -527,6 +528,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void GameLoop()
     {
+        if (Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
         //フェーズ中
         if (stateCoroutine != null) return;
 
@@ -1053,7 +1055,7 @@ public class GameManager : MonoBehaviour
         PhotonNetwork.Disconnect();
 
         //タイトルに移動
-        SceneManager.LoadScene(SceneNames.Lobby.ToString());
+        SceneManager.LoadScene(SceneNames.Title.ToString());
     }
 
     #endregion

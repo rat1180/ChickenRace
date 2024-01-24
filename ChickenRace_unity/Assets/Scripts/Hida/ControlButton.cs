@@ -22,6 +22,7 @@ public class ControlButton : MonoBehaviour
     {
         menuManager = GetComponent<MenuManager>();
         verticalIndex = horizontalIndex = 0;
+        ButtonMove(Vector2.zero);
     }
 
     // Update is called once per frame
