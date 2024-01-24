@@ -120,6 +120,7 @@ public class GameManager : MonoBehaviour
 
 
     public static GameManager instance;
+    public NameTag nameTag;
 
     #endregion
 
