@@ -72,6 +72,7 @@ public class Character : MonoBehaviourPun, IPunObservable
     {
         if((target == null && photonView.IsMine) || isDestroy)
         {
+            photonView.RPC("DestroyRPC", RpcTarget.Others);
             Destroy(gameObject);
         }
     }
