@@ -83,7 +83,12 @@ public class Player : MonoBehaviour
     {
         if(collision.gameObject.tag == "Goal")
         {
-            isGoal = true;
+            if (!isGoal)
+            {
+                isGoal = true;
+                SoundManager.instance.PlaySE(SoundName.SECode.SE_Goal_Voice);
+                SoundManager.instance.PlaySE(SoundName.SECode.SE_Goal);
+            }
         }
         else if(collision.gameObject.tag == "Damage")
         {

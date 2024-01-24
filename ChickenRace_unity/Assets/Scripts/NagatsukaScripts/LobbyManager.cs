@@ -59,7 +59,15 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             ConectServer.RoomProperties.offline = true; //オフラインモード設定.                      
         }
         ConectServer.RoomProperties.RoomName = roomName[roomNameDropdown.value]; //入室するルームの名前を設定.
-        PhotonNetwork.NickName = inputNickName.text;
+        if(inputNickName.text == "")//名無しは強制Playerという名前に.
+        {
+            PhotonNetwork.NickName = "Player" + PhotonNetwork.LocalPlayer.ActorNumber;
+        }
+        else
+        {
+            PhotonNetwork.NickName = inputNickName.text;
+        }
+        
         SceneManager.LoadScene(SceneNames.WaitRoomCP.ToString());//ゲーム待機シーンに移動.
     }
 
