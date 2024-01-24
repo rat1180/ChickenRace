@@ -296,6 +296,17 @@
                 },
                 {
                     "name": "",
+                    "id": "92305856-bb7b-4eb2-8c4b-bebafa775d30",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "8068077c-54d3-404e-9076-316c585baad3",
                     "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
@@ -1137,6 +1148,28 @@
                     "name": "",
                     "id": "5fd95ec8-2352-4848-9245-eeaaa36f2292",
                     "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CircleButtonPush",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1a6702c6-5cba-4e80-8c70-faa8db387e29",
+                    "path": "<DualShockGamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "CircleButtonPush",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9e497752-908d-41f4-8160-758f9b7ac977",
+                    "path": "<XInputController>/start",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
