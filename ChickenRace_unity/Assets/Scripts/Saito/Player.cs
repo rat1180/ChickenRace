@@ -67,7 +67,6 @@ public class Player : MonoBehaviour
             rb.isKinematic = false; // d—Í‚ÌŠJn.
         }
         PlayerTransform();
-        GameManager.instance.nameTag.NameOn(gameObject);
     }
 
     private void OnCollisionStay2D(Collision2D collision)

@@ -120,7 +120,6 @@ public class GameManager : MonoBehaviour
 
 
     public static GameManager instance;
-    public NameTag nameTag;
 
     #endregion
 
@@ -481,6 +480,7 @@ public class GameManager : MonoBehaviour
 
     public bool CheckItem(int index)
     {
+        if (index == -1) return false;
         if(gameProgress.dataSharingClass.ID[index] != -1)
         {
             return true;

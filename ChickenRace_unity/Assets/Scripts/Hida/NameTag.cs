@@ -9,23 +9,30 @@ public class NameTag : MonoBehaviour
     string name;
     GameObject target;
     public float offset;
+    public Text text;
+    bool isOn;
     // Start is called before the first frame update
     void Start()
     {
-        NameOn(null);
+        isOn = true;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        NameOn();
     }
 
-
-    public void NameOn(GameObject player)
+    public void NameStart()
     {
-        if (player == null) target = null;
-        else target = player;
+
+    }
+
+    void NameOn()
+    {
+        if (!isOn) return;
+        target = transform.parent.gameObject;
 
         if (target == null)
         {
@@ -33,9 +40,11 @@ public class NameTag : MonoBehaviour
             return;
         }
         gameObject.SetActive(true);
-        transform.position = RectTransformUtility.WorldToScreenPoint(
-             Camera.main,
-             target.transform.position + Vector3.up * offset);
-        GetComponent<Text>().text = PhotonNetwork.LocalPlayer.NickName;
+        var pos = text.gameObject.transform.localScale;
+        if (target.transform.localScale.x < 0 && pos.x > 0) pos.x *= -1;
+        if (target.transform.localScale.x > 0 && pos.x < 0) pos.x *= -1;
+        text.transform.localScale = pos;
+        //transform.position = Camera.main.WorldToScreenPoint(target.transform.position);
+        text.text = target.GetPhotonView().Owner.NickName;
     }
 }
