@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveVector: {x: 0, y: 0, z: 0}
-  moveSpeed: 5
+  moveSpeed: 10
   itemId: 0
   index: 0
   isInstalled: 0
